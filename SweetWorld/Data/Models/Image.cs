@@ -8,11 +8,13 @@ namespace SweetWorld.Data.Models
         [Key]
         public Guid Id { get; set; }
 
-        public string URL { get; set; }
+        [Required]
+        public string? URL { get; set; }
 
         [ForeignKey(nameof(Product))]
-        public Guid ProductId { get; set; }
-        public Product Product { get; set; }
+        public Guid? ProductId { get; set; }
+        [Required]
+        public Product? Product { get; set; }
 
     }
 }

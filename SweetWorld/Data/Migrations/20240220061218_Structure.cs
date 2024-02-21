@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SweetWorld.Data.Migrations
 {
-    public partial class DbContext : Migration
+    public partial class Structure : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -84,67 +84,6 @@ namespace SweetWorld.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Shapes",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Size = table.Column<int>(type: "int", nullable: false),
-                    PiecesCount = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Shapes", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Orders",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ClientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Orders", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Orders_Clients_ClientId",
-                        column: x => x.ClientId,
-                        principalTable: "Clients",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Requests",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ClientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ConfectionerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Requests", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Requests_Clients_ClientId",
-                        column: x => x.ClientId,
-                        principalTable: "Clients",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Requests_Confectioners_ConfectionerId",
-                        column: x => x.ConfectionerId,
-                        principalTable: "Confectioners",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
@@ -153,8 +92,7 @@ namespace SweetWorld.Data.Migrations
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     InStock = table.Column<bool>(type: "bit", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ConfectionerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    ConfectionerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -165,12 +103,6 @@ namespace SweetWorld.Data.Migrations
                         principalTable: "Confectioners",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Products_Orders_OrderId",
-                        column: x => x.OrderId,
-                        principalTable: "Orders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -179,8 +111,7 @@ namespace SweetWorld.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     URL = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RequestId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -191,12 +122,34 @@ namespace SweetWorld.Data.Migrations
                         principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    ClientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => new { x.ClientId, x.ProductId });
                     table.ForeignKey(
-                        name: "FK_Images_Requests_RequestId",
-                        column: x => x.RequestId,
-                        principalTable: "Requests",
+                        name: "FK_Orders_Clients_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Clients",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_Orders_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -247,31 +200,6 @@ namespace SweetWorld.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "ShapesCakes",
-                columns: table => new
-                {
-                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ShapeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ShapesCakes", x => new { x.ShapeId, x.ProductId });
-                    table.ForeignKey(
-                        name: "FK_ShapesCakes_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ShapesCakes_Shapes_ShapeId",
-                        column: x => x.ShapeId,
-                        principalTable: "Shapes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Clients_UserId",
                 table: "Clients",
@@ -288,24 +216,14 @@ namespace SweetWorld.Data.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Images_RequestId",
-                table: "Images",
-                column: "RequestId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Orders_ClientId",
+                name: "IX_Orders_ProductId",
                 table: "Orders",
-                column: "ClientId");
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_ConfectionerId",
                 table: "Products",
                 column: "ConfectionerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Products_OrderId",
-                table: "Products",
-                column: "OrderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductsCategories_CategoryId",
@@ -316,21 +234,6 @@ namespace SweetWorld.Data.Migrations
                 name: "IX_ProductsIngredients_ProductId",
                 table: "ProductsIngredients",
                 column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Requests_ClientId",
-                table: "Requests",
-                column: "ClientId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Requests_ConfectionerId",
-                table: "Requests",
-                column: "ConfectionerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ShapesCakes_ProductId",
-                table: "ShapesCakes",
-                column: "ProductId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -339,16 +242,16 @@ namespace SweetWorld.Data.Migrations
                 name: "Images");
 
             migrationBuilder.DropTable(
+                name: "Orders");
+
+            migrationBuilder.DropTable(
                 name: "ProductsCategories");
 
             migrationBuilder.DropTable(
                 name: "ProductsIngredients");
 
             migrationBuilder.DropTable(
-                name: "ShapesCakes");
-
-            migrationBuilder.DropTable(
-                name: "Requests");
+                name: "Clients");
 
             migrationBuilder.DropTable(
                 name: "Categories");
@@ -360,16 +263,7 @@ namespace SweetWorld.Data.Migrations
                 name: "Products");
 
             migrationBuilder.DropTable(
-                name: "Shapes");
-
-            migrationBuilder.DropTable(
                 name: "Confectioners");
-
-            migrationBuilder.DropTable(
-                name: "Orders");
-
-            migrationBuilder.DropTable(
-                name: "Clients");
 
             migrationBuilder.DropColumn(
                 name: "FirstName",

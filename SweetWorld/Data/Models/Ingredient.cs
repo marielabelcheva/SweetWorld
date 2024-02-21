@@ -7,7 +7,9 @@ namespace SweetWorld.Data.Models
         [Key]
         public Guid Id { get; set; }
 
-        public string Name { get; set; }
+        [Required]
+        [StringLength(50, MinimumLength = 2)]
+        public string? Name { get; set; }
 
         public ICollection<ProductsIngredients> ProductsIngredients { get; set; } = new HashSet<ProductsIngredients>();
     }

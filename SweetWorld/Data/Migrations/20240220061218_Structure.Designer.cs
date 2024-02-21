@@ -12,8 +12,8 @@ using SweetWorld.Data;
 namespace SweetWorld.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240213072818_DbContext")]
-    partial class DbContext
+    [Migration("20240220061218_Structure")]
+    partial class Structure
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -219,9 +219,6 @@ namespace SweetWorld.Data.Migrations
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("RequestId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("URL")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -229,8 +226,6 @@ namespace SweetWorld.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("RequestId");
 
                     b.ToTable("Images");
                 });
@@ -252,15 +247,18 @@ namespace SweetWorld.Data.Migrations
 
             modelBuilder.Entity("SweetWorld.Data.Models.Order", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("ClientId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ClientId")
+                    b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -269,9 +267,9 @@ namespace SweetWorld.Data.Migrations
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ClientId", "ProductId");
 
-                    b.HasIndex("ClientId");
+                    b.HasIndex("ProductId");
 
                     b.ToTable("Orders");
                 });
@@ -292,9 +290,6 @@ namespace SweetWorld.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
@@ -305,8 +300,6 @@ namespace SweetWorld.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ConfectionerId");
-
-                    b.HasIndex("OrderId");
 
                     b.ToTable("Products");
                 });
@@ -339,70 +332,6 @@ namespace SweetWorld.Data.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductsIngredients");
-                });
-
-            modelBuilder.Entity("SweetWorld.Data.Models.Request", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ClientId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ConfectionerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClientId");
-
-                    b.HasIndex("ConfectionerId");
-
-                    b.ToTable("Requests");
-                });
-
-            modelBuilder.Entity("SweetWorld.Data.Models.Shape", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PiecesCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Size")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Shapes");
-                });
-
-            modelBuilder.Entity("SweetWorld.Data.Models.ShapesCakes", b =>
-                {
-                    b.Property<Guid>("ShapeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("ShapeId", "ProductId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ShapesCakes");
                 });
 
             modelBuilder.Entity("SweetWorld.Data.Models.User", b =>
@@ -559,15 +488,7 @@ namespace SweetWorld.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SweetWorld.Data.Models.Request", "Request")
-                        .WithMany("Images")
-                        .HasForeignKey("RequestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Product");
-
-                    b.Navigation("Request");
                 });
 
             modelBuilder.Entity("SweetWorld.Data.Models.Order", b =>
@@ -578,7 +499,15 @@ namespace SweetWorld.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("SweetWorld.Data.Models.Product", "Product")
+                        .WithMany("Orders")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Client");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("SweetWorld.Data.Models.Product", b =>
@@ -589,15 +518,7 @@ namespace SweetWorld.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SweetWorld.Data.Models.Order", "Order")
-                        .WithMany("Products")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Confectioner");
-
-                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("SweetWorld.Data.Models.ProductsCategories", b =>
@@ -638,44 +559,6 @@ namespace SweetWorld.Data.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("SweetWorld.Data.Models.Request", b =>
-                {
-                    b.HasOne("SweetWorld.Data.Models.Client", "Client")
-                        .WithMany("Requests")
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SweetWorld.Data.Models.Confectioner", "Confectioner")
-                        .WithMany("Requests")
-                        .HasForeignKey("ConfectionerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Client");
-
-                    b.Navigation("Confectioner");
-                });
-
-            modelBuilder.Entity("SweetWorld.Data.Models.ShapesCakes", b =>
-                {
-                    b.HasOne("SweetWorld.Data.Models.Product", "Product")
-                        .WithMany("ShapesCakes")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SweetWorld.Data.Models.Shape", "Shape")
-                        .WithMany("ShapesCakes")
-                        .HasForeignKey("ShapeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("Shape");
-                });
-
             modelBuilder.Entity("SweetWorld.Data.Models.Category", b =>
                 {
                     b.Navigation("ProductsCategories");
@@ -684,25 +567,16 @@ namespace SweetWorld.Data.Migrations
             modelBuilder.Entity("SweetWorld.Data.Models.Client", b =>
                 {
                     b.Navigation("Orders");
-
-                    b.Navigation("Requests");
                 });
 
             modelBuilder.Entity("SweetWorld.Data.Models.Confectioner", b =>
                 {
                     b.Navigation("Products");
-
-                    b.Navigation("Requests");
                 });
 
             modelBuilder.Entity("SweetWorld.Data.Models.Ingredient", b =>
                 {
                     b.Navigation("ProductsIngredients");
-                });
-
-            modelBuilder.Entity("SweetWorld.Data.Models.Order", b =>
-                {
-                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("SweetWorld.Data.Models.Product", b =>
@@ -711,17 +585,7 @@ namespace SweetWorld.Data.Migrations
 
                     b.Navigation("Ingredients");
 
-                    b.Navigation("ShapesCakes");
-                });
-
-            modelBuilder.Entity("SweetWorld.Data.Models.Request", b =>
-                {
-                    b.Navigation("Images");
-                });
-
-            modelBuilder.Entity("SweetWorld.Data.Models.Shape", b =>
-                {
-                    b.Navigation("ShapesCakes");
+                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

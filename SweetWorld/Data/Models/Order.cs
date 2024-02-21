@@ -5,21 +5,26 @@ namespace SweetWorld.Data.Models
 {
     public class Order
     {
-        [Key]
-        public Guid Id { get; set; } // kompiziten PK or leave it that way
-
-        public DateTime CreationDate { get; set; }
-
         [ForeignKey(nameof(Client))]
-        public Guid ClientId { get; set; }
-        public Client Client { get; set; }
+        public Guid? ClientId { get; set; }
+        [Required]
+        public Client? Client { get; set; }
 
         [ForeignKey(nameof(Product))]
-        public Guid ProductId { get; set; }
-        public Product Product { get; set; }
+        public Guid? ProductId { get; set; }
+        [Required]
+        public Product? Product { get; set; }
 
-        public decimal TotalPrice { get; set; }
+        [Required]
+        public DateTime CreationDate { get; set; }
 
-        public string Status { get; set; }
+        [Required]
+        public decimal? TotalPrice { get; set; }
+
+        public string? AdditionalInformation { get; set; } = null!;
+
+        [Required]
+        [StringLength(50, MinimumLength = 2)]
+        public string? Status { get; set; }
     }
 }
