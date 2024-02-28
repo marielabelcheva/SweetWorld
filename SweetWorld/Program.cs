@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using SweetWorld.Contracts;
 using SweetWorld.Data;
 using SweetWorld.Data.Models;
+using SweetWorld.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,10 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+
+builder.Services.ConfigureApplicationCookie(options => options.LoginPath = "/User/Login");
+
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 var app = builder.Build();
 
