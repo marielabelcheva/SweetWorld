@@ -27,7 +27,7 @@ namespace SweetWorld.Services
                 await this.dbContext.SaveChangesAsync();
             }
 
-            throw new ArgumentException("Category has already exists!");
+            else throw new ArgumentException("Category has already exists!");
         }
 
         public async Task<IEnumerable<CategoryViewModel>> GetAllCategoriesAsync()

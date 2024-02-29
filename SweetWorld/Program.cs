@@ -20,6 +20,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.ConfigureApplicationCookie(options => options.LoginPath = "/User/Login");
 
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IIngredientService, IngredientService>();
 
 var app = builder.Build();
 
