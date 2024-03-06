@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using SweetWorld.Data.Models;
+using SweetWorld.Infrastructure.Data.Models;
 
 namespace SweetWorld.Areas.Identity.Pages.Account
 {

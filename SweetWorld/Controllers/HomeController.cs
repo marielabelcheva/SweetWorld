@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SweetWorld.Models;
+using SweetWorld.Core.Models;
 using System.Diagnostics;
 
 namespace SweetWorld.Controllers

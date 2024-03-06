@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using SweetWorld.Contracts;
-using SweetWorld.Data;
-using SweetWorld.Data.Models;
-using SweetWorld.Services;
+using SweetWorld.Core.Contracts;
+using SweetWorld.Infrastructure.Data;
+using SweetWorld.Infrastructure.Data.Models;
+using SweetWorld.Core.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

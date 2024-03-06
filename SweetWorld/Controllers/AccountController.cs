@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using SweetWorld.Data.Models;
-using SweetWorld.Models.AccountViewModels;
+using SweetWorld.Infrastructure.Data.Models;
+using SweetWorld.Core.Models.AccountViewModels;
 
 namespace SweetWorld.Controllers
 {
