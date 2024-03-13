@@ -4,6 +4,8 @@ using SweetWorld.Core.Contracts;
 using SweetWorld.Infrastructure.Data;
 using SweetWorld.Infrastructure.Data.Models;
 using SweetWorld.Core.Services;
+using SweetWorld.Helpers;
+using CloudinaryDotNet;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,13 @@ builder.Services.ConfigureApplicationCookie(options => options.LoginPath = "/Use
 
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IIngredientService, IngredientService>();
+builder.Services.AddScoped<IImageService, ImageService>();
+
+var cloudinarySettings = builder.Configuration.GetSection("CloudinarySettings").Get<CloudinarySettings>();
+builder.Services.AddSingleton<Cloudinary>((sp) =>
+{
+    return new Cloudinary(new Account(cloudinarySettings.CloudName, cloudinarySettings.ApiKey, cloudinarySettings.ApiSecret));
+});
 
 var app = builder.Build();
 
