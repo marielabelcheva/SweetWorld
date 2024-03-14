@@ -24,6 +24,9 @@ namespace SweetWorld.Infrastructure.Data.Models
         [Required]
         public Confectioner? Confectioner { get; set; }
 
+        [Required]
+        public string? Thumbnail {  get; set; }
+
         public ICollection<ProductsIngredients> Ingredients { get; set; } = new HashSet<ProductsIngredients>();
 
         public ICollection<ProductsCategories> Categories { get; set; } = new HashSet<ProductsCategories>();

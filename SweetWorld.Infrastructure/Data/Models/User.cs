@@ -12,5 +12,7 @@ namespace SweetWorld.Infrastructure.Data.Models
         [Required]
         [StringLength(30, MinimumLength = 3)]
         public string? LastName { get; set; }
+
+        public string? ProfilePictureUrl {  get; set; }
     }
 }

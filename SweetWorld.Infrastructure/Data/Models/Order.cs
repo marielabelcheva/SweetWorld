@@ -24,6 +24,9 @@ namespace SweetWorld.Infrastructure.Data.Models
         public string? AdditionalInformation { get; set; } = null!;
 
         [Required]
+        public string? DeliveryAddress;
+
+        [Required]
         [StringLength(50, MinimumLength = 2)]
         public string? Status { get; set; }
     }
