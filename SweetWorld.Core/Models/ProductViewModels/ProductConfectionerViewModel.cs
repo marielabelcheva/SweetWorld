@@ -1,17 +1,20 @@
-﻿using SweetWorld.Infrastructure.Data.Models;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace SweetWorld.Core.Models.ProductViewModels
 {
-    public class AddProductViewModel
+    public class ProductConfectionerViewModel
     {
+        public Guid Id {  get; set; }
+
         [Required]
-        [StringLength(60, MinimumLength = 3)]
         public string? Name { get; set; }
 
         [Required]
-        [StringLength(60, MinimumLength = 2)]
         public string? Type { get; set; }
 
         [Required]
@@ -19,7 +22,5 @@ namespace SweetWorld.Core.Models.ProductViewModels
 
         [Required]
         public string? Thumbnail { get; set; }
-
-        public Confectioner? Confectioner { get; set; }
     }
 }

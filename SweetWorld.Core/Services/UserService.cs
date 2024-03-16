@@ -21,7 +21,7 @@ namespace SweetWorld.Core.Services
             this.imageService = imageService;
         }
 
-        public async Task DeleteUserAsync(string id) // sends email - maybe
+        public async Task DeleteUserAsync(string id)
         {
             User user = await this.userManager.FindByIdAsync(id);
 
