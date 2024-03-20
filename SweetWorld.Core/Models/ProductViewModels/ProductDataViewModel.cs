@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 
 namespace SweetWorld.Core.Models.ProductViewModels
 {
-    public class EditProductViewModel
+    public class ProductDataViewModel
     {
+        [Key]
         public Guid Id { get; set; }
 
         [Required]
@@ -24,8 +25,19 @@ namespace SweetWorld.Core.Models.ProductViewModels
         public decimal? Price { get; set; }
 
         [Required]
+        public string? ConfectionerName {  get; set; }
+
+        [Required]
         public string? Thumbnail { get; set; }
 
-        //public ICollection<string> PiecesCountShapeAndPrice { get; set; } = new HashSet<string>();
+        public ICollection<string> PiecesCountShapeAndPrice { get; set; } = new HashSet<string>();
+
+        public ICollection<Image> Images { get; set; } = new HashSet<Image>();
+
+        [Required]
+        public ICollection<string?> Ingredients { get; set; } = new HashSet<string?>();
+
+        [Required]
+        public ICollection<string?> Categories { get; set; } = new HashSet<string?>();
     }
 }

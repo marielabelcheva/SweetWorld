@@ -27,7 +27,20 @@ namespace SweetWorld.Core.Services
                 await this.dbContext.SaveChangesAsync();
             }
 
-            else throw new ArgumentException("Category has already exists!");
+            throw new ArgumentException("Category has already exists!");
+        }
+
+        public async Task DeleteCategoryAsync(Guid id)
+        {
+            Category? category = await this.dbContext.Categories.FindAsync(id);
+
+            if (category != null)
+            {
+                this.dbContext.Categories.Remove(category);
+                await this.dbContext.SaveChangesAsync();
+            }
+
+            throw new NullReferenceException();
         }
 
         public async Task<IEnumerable<CategoryViewModel>> GetAllCategoriesAsync()
@@ -39,35 +52,15 @@ namespace SweetWorld.Core.Services
             }).ToListAsync();
         }
 
-        public async Task<CategoryViewModel> RemoveCategoryAsync(Guid id)
+        public async Task<ICollection<string?>> GetAllCategoriesOfAProductAsync(Guid productId)
         {
-            Category? category = await this.dbContext.Categories.FirstOrDefaultAsync(category => category.Id == id);
+            var product = await this.dbContext.Products.Include(product => product.Categories)
+                                                        .ThenInclude(category => category.Category)
+                                                        .FirstOrDefaultAsync(product => product.Id == productId);
 
-            if (category != null)
-            {
-                CategoryViewModel viewModel = new CategoryViewModel()
-                {
-                    Id = category.Id,
-                    Name = category.Name
-                };
-
-                return viewModel;
-            }
+            if (product?.Categories != null) { return product.Categories.Select(category => category?.Category?.Name).ToHashSet(); }
 
             throw new NullReferenceException();
-        }
-
-        public async Task RemoveCategoryAsync(CategoryViewModel viewModel)
-        {
-            Category? category = await this.dbContext.Categories.FindAsync(viewModel.Id);
-
-            if (category != null)
-            {
-                this.dbContext.Categories.Remove(category);
-                await this.dbContext.SaveChangesAsync();
-            }
-
-            else throw new NullReferenceException();
         }
     }
 }

@@ -4,7 +4,7 @@ namespace SweetWorld.Core.Contracts
 {
     public interface IProductService
     {
-        //Add, Edit, Delete - without post, All - pagination, PoductsFromType - pagination, ProductData
+        //All - pagination, PoductsFromType - pagination
 
         public Task<IEnumerable<ProductViewModel>> AllProductsAsync();
 
@@ -15,5 +15,9 @@ namespace SweetWorld.Core.Contracts
         public Task EditProductAsync(EditProductViewModel viewModel);
 
         public Task DeleteProductAsync(Guid id);
+
+        public Task<ProductDataViewModel> ProductDataAsync(Guid id);
+
+        public Task<IEnumerable<ProductViewModel>> GetProductsFromTypeAsync(string type);
     }
 }

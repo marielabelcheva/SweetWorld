@@ -7,11 +7,15 @@ namespace SweetWorld.Core.Contracts
     {
         public Task AddCategoryAsync(CategoryViewModel viewModel);
 
+        //public Task AddCategoryOfaProductAsync(Guid productId, Guid categoryId);
+
         public Task<IEnumerable<CategoryViewModel>> GetAllCategoriesAsync();
 
-        public Task<CategoryViewModel> RemoveCategoryAsync(Guid id);
+        public Task<ICollection<string?>> GetAllCategoriesOfAProductAsync(Guid productId);
 
-        public Task RemoveCategoryAsync(CategoryViewModel viewModel);
+        public Task DeleteCategoryAsync(Guid id);
+
+        //public Task DeleteCategoryOfAProductAsync(Guid productId, Guid categoryId);
 
         //all products from category - pagination
     }

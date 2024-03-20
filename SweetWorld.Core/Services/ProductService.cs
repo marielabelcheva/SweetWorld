@@ -14,8 +14,15 @@ namespace SweetWorld.Core.Services
     public class ProductService : IProductService
     {
         private readonly ApplicationDbContext dbContext;
+        private readonly ICategoryService categoryService;
+        private readonly IIngredientService ingredientService;
 
-        public ProductService(ApplicationDbContext dbContext) { this.dbContext =  dbContext; }
+        public ProductService(ApplicationDbContext dbContext, ICategoryService categoryService, IIngredientService ingredientService)
+        {
+            this.dbContext = dbContext;
+            this.categoryService = categoryService;
+            this.ingredientService = ingredientService;
+        }
 
         public async Task AddProductAsync(AddProductViewModel viewModel)
         {
@@ -61,14 +68,85 @@ namespace SweetWorld.Core.Services
             throw new NullReferenceException();
         }
 
-        public Task<EditProductViewModel> EditProductAsync(Guid id)
+        public async Task<EditProductViewModel> EditProductAsync(Guid id)
         {
-            throw new NotImplementedException();
+            Product? product = await this.dbContext.Products.FindAsync(id);
+
+            if (product != null)
+            {
+                return new EditProductViewModel()
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Type = product.Type,
+                    Price = product.Price,
+                    Thumbnail = product.Thumbnail
+                };
+            }
+
+            throw new NullReferenceException();
         }
 
-        public Task EditProductAsync(EditProductViewModel viewModel)
+        public async Task EditProductAsync(EditProductViewModel viewModel)
         {
-            throw new NotImplementedException();
+            Product? product = await this.dbContext.Products.FindAsync(viewModel.Id);
+
+            if (product != null ) 
+            {
+                product.Name = viewModel.Name;
+                product.Type = viewModel.Type;
+                product.Price = viewModel.Price;
+                product.Thumbnail = viewModel.Thumbnail;
+
+                await this.dbContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task<IEnumerable<ProductViewModel>> GetProductsFromTypeAsync(string type)
+        {
+            var products = await this.dbContext.Products.Where(product => product.Type == type)
+                                                        .Include(product => product.Confectioner)
+                                                        .ThenInclude(confectioner => confectioner.User).ToListAsync();
+
+            if (products != null)
+            {
+                return products.Select(product => new ProductViewModel()
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Type = product.Type,
+                    Price = product.Price,
+                    Thumbnail = product.Thumbnail,
+                    ConfectionerName = $"{product.Confectioner.User.FirstName} {product.Confectioner.User.LastName}"
+                });
+            }
+
+            throw new ArgumentException("Invalid type");
+        }
+
+        public async Task<ProductDataViewModel> ProductDataAsync(Guid id)
+        {
+            Product? product = await this.dbContext.Products.Include(product => product.Confectioner)
+                                                        .ThenInclude(confectioner => confectioner.User)
+                                                        .FirstOrDefaultAsync(product => product.Id == id);
+            if (product != null)
+            {
+                return new ProductDataViewModel()
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Type = product.Type,
+                    Price = product.Price,
+                    ConfectionerName = $"{product.Confectioner.User.FirstName} {product.Confectioner.User.LastName}",
+                    Thumbnail = product.Thumbnail,
+                    PiecesCountShapeAndPrice = product.PiecesCountShapeAndPrice,
+                    Images = product.Images,
+                    Ingredients = await this.ingredientService.GetAllIngredientsOfAProductAsync(product.Id),
+                    Categories = await this.categoryService.GetAllCategoriesOfAProductAsync(product.Id)
+                };
+            }
+
+            throw new NullReferenceException();
         }
     }
 }
