@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SweetWorld.Infrastructure.Data.Configuration;
 using SweetWorld.Infrastructure.Data.Models;
 
 namespace SweetWorld.Infrastructure.Data
@@ -20,21 +21,15 @@ namespace SweetWorld.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Ingredient>().ToTable("ingredients");
-            builder.Entity<Ingredient>().Property(ingredient => ingredient.Id).HasColumnName("id");
-            builder.Entity<Ingredient>().Property(ingredient => ingredient.Name).HasColumnName("name");
+            builder.ApplyConfiguration(new IngredientConfiguration());
 
-            builder.Entity<Category>().ToTable("categories");
-            builder.Entity<Category>().Property(category => category.Id).HasColumnName("id");
-            builder.Entity<Category>().Property(category => category.Name).HasColumnName("name");
+            builder.ApplyConfiguration(new CategoryConfiguration());
 
-            builder.Entity<Confectioner>().ToTable("confectioners");
-            builder.Entity<Confectioner>().Property(confectioner => confectioner.Id).HasColumnName("id");
-            builder.Entity<Confectioner>().Property(confectioner => confectioner.UserId).HasColumnName("user_id");
+            builder.ApplyConfiguration(new UserConfiguration());
 
-            builder.Entity<Client>().ToTable("clients");
-            builder.Entity<Client>().Property(client => client.Id).HasColumnName("id");
-            builder.Entity<Client>().Property(client => client.UserId).HasColumnName("user_id");
+            builder.ApplyConfiguration(new ConfectionerConfiguration());
+
+            builder.ApplyConfiguration(new ClientConfiguration());
 
             builder.Entity<Product>().ToTable("products");
             builder.Entity<Product>().Property(product => product.Id).HasColumnName("id");
