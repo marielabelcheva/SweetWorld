@@ -24,21 +24,17 @@ namespace SweetWorld.Infrastructure.Data.Configuration
         {
             List<Client> clients = new List<Client>();
 
-            Client client = new Client()
+            clients.Add(new Client()
             {
                 Id = Guid.Parse("fa6c6780-40d5-4c7e-9e48-fd82d03190b5"),
                 UserId = "7376f12c-855e-40ba-a5d5-d6a993022bf3"
-            };
+            });
 
-            clients.Add(client);
-
-            client = new Client()
+            clients.Add(new Client()
             {
                 Id = Guid.Parse("c96d52c3-571e-4381-a724-b88c58492caa"),
                 UserId = "a501c64b-74f7-46b7-a938-bda911a77b81"
-            };
-
-            clients.Add(client);
+            });
 
             return clients;
         }

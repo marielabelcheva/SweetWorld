@@ -5,6 +5,9 @@ namespace SweetWorld.Infrastructure.Data.Models
 {
     public class Order
     {
+        [Key]
+        public Guid? Id { get; set; }
+
         [ForeignKey(nameof(Client))]
         public Guid? ClientId { get; set; }
         [Required]
@@ -16,7 +19,13 @@ namespace SweetWorld.Infrastructure.Data.Models
         public Product? Product { get; set; }
 
         [Required]
+        public int? Amount { get; set; }
+
+        [Required]
         public DateTime CreationDate { get; set; }
+
+        [Required]
+        public DateTime ToDate { get; set; }
 
         [Required]
         public decimal? TotalPrice { get; set; }
@@ -24,7 +33,8 @@ namespace SweetWorld.Infrastructure.Data.Models
         public string? AdditionalInformation { get; set; } = null!;
 
         [Required]
-        public string? DeliveryAddress;
+        [StringLength(100, MinimumLength = 2)]
+        public string? DeliveryAddress {  get; set; }
 
         [Required]
         [StringLength(50, MinimumLength = 2)]

@@ -19,7 +19,6 @@ namespace SweetWorld.Infrastructure.Data.Configuration
             builder.Property(user => user.PhoneNumber).HasMaxLength(10).IsRequired();
 
             builder.HasData(CreateUsers());
-
         }
 
         private List<User> CreateUsers()

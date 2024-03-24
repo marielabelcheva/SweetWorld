@@ -49,19 +49,13 @@ namespace SweetWorld.Infrastructure.Data
             builder.Entity<ProductsCategories>().Property(product => product.ProductId).HasColumnName("product_id");
             builder.Entity<ProductsCategories>().Property(product => product.CategoryId).HasColumnName("category_id");
 
-            builder.Entity<Order>().ToTable("orders");
-            builder.Entity<Order>().HasKey(order => new { order.ClientId, order.ProductId });
-            builder.Entity<Order>().Property(order => order.ClientId).HasColumnName("client_id");
-            builder.Entity<Order>().Property(order => order.ProductId).HasColumnName("product_id");
-            builder.Entity<Order>().Property(order => order.CreationDate).HasColumnName("date_of_creating");
-            builder.Entity<Order>().Property(order => order.TotalPrice).HasColumnName("total_price");
-            builder.Entity<Order>().Property(order => order.AdditionalInformation).HasColumnName("additional_information");
-            builder.Entity<Order>().Property(order => order.Status).HasColumnName("status");
+            builder.ApplyConfiguration(new OrderConfiguration());
 
-            builder.Entity<Image>().ToTable("images");
-            builder.Entity<Image>().Property(image => image.Id).HasColumnName("id");
-            builder.Entity<Image>().Property(image => image.URL).HasColumnName("url");
-            builder.Entity<Image>().Property(image => image.ProductId).HasColumnName("product_id");
+            builder.ApplyConfiguration(new ImageConfiguration());
+
+            builder.ApplyConfiguration(new RoleConfiguration());
+
+            builder.ApplyConfiguration(new UsersRolesConfiguration());
 
             base.OnModelCreating(builder);
         }
