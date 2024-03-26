@@ -4,6 +4,7 @@ using SweetWorld.Infrastructure.Data;
 using SweetWorld.Infrastructure.Data.Models;
 using SweetWorld.Core.Models.CategoryViewModels;
 using System.Security.Policy;
+using System.Web.Mvc;
 
 namespace SweetWorld.Core.Services
 {
@@ -43,13 +44,26 @@ namespace SweetWorld.Core.Services
             throw new NullReferenceException();
         }
 
-        public async Task<IEnumerable<CategoryViewModel>> GetAllCategoriesAsync()
+        public SelectList GetAllCategoriesAsync() { return new SelectList(this.dbContext.Categories, "Id", "Name"); }
+
+        public async Task AddCategoryOfaProductAsync(Guid productId, Guid categoryId)
         {
-            return await this.dbContext.Categories.Select(category => new CategoryViewModel
+            Product? product = await this.dbContext.Products.FindAsync(productId);
+            Category? category = await this.dbContext.Categories.FindAsync(categoryId);
+
+            if (product != null && category != null)
             {
-                Id = category.Id,
-                Name = category.Name
-            }).ToListAsync();
+                ProductsCategories productCategory = new ProductsCategories()
+                {
+                    Product = product,
+                    Category = category
+                };
+
+                await this.dbContext.ProductsCategories.AddAsync(productCategory);
+                await this.dbContext.SaveChangesAsync();
+            }
+
+            throw new NullReferenceException();
         }
 
         public async Task<ICollection<string?>> GetAllCategoriesOfAProductAsync(Guid productId)
@@ -59,6 +73,20 @@ namespace SweetWorld.Core.Services
                                                         .FirstOrDefaultAsync(product => product.Id == productId);
 
             if (product?.Categories != null) { return product.Categories.Select(category => category?.Category?.Name).ToHashSet(); }
+
+            throw new NullReferenceException();
+        }
+
+        public async Task DeleteCategoryOfAProductAsync(Guid productId, Guid categoryId)
+        {
+            var productCat = await this.dbContext.ProductsCategories.FirstOrDefaultAsync(productCategory =>
+                                                      productCategory.ProductId == productId && productCategory.CategoryId == categoryId);
+
+            if (productCat != null)
+            {
+                this.dbContext.ProductsCategories.Remove(productCat);
+                await this.dbContext.SaveChangesAsync();
+            }
 
             throw new NullReferenceException();
         }
