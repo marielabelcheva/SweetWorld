@@ -38,9 +38,42 @@ namespace SweetWorld.Core.Services
             }).ToListAsync();
         }
 
+        public async Task DeleteIngredientAsync(Guid id)
+        {
+            Ingredient? ingredient = await this.dbContext.Ingredients.FindAsync(id);
+
+            if (ingredient != null)
+            {
+                this.dbContext.Ingredients.Remove(ingredient);
+                await this.dbContext.SaveChangesAsync();
+            }
+
+            throw new NullReferenceException();
+        }
+
+        public async Task AddIngredientOfAProductAsync(Guid productId, Guid ingredientId)
+        {
+            Product? product = await this.dbContext.Products.FindAsync(productId);
+            Ingredient? ingredient = await this.dbContext.Ingredients.FindAsync(ingredientId);
+
+            if (product != null && ingredient != null)
+            {
+                ProductsIngredients productIngredient = new ProductsIngredients()
+                {
+                    Product = product,
+                    Ingredient = ingredient
+                };
+
+                await this.dbContext.ProductsIngredients.AddAsync(productIngredient);
+                await this.dbContext.SaveChangesAsync();
+            }
+
+            throw new NullReferenceException();
+        }
+
         public async Task<ICollection<string?>> GetAllIngredientsOfAProductAsync(Guid productId)
         {
-            var product =  await this.dbContext.Products.Include(product => product.Ingredients)
+            var product = await this.dbContext.Products.Include(product => product.Ingredients)
                                                         .ThenInclude(ingredient => ingredient.Ingredient)
                                                         .FirstOrDefaultAsync(product => product.Id == productId);
 
@@ -49,13 +82,14 @@ namespace SweetWorld.Core.Services
             throw new NullReferenceException();
         }
 
-        public async Task DeleteIngredientAsync(Guid id)
+        public async Task DeleteIngredientOfAProductAsync(Guid productId, Guid ingredientId)
         {
-            Ingredient? ingredient = await this.dbContext.Ingredients.FindAsync(id);
+            var productIngredient = await this.dbContext.ProductsIngredients.FirstOrDefaultAsync(productIngredient =>
+                                          productIngredient.ProductId == productId && productIngredient.IngredientId == ingredientId);
 
-            if (ingredient != null)
+            if (productIngredient != null)
             {
-                this.dbContext.Ingredients.Remove(ingredient);
+                this.dbContext.ProductsIngredients.Remove(productIngredient);
                 await this.dbContext.SaveChangesAsync();
             }
 
