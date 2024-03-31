@@ -25,9 +25,6 @@ namespace SweetWorld.Infrastructure.Data.Models
         public DateTime CreationDate { get; set; }
 
         [Required]
-        public DateTime ToDate { get; set; }
-
-        [Required]
         public decimal? TotalPrice { get; set; }
 
         public string? AdditionalInformation { get; set; } = null!;

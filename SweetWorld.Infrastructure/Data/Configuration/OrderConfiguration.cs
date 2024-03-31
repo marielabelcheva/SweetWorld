@@ -19,7 +19,6 @@ namespace SweetWorld.Infrastructure.Data.Configuration
             builder.Property(order => order.ProductId).HasColumnName("product_id");
             builder.Property(order => order.Amount).HasColumnName("product_amount");
             builder.Property(order => order.CreationDate).HasColumnName("date_of_creating");
-            builder.Property(order => order.ToDate).HasColumnName("to_date");
             builder.Property(order => order.TotalPrice).HasColumnName("total_price");
             builder.Property(order => order.AdditionalInformation).HasColumnName("additional_information");
             builder.Property(order => order.DeliveryAddress).HasColumnName("delivery_address");

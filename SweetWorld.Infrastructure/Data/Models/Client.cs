@@ -14,5 +14,7 @@ namespace SweetWorld.Infrastructure.Data.Models
         public User? User { get; set; }
 
         public ICollection<Order> Orders { get; set; } = new HashSet<Order>();
+
+        //public ICollection<Order> Cart { get; set; } = new HashSet<Order>();
     }
 }
