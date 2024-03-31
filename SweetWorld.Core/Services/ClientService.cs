@@ -18,6 +18,8 @@ namespace SweetWorld.Core.Services
 
         public ClientService(ApplicationDbContext dbContext) { this.dbContext = dbContext; }
 
+        public ICollection<OrderCartViewModel> Cart { get; set; } = new HashSet<OrderCartViewModel>();
+
         public async Task AddClientAsync(string userId)
         {
             Client client = new Client()
@@ -38,8 +40,7 @@ namespace SweetWorld.Core.Services
             {
                 return clientOrders.Orders.Select(order => new OrderClientViewModel()
                 {
-                    ClientId = order.ClientId,
-                    ProductId = order.ProductId,
+                    OrderId = order.Id,
                     ProductName = order.Product?.Name,
                     ProductThumb = order.Product?.Thumbnail,
                     ProductType = order.Product?.Type,

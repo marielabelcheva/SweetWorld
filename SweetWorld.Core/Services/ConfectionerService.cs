@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SweetWorld.Core.Contracts;
+using SweetWorld.Core.Models.OrderViewModels;
 using SweetWorld.Core.Models.ProductViewModels;
 using SweetWorld.Core.Models.UserViewModels;
 using SweetWorld.Infrastructure.Data;
@@ -30,7 +31,28 @@ namespace SweetWorld.Core.Services
             await this.dbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<ProductConfectionerViewModel>> AllProductsOfAConfectioner(Guid confectionerId)
+        public async Task<IEnumerable<OrderClientViewModel>> AllOrdersForExecutingAsync(Confectioner confectioner)
+        {
+            var orders = await this.dbContext.Orders.Where(order => order.Status == "approved").Include(order => order.Product)
+                                                    .Where(product => product.Product.ConfectionerId == confectioner.Id).ToListAsync();
+            if (orders != null)
+            {
+                return orders.Select(order => new OrderClientViewModel()
+                {
+                    OrderId = order.Id,
+                    ProductName = order.Product.Name,
+                    ProductThumb = order.Product.Thumbnail,
+                    ProductType = order.Product.Type,
+                    CreationDate = order.CreationDate,
+                    TotalPrice = order.TotalPrice,
+                    Amount = order.Amount,
+                    Status = order.Status
+                });
+            }
+            throw new NullReferenceException("No new orders!");
+        }
+
+        public async Task<IEnumerable<ProductConfectionerViewModel>> AllProductsOfAConfectionerAsync(Guid confectionerId)
         {
             Confectioner? confectionerProducts = await this.dbContext.Confectioners.Where(confectioner => confectioner.Id == confectionerId)
                                                                                    .Include(confectioner => confectioner.Products)

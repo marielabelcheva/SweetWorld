@@ -24,8 +24,5 @@ namespace SweetWorld.Core.Models.ProductViewModels
 
         [Required]
         public string? Thumbnail { get; set; }
-
-        [Required]
-        public string? ConfectionerName {  get; set; }
     }
 }

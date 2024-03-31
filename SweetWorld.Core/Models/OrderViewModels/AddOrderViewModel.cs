@@ -7,21 +7,13 @@ using System.Threading.Tasks;
 
 namespace SweetWorld.Core.Models.OrderViewModels
 {
-    public class OrderClientViewModel
+    public class AddOrderViewModel
     {
         [Required]
-        public Guid? OrderId {  get; set; }
+        public Guid? ClientId { get; set; }
 
         [Required]
-        public string? ProductName {  get; set; }
-
-        public string? ProductThumb {  get; set; }
-
-        [Required]
-        public string? ProductType { get; set; }
-
-        [Required]
-        public DateTime CreationDate { get; set; }
+        public Guid? ProductId { get; set; }
 
         [Required]
         public int? Amount { get; set; }
@@ -29,7 +21,10 @@ namespace SweetWorld.Core.Models.OrderViewModels
         [Required]
         public decimal? TotalPrice { get; set; }
 
+        public string? AdditionalInformation { get; set; } = null!;
+
         [Required]
-        public string? Status { get; set; }
+        [StringLength(100, MinimumLength = 2)]
+        public string? DeliveryAddress;
     }
 }

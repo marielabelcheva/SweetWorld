@@ -50,8 +50,7 @@ namespace SweetWorld.Core.Services
                                            Name = product.Name,
                                            Type = product.Type,
                                            Price = product.Price,
-                                           Thumbnail = product.Thumbnail,
-                                           ConfectionerName = $"{product.Confectioner.User.FirstName} {product.Confectioner.User.LastName}"
+                                           Thumbnail = product.Thumbnail
                                        }).ToListAsync();
         }
 
@@ -102,11 +101,30 @@ namespace SweetWorld.Core.Services
             }
         }
 
+        public async Task<IEnumerable<ProductViewModel>> GetProductsFromCategoryAsync(Guid categoryId)
+        {
+            var categoryProducts = await this.dbContext.Categories.Where(category => category.Id == categoryId)
+                                                          .Include(category => category.ProductsCategories)
+                                                          .ThenInclude(product => product.Product).FirstOrDefaultAsync();
+
+            if (categoryProducts?.ProductsCategories != null)
+            {
+                return categoryProducts.ProductsCategories.Select(product => new ProductViewModel()
+                {
+                    Id = product.Product.Id,
+                    Name = product.Product.Name,
+                    Type = product.Product.Type,
+                    Price = product.Product.Price,
+                    Thumbnail = product.Product.Thumbnail
+                });
+            }
+
+            throw new NullReferenceException();
+        }
+
         public async Task<IEnumerable<ProductViewModel>> GetProductsFromTypeAsync(string type)
         {
-            var products = await this.dbContext.Products.Where(product => product.Type == type)
-                                                        .Include(product => product.Confectioner)
-                                                        .ThenInclude(confectioner => confectioner.User).ToListAsync();
+            var products = await this.dbContext.Products.Where(product => product.Type == type).ToListAsync();
 
             if (products != null)
             {
@@ -116,8 +134,7 @@ namespace SweetWorld.Core.Services
                     Name = product.Name,
                     Type = product.Type,
                     Price = product.Price,
-                    Thumbnail = product.Thumbnail,
-                    ConfectionerName = $"{product.Confectioner.User.FirstName} {product.Confectioner.User.LastName}"
+                    Thumbnail = product.Thumbnail
                 });
             }
 

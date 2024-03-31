@@ -7,29 +7,25 @@ using System.Threading.Tasks;
 
 namespace SweetWorld.Core.Models.OrderViewModels
 {
-    public class OrderClientViewModel
+    public class OrderCartViewModel
     {
         [Required]
-        public Guid? OrderId {  get; set; }
+        public Guid? ProductId { get; set; }
 
         [Required]
-        public string? ProductName {  get; set; }
+        public string? ProductName { get; set; }
 
-        public string? ProductThumb {  get; set; }
+        public string? ProductThumb { get; set; }
 
         [Required]
         public string? ProductType { get; set; }
 
         [Required]
-        public DateTime CreationDate { get; set; }
-
-        [Required]
         public int? Amount { get; set; }
 
         [Required]
-        public decimal? TotalPrice { get; set; }
+        public decimal? UnitPrice { get; set; }
 
-        [Required]
-        public string? Status { get; set; }
+        public string? AdditionalInformation { get; set; } = null!;
     }
 }

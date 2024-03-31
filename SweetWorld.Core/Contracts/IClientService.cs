@@ -12,5 +12,7 @@ namespace SweetWorld.Core.Contracts
         public Task<IEnumerable<UserViewModel>> GetAllClientsAsync();
 
         public Task<IEnumerable<OrderClientViewModel>> AllOrdersOfAClientAsync(Guid clientId);
+
+        public ICollection<OrderCartViewModel> Cart { get; set; }
     }
 }

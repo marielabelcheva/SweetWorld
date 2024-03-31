@@ -8,7 +8,7 @@ namespace SweetWorld.Core.Contracts
 
         public Task AddIngredientOfAProductAsync(Guid productId, Guid ingredientId);
 
-        public Task<IEnumerable<IngredientViewModel>> GetAllIngredientsAsync(); // pagination
+        public Task<IEnumerable<IngredientViewModel>> GetAllIngredientsAsync();
 
         public Task<ICollection<string?>> GetAllIngredientsOfAProductAsync(Guid productId);
 

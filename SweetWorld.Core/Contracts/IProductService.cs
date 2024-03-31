@@ -19,5 +19,7 @@ namespace SweetWorld.Core.Contracts
         public Task<ProductDataViewModel> ProductDataAsync(Guid id);
 
         public Task<IEnumerable<ProductViewModel>> GetProductsFromTypeAsync(string type);
+
+        public Task<IEnumerable<ProductViewModel>> GetProductsFromCategoryAsync(Guid categoryId);
     }
 }
