@@ -10,7 +10,7 @@ namespace SweetWorld.Core.Models.ProductViewModels
 {
     public class ProductDataViewModel
     {
-        [Key]
+        [Required]
         public Guid? Id { get; set; }
 
         [Required]
@@ -21,7 +21,6 @@ namespace SweetWorld.Core.Models.ProductViewModels
         [StringLength(60, MinimumLength = 2)]
         public string? Type { get; set; }
 
-        [Required]
         public decimal? Price { get; set; }
 
         [Required]
@@ -30,14 +29,18 @@ namespace SweetWorld.Core.Models.ProductViewModels
         [Required]
         public string? Thumbnail { get; set; }
 
-        public ICollection<KeyValuePair<int, decimal>> PiecesCountAndPrice { get; set; } = new HashSet<KeyValuePair<int, decimal>>();
+        public ICollection<KeyValuePair<int, decimal>>? PiecesCountAndPrice { get; set; } = new HashSet<KeyValuePair<int, decimal>>();
 
-        public ICollection<Image> Images { get; set; } = new HashSet<Image>();
+        public ICollection<Image>? Images { get; set; } = new HashSet<Image>();
 
-        [Required]
         public ICollection<string?> Ingredients { get; set; } = new HashSet<string?>();
 
-        [Required]
         public ICollection<string?> Categories { get; set; } = new HashSet<string?>();
+
+        public int? Amount { get; set; } = 0;
+
+        public string? AdditionalInformation { get; set; } = null!;
+
+        public int PiecesCount { get; set; } = 0;
     }
 }

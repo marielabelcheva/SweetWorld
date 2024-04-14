@@ -21,7 +21,7 @@ namespace SweetWorld.Core.Models.OrderViewModels
         public string? ProductType { get; set; }
 
         [Required]
-        public DateTime CreationDate { get; set; }
+        public DateTime? CreationDate { get; set; }
 
         [Required]
         public int? Amount { get; set; }
@@ -31,5 +31,7 @@ namespace SweetWorld.Core.Models.OrderViewModels
 
         [Required]
         public string? Status { get; set; }
+
+        public string? AdditionalInformation {  get; set; }
     }
 }

@@ -136,11 +136,11 @@ namespace SweetWorld.Core.Services
             {
                 return categoryProducts.ProductsCategories.Select(product => new ProductViewModel()
                 {
-                    Id = product.Product.Id,
-                    Name = product.Product.Name,
-                    Type = product.Product.Type,
-                    Price = product.Product.Price,
-                    Thumbnail = product.Product.Thumbnail
+                    Id = product?.Product?.Id,
+                    Name = product?.Product?.Name,
+                    Type = product?.Product?.Type,
+                    Price = product?.Product?.Price,
+                    Thumbnail = product?.Product?.Thumbnail
                 });
             }
 
@@ -179,12 +179,12 @@ namespace SweetWorld.Core.Services
                     Name = product.Name,
                     Type = product.Type,
                     Price = product.Price,
-                    ConfectionerName = $"{product.Confectioner.User.FirstName} {product.Confectioner.User.LastName}",
-                    Thumbnail = product.Thumbnail,
-                    PiecesCountAndPrice = product.PiecesCountAndPrice,
-                    Images = product.Images,
-                    Ingredients = await this.ingredientService.GetAllIngredientsOfAProductAsync(product.Id),
-                    Categories = await this.categoryService.GetAllCategoriesOfAProductAsync(product.Id)
+                    ConfectionerName = $"{product?.Confectioner?.User?.FirstName} {product?.Confectioner?.User?.LastName}",
+                    Thumbnail = product?.Thumbnail,
+                    PiecesCountAndPrice = product?.PiecesCountAndPrice,
+                    Images = product?.Images,
+                    Ingredients = await this.ingredientService.GetAllIngredientsOfAProductAsync(product?.Id),
+                    Categories = await this.categoryService.GetAllCategoriesOfAProductAsync(product?.Id)
                 };
             }
 

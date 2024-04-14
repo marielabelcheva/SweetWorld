@@ -46,7 +46,8 @@ namespace SweetWorld.Core.Services
                     CreationDate = order.CreationDate,
                     TotalPrice = order.TotalPrice,
                     Amount = order.Amount,
-                    Status = order.Status
+                    Status = order.Status,
+                    AdditionalInformation = order.AdditionalInformation
                 });
             }
             throw new NullReferenceException("No new orders!");

@@ -21,7 +21,5 @@ namespace SweetWorld.Core.Contracts
         public Task<IEnumerable<ProductViewModel>> GetProductsFromCategoryAsync(Guid? categoryId);
 
         public Task<IEnumerable<ProductViewModel>> GetProductsByPriceAsync(decimal price = 0.0m);
-
-        //upload images to product and delete them after deleting product
     }
 }

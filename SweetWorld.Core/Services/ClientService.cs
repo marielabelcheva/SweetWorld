@@ -44,7 +44,9 @@ namespace SweetWorld.Core.Services
                     ProductType = order.Product?.Type,
                     TotalPrice = order.TotalPrice,
                     CreationDate = order.CreationDate,
-                    Status = order.Status
+                    Status = order.Status,
+                    AdditionalInformation = order.AdditionalInformation,
+                    Amount = order.Amount
                 });
             }
 
