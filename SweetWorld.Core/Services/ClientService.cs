@@ -18,8 +18,6 @@ namespace SweetWorld.Core.Services
 
         public ClientService(ApplicationDbContext dbContext) { this.dbContext = dbContext; }
 
-        public ICollection<OrderCartViewModel> Cart { get; set; } = new HashSet<OrderCartViewModel>();
-
         public async Task AddClientAsync(string userId)
         {
             Client client = new Client()

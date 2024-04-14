@@ -9,7 +9,7 @@ namespace SweetWorld.Core.Models.ProductViewModels
 {
     public class ProductViewModel
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
         [Required]
         [StringLength(60, MinimumLength = 3)]

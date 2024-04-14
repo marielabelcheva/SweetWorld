@@ -4,9 +4,9 @@ namespace SweetWorld.Core.Contracts
 {
     public interface IUserService
     {
-        public Task DeleteUserAsync(string id);
+        public Task DeleteUserAsync(string? id);
 
-        public Task<UserViewModel> GetUserByIdAsync(string id);
+        public Task<UserViewModel> GetUserByIdAsync(string? id);
 
         public Task UpdateUserAsync(UserViewModel viewModel);
     }

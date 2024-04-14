@@ -10,7 +10,7 @@ namespace SweetWorld.Core.Models.ProductViewModels
 {
     public class EditProductViewModel
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
         [Required]
         [StringLength(60, MinimumLength = 3)]
@@ -26,6 +26,5 @@ namespace SweetWorld.Core.Models.ProductViewModels
         [Required]
         public string? Thumbnail { get; set; }
 
-        //public ICollection<string> PiecesCountShapeAndPrice { get; set; } = new HashSet<string>();
     }
 }

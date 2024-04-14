@@ -15,24 +15,24 @@ namespace SweetWorld.Core.Services
 
         public OrderService(ApplicationDbContext dbContext) { this.dbContext = dbContext; }
 
-        public async Task AddOrderAsync(AddOrderViewModel viewModel)
+        public async Task AddOrderToTheCartAsync(Guid? productId)
         {
-            throw new NotImplementedException();
+            
         }
 
-        public async Task AddOrderToTheCartAsync(Guid clientId, Guid productId)
+        public async Task CheckoutCartAsync(DeliveryViewModel viewModel)
         {
-            throw new NotImplementedException();
+            
         }
 
-        public async Task DeleteOrderAsync(Guid id)
+        public async Task DeleteOrderAsync(Guid? id)
         {
-            throw new NotImplementedException();
+            
         }
 
-        public async Task DeleteOrderFromTheCartAsync(Guid clientId, Guid productId)
+        public async Task DeleteOrderFromTheCartAsync(Guid? productId)
         {
-            throw new NotImplementedException();
+            
         }
 
         public async Task<OrderClientViewModel> GetAllUnaprovedOrdersAsync()
@@ -40,9 +40,9 @@ namespace SweetWorld.Core.Services
             throw new NotImplementedException();
         }
 
-        public async Task UpdateStatusOfAnOrderAsync(Guid id, string status)
+        public async Task UpdateStatusOfAnOrderAsync(Guid? id, string status)
         {
-            throw new NotImplementedException();
+            
         }
     }
 }

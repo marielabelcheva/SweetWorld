@@ -52,7 +52,7 @@ namespace SweetWorld.Core.Services
             throw new NullReferenceException("No new orders!");
         }
 
-        public async Task<IEnumerable<ProductConfectionerViewModel>> AllProductsOfAConfectionerAsync(Guid confectionerId)
+        public async Task<IEnumerable<ProductConfectionerViewModel>> AllProductsOfAConfectionerAsync(Guid? confectionerId)
         {
             Confectioner? confectionerProducts = await this.dbContext.Confectioners.Where(confectioner => confectioner.Id == confectionerId)
                                                                                    .Include(confectioner => confectioner.Products)

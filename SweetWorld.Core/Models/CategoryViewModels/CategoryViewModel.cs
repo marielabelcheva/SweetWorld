@@ -4,7 +4,7 @@ namespace SweetWorld.Core.Models.CategoryViewModels
 {
     public class CategoryViewModel
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
         [Required]
         [StringLength(50, MinimumLength = 3)]

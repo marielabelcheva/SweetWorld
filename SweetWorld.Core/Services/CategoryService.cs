@@ -31,7 +31,7 @@ namespace SweetWorld.Core.Services
             throw new ArgumentException("Category has already exists!");
         }
 
-        public async Task DeleteCategoryAsync(Guid id)
+        public async Task DeleteCategoryAsync(Guid? id)
         {
             Category? category = await this.dbContext.Categories.FindAsync(id);
 
@@ -46,7 +46,7 @@ namespace SweetWorld.Core.Services
 
         public SelectList GetAllCategoriesAsync() { return new SelectList(this.dbContext.Categories, "Id", "Name"); }
 
-        public async Task AddCategoryOfaProductAsync(Guid productId, Guid categoryId)
+        public async Task AddCategoryOfaProductAsync(Guid? productId, Guid? categoryId)
         {
             Product? product = await this.dbContext.Products.FindAsync(productId);
             Category? category = await this.dbContext.Categories.FindAsync(categoryId);
@@ -66,7 +66,7 @@ namespace SweetWorld.Core.Services
             throw new NullReferenceException();
         }
 
-        public async Task<ICollection<string?>> GetAllCategoriesOfAProductAsync(Guid productId)
+        public async Task<ICollection<string?>> GetAllCategoriesOfAProductAsync(Guid? productId)
         {
             var product = await this.dbContext.Products.Include(product => product.Categories)
                                                         .ThenInclude(category => category.Category)
@@ -77,7 +77,7 @@ namespace SweetWorld.Core.Services
             throw new NullReferenceException();
         }
 
-        public async Task DeleteCategoryOfAProductAsync(Guid productId, Guid categoryId)
+        public async Task DeleteCategoryOfAProductAsync(Guid? productId, Guid? categoryId)
         {
             var productCat = await this.dbContext.ProductsCategories.FirstOrDefaultAsync(productCategory =>
                                                       productCategory.ProductId == productId && productCategory.CategoryId == categoryId);

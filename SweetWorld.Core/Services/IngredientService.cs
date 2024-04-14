@@ -38,7 +38,7 @@ namespace SweetWorld.Core.Services
             }).ToListAsync();
         }
 
-        public async Task DeleteIngredientAsync(Guid id)
+        public async Task DeleteIngredientAsync(Guid? id)
         {
             Ingredient? ingredient = await this.dbContext.Ingredients.FindAsync(id);
 
@@ -51,7 +51,7 @@ namespace SweetWorld.Core.Services
             throw new NullReferenceException();
         }
 
-        public async Task AddIngredientOfAProductAsync(Guid productId, Guid ingredientId)
+        public async Task AddIngredientOfAProductAsync(Guid? productId, Guid? ingredientId)
         {
             Product? product = await this.dbContext.Products.FindAsync(productId);
             Ingredient? ingredient = await this.dbContext.Ingredients.FindAsync(ingredientId);
@@ -71,7 +71,7 @@ namespace SweetWorld.Core.Services
             throw new NullReferenceException();
         }
 
-        public async Task<ICollection<string?>> GetAllIngredientsOfAProductAsync(Guid productId)
+        public async Task<ICollection<string?>> GetAllIngredientsOfAProductAsync(Guid? productId)
         {
             var product = await this.dbContext.Products.Include(product => product.Ingredients)
                                                         .ThenInclude(ingredient => ingredient.Ingredient)
@@ -82,7 +82,7 @@ namespace SweetWorld.Core.Services
             throw new NullReferenceException();
         }
 
-        public async Task DeleteIngredientOfAProductAsync(Guid productId, Guid ingredientId)
+        public async Task DeleteIngredientOfAProductAsync(Guid? productId, Guid? ingredientId)
         {
             var productIngredient = await this.dbContext.ProductsIngredients.FirstOrDefaultAsync(productIngredient =>
                                           productIngredient.ProductId == productId && productIngredient.IngredientId == ingredientId);

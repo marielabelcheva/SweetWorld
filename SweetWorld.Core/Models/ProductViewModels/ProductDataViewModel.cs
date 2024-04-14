@@ -11,7 +11,7 @@ namespace SweetWorld.Core.Models.ProductViewModels
     public class ProductDataViewModel
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
         [Required]
         [StringLength(60, MinimumLength = 3)]
@@ -30,7 +30,7 @@ namespace SweetWorld.Core.Models.ProductViewModels
         [Required]
         public string? Thumbnail { get; set; }
 
-        public ICollection<string> PiecesCountShapeAndPrice { get; set; } = new HashSet<string>();
+        public ICollection<KeyValuePair<int, decimal>> PiecesCountAndPrice { get; set; } = new HashSet<KeyValuePair<int, decimal>>();
 
         public ICollection<Image> Images { get; set; } = new HashSet<Image>();
 

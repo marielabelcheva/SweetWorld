@@ -23,7 +23,7 @@ namespace SweetWorld.Core.Services
             this.dbContext = dbContext;
         }
 
-        public async Task<Image> UploadImageAsync(IFormFile? imageFile, string folderName, Guid productId)
+        public async Task<Image> UploadImageAsync(IFormFile? imageFile, string folderName, Guid? productId)
         {
             using var stream = imageFile?.OpenReadStream();
 

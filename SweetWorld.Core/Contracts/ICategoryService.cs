@@ -8,14 +8,14 @@ namespace SweetWorld.Core.Contracts
     {
         public Task AddCategoryAsync(CategoryViewModel viewModel);
 
-        public Task AddCategoryOfaProductAsync(Guid productId, Guid categoryId);
+        public Task AddCategoryOfaProductAsync(Guid? productId, Guid? categoryId);
 
         public SelectList GetAllCategoriesAsync();
 
-        public Task<ICollection<string?>> GetAllCategoriesOfAProductAsync(Guid productId);
+        public Task<ICollection<string?>> GetAllCategoriesOfAProductAsync(Guid? productId);
 
-        public Task DeleteCategoryAsync(Guid id);
+        public Task DeleteCategoryAsync(Guid? id);
 
-        public Task DeleteCategoryOfAProductAsync(Guid productId, Guid categoryId);
+        public Task DeleteCategoryOfAProductAsync(Guid? productId, Guid? categoryId);
     }
 }

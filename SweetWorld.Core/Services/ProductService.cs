@@ -16,12 +16,15 @@ namespace SweetWorld.Core.Services
         private readonly ApplicationDbContext dbContext;
         private readonly ICategoryService categoryService;
         private readonly IIngredientService ingredientService;
+        private readonly IImageService imageService;
 
-        public ProductService(ApplicationDbContext dbContext, ICategoryService categoryService, IIngredientService ingredientService)
+        public ProductService(ApplicationDbContext dbContext, ICategoryService categoryService,
+                              IIngredientService ingredientService, IImageService imageService)
         {
             this.dbContext = dbContext;
             this.categoryService = categoryService;
             this.ingredientService = ingredientService;
+            this.imageService = imageService;
         }
 
         public async Task AddProductAsync(AddProductViewModel viewModel)
@@ -54,7 +57,7 @@ namespace SweetWorld.Core.Services
                                        }).ToListAsync();
         }
 
-        public async Task DeleteProductAsync(Guid id)
+        public async Task DeleteProductAsync(Guid? id)
         {
             Product? product = await this.dbContext.Products.FirstOrDefaultAsync(product => product.Id == id);
 
@@ -67,7 +70,7 @@ namespace SweetWorld.Core.Services
             throw new NullReferenceException();
         }
 
-        public async Task<EditProductViewModel> EditProductAsync(Guid id)
+        public async Task<EditProductViewModel> EditProductAsync(Guid? id)
         {
             Product? product = await this.dbContext.Products.FindAsync(id);
 
@@ -101,7 +104,29 @@ namespace SweetWorld.Core.Services
             }
         }
 
-        public async Task<IEnumerable<ProductViewModel>> GetProductsFromCategoryAsync(Guid categoryId)
+        public async Task<IEnumerable<ProductViewModel>> GetProductsByPriceAsync(decimal price = 0.0m)
+        {
+            List<Product> products = new List<Product>();
+
+            if (price > 0) { products = await this.dbContext.Products.Where(product => product.Price <= price).ToListAsync(); }
+            else if (price == 0) { products = await this.dbContext.Products.ToListAsync(); }
+
+            if (products != null)
+            {
+                return products.Select(product => new ProductViewModel()
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Type = product.Type,
+                    Price = product.Price,
+                    Thumbnail = product.Thumbnail
+                });
+            }
+
+            throw new NullReferenceException();
+        }
+
+        public async Task<IEnumerable<ProductViewModel>> GetProductsFromCategoryAsync(Guid? categoryId)
         {
             var categoryProducts = await this.dbContext.Categories.Where(category => category.Id == categoryId)
                                                           .Include(category => category.ProductsCategories)
@@ -141,7 +166,7 @@ namespace SweetWorld.Core.Services
             throw new ArgumentException("Invalid type");
         }
 
-        public async Task<ProductDataViewModel> ProductDataAsync(Guid id)
+        public async Task<ProductDataViewModel> ProductDataAsync(Guid? id)
         {
             Product? product = await this.dbContext.Products.Include(product => product.Confectioner)
                                                         .ThenInclude(confectioner => confectioner.User)
@@ -156,7 +181,7 @@ namespace SweetWorld.Core.Services
                     Price = product.Price,
                     ConfectionerName = $"{product.Confectioner.User.FirstName} {product.Confectioner.User.LastName}",
                     Thumbnail = product.Thumbnail,
-                    PiecesCountShapeAndPrice = product.PiecesCountShapeAndPrice,
+                    PiecesCountAndPrice = product.PiecesCountAndPrice,
                     Images = product.Images,
                     Ingredients = await this.ingredientService.GetAllIngredientsOfAProductAsync(product.Id),
                     Categories = await this.categoryService.GetAllCategoriesOfAProductAsync(product.Id)

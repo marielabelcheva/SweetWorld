@@ -5,7 +5,7 @@ namespace SweetWorld.Core.Contracts
 {
     public interface IImageService
     {
-        public Task<Image> UploadImageAsync(IFormFile? imageFile, string folderName, Guid productId);
+        public Task<Image> UploadImageAsync(IFormFile? imageFile, string folderName, Guid? productId);
 
         public Task<string?> UploadImageAsync(IFormFile? imageFile, string folderName, User user); 
     }

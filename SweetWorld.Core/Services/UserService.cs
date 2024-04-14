@@ -21,7 +21,7 @@ namespace SweetWorld.Core.Services
             this.imageService = imageService;
         }
 
-        public async Task DeleteUserAsync(string id)
+        public async Task DeleteUserAsync(string? id)
         {
             User user = await this.userManager.FindByIdAsync(id);
 
@@ -30,7 +30,7 @@ namespace SweetWorld.Core.Services
             throw new NullReferenceException();
         }
 
-        public async Task<UserViewModel> GetUserByIdAsync(string id)
+        public async Task<UserViewModel> GetUserByIdAsync(string? id)
         {
             User user = await this.userManager.FindByIdAsync(id);
 

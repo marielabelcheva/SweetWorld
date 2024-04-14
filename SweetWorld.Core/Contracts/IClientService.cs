@@ -5,14 +5,10 @@ namespace SweetWorld.Core.Contracts
 {
     public interface IClientService
     {
-        //all clients - pagination
-
         public Task AddClientAsync(string userId);
 
         public Task<IEnumerable<UserViewModel>> GetAllClientsAsync();
 
         public Task<IEnumerable<OrderClientViewModel>> AllOrdersOfAClientAsync(Guid clientId);
-
-        public ICollection<OrderCartViewModel> Cart { get; set; }
     }
 }
