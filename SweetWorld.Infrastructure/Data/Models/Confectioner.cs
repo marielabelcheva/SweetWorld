@@ -6,7 +6,7 @@ namespace SweetWorld.Infrastructure.Data.Models
     public class Confectioner
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
         [ForeignKey(nameof(User))]
         public string? UserId { get; set; }

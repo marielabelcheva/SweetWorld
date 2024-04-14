@@ -39,7 +39,7 @@ namespace SweetWorld.Infrastructure.Data.Configuration
             categories.Add(new Category()
             {
                 Id = Guid.Parse("a313707e-4307-4e0e-91b9-5ecd4399931f"),
-                Name = "Turkish pastries"
+                Name = "Muffins"
             });
 
             categories.Add(new Category()
@@ -51,7 +51,7 @@ namespace SweetWorld.Infrastructure.Data.Configuration
             categories.Add(new Category()
             {
                 Id = Guid.Parse("85901598-c0eb-49ac-93d7-8e680de25a68"),
-                Name = "Doughnuts"
+                Name = "Cookies"
             });
 
             return categories;

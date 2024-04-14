@@ -6,7 +6,7 @@ namespace SweetWorld.Infrastructure.Data.Models
     public class Client
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
         [ForeignKey(nameof(User))]
         public string? UserId { get; set; }
@@ -15,6 +15,6 @@ namespace SweetWorld.Infrastructure.Data.Models
 
         public ICollection<Order> Orders { get; set; } = new HashSet<Order>();
 
-        //public ICollection<Order> Cart { get; set; } = new HashSet<Order>();
+        public ICollection<CartOrder> Cart { get; set; } = new HashSet<CartOrder>();
     }
 }

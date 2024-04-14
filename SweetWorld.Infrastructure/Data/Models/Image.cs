@@ -6,7 +6,7 @@ namespace SweetWorld.Infrastructure.Data.Models
     public class Image
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
         [Required]
         public string? URL { get; set; }

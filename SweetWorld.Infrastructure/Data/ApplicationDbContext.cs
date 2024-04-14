@@ -33,15 +33,9 @@ namespace SweetWorld.Infrastructure.Data
 
             builder.ApplyConfiguration(new ProductConfiguration());
 
-            builder.Entity<ProductsIngredients>().ToTable("products_ingredients");
-            builder.Entity<ProductsIngredients>().HasKey(product => new { product.IngredientId, product.ProductId });
-            builder.Entity<ProductsIngredients>().Property(product => product.ProductId).HasColumnName("product_id");
-            builder.Entity<ProductsIngredients>().Property(product => product.IngredientId).HasColumnName("ingredient_id");
+            builder.ApplyConfiguration(new ProductsIngredientsConfiguration());
 
-            builder.Entity<ProductsCategories>().ToTable("products_categories");
-            builder.Entity<ProductsCategories>().HasKey(product => new { product.CategoryId, product.ProductId });
-            builder.Entity<ProductsCategories>().Property(product => product.ProductId).HasColumnName("product_id");
-            builder.Entity<ProductsCategories>().Property(product => product.CategoryId).HasColumnName("category_id");
+            builder.ApplyConfiguration(new ProductsCategoriesConfiguration());
 
             builder.ApplyConfiguration(new OrderConfiguration());
 

@@ -5,7 +5,7 @@ namespace SweetWorld.Infrastructure.Data.Models
     public class Ingredient
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
         [Required]
         [StringLength(50, MinimumLength = 2)]
