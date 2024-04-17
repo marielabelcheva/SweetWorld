@@ -12,15 +12,15 @@ namespace SweetWorld.Core.Services
 
         public IngredientService(ApplicationDbContext dbContext) { this.dbContext = dbContext; }
 
-        public async Task AddIngredientAsync(IngredientViewModel viewModel)
+        public async Task AddIngredientAsync(string name)
         {
             Ingredient ingredient = new Ingredient()
             {
                 Id = Guid.NewGuid(),
-                Name = viewModel.Name
+                Name = name
             };
 
-            if (!await this.dbContext.Ingredients.ContainsAsync(ingredient))
+            if (!await this.dbContext.Ingredients.Select(ing => ing.Name).ContainsAsync(name))
             {
                 await this.dbContext.Ingredients.AddAsync(ingredient);
                 await this.dbContext.SaveChangesAsync();
@@ -29,13 +29,12 @@ namespace SweetWorld.Core.Services
             throw new ArgumentException("Ingredient has alredy exists!");
         }
 
-        public async Task<IEnumerable<IngredientViewModel>> GetAllIngredientsAsync()
+        public async Task<IEnumerable<string?>> GetAllIngredientsAsync()
         {
-            return await this.dbContext.Ingredients.Select(ingredient => new IngredientViewModel
-            {
-                Id = ingredient.Id,
-                Name = ingredient.Name
-            }).ToListAsync();
+            if (this.dbContext.Ingredients.Count() != 0) 
+            { return await this.dbContext.Ingredients.Select(ingredient => ingredient.Name).ToListAsync(); }
+
+            throw new NullReferenceException("No ingredients in the database!");
         }
 
         public async Task DeleteIngredientAsync(Guid? id)
@@ -51,10 +50,10 @@ namespace SweetWorld.Core.Services
             throw new NullReferenceException();
         }
 
-        public async Task AddIngredientOfAProductAsync(Guid? productId, Guid? ingredientId)
+        public async Task AddIngredientOfAProductAsync(Guid? productId, string name)
         {
             Product? product = await this.dbContext.Products.FindAsync(productId);
-            Ingredient? ingredient = await this.dbContext.Ingredients.FindAsync(ingredientId);
+            Ingredient? ingredient = await this.dbContext.Ingredients.FirstOrDefaultAsync(ing => ing.Name == name);
 
             if (product != null && ingredient != null)
             {
@@ -71,27 +70,13 @@ namespace SweetWorld.Core.Services
             throw new NullReferenceException();
         }
 
-        public async Task<ICollection<string?>> GetAllIngredientsOfAProductAsync(Guid? productId)
+        public async Task<IEnumerable<string?>> GetAllIngredientsOfAProductAsync(Guid? productId)
         {
             var product = await this.dbContext.Products.Include(product => product.Ingredients)
                                                         .ThenInclude(ingredient => ingredient.Ingredient)
                                                         .FirstOrDefaultAsync(product => product.Id == productId);
 
             if (product?.Ingredients != null) { return product.Ingredients.Select(ingredient => ingredient?.Ingredient?.Name).ToHashSet(); }
-
-            throw new NullReferenceException();
-        }
-
-        public async Task DeleteIngredientOfAProductAsync(Guid? productId, Guid? ingredientId)
-        {
-            var productIngredient = await this.dbContext.ProductsIngredients.FirstOrDefaultAsync(productIngredient =>
-                                          productIngredient.ProductId == productId && productIngredient.IngredientId == ingredientId);
-
-            if (productIngredient != null)
-            {
-                this.dbContext.ProductsIngredients.Remove(productIngredient);
-                await this.dbContext.SaveChangesAsync();
-            }
 
             throw new NullReferenceException();
         }

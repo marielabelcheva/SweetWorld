@@ -21,7 +21,7 @@ namespace SweetWorld.Core.Models.ProductViewModels
         [StringLength(60, MinimumLength = 2)]
         public string? Type { get; set; }
 
-        public decimal? Price { get; set; }
+        public decimal? Price { get; set; } = 0;
 
         [Required]
         public string? ConfectionerName {  get; set; }
@@ -33,14 +33,16 @@ namespace SweetWorld.Core.Models.ProductViewModels
 
         public ICollection<Image>? Images { get; set; } = new HashSet<Image>();
 
-        public ICollection<string?> Ingredients { get; set; } = new HashSet<string?>();
+        public IEnumerable<string?> Ingredients { get; set; } = new HashSet<string?>();
 
-        public ICollection<string?> Categories { get; set; } = new HashSet<string?>();
+        public IEnumerable<string?> Categories { get; set; } = new HashSet<string?>();
 
         public int? Amount { get; set; } = 0;
 
         public string? AdditionalInformation { get; set; } = null!;
 
         public int PiecesCount { get; set; } = 0;
+
+        public IEnumerable<ProductViewModel> Related { get; set; } = new HashSet<ProductViewModel>();
     }
 }

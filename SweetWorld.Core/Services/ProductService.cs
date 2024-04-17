@@ -27,7 +27,7 @@ namespace SweetWorld.Core.Services
             this.imageService = imageService;
         }
 
-        public async Task AddProductAsync(AddProductViewModel viewModel)
+        public async Task AddProductAsync(AddProductViewModel viewModel, Guid? confectionerId)
         {
             Product product = new Product()
             {
@@ -36,7 +36,7 @@ namespace SweetWorld.Core.Services
                 Type = viewModel.Type,
                 Price = viewModel.Price,
                 Thumbnail = viewModel.Thumbnail,
-                Confectioner = viewModel.Confectioner
+                ConfectionerId = confectionerId
             };
 
             await this.dbContext.Products.AddAsync(product);
@@ -45,14 +45,12 @@ namespace SweetWorld.Core.Services
 
         public async Task<IEnumerable<ProductViewModel>> AllProductsAsync()
         {
-            return await this.dbContext.Products.Include(product => product.Confectioner)
-                                       .ThenInclude(confectioner => confectioner.User)
+            return await this.dbContext.Products
                                        .Select(product => new ProductViewModel()
                                        {
                                            Id = product.Id,
                                            Name = product.Name,
                                            Type = product.Type,
-                                           Price = product.Price,
                                            Thumbnail = product.Thumbnail
                                        }).ToListAsync();
         }
@@ -104,23 +102,12 @@ namespace SweetWorld.Core.Services
             }
         }
 
-        public async Task<IEnumerable<ProductViewModel>> GetProductsByPriceAsync(decimal price = 0.0m)
+        public IEnumerable<ProductViewModel> GetProductsByPriceAsync(IEnumerable<ProductViewModel> products, decimal price = 0)
         {
-            List<Product> products = new List<Product>();
-
-            if (price > 0) { products = await this.dbContext.Products.Where(product => product.Price <= price).ToListAsync(); }
-            else if (price == 0) { products = await this.dbContext.Products.ToListAsync(); }
-
             if (products != null)
             {
-                return products.Select(product => new ProductViewModel()
-                {
-                    Id = product.Id,
-                    Name = product.Name,
-                    Type = product.Type,
-                    Price = product.Price,
-                    Thumbnail = product.Thumbnail
-                });
+                if (price > 0) { return products.Where(product => product.Price <= price); }
+                else if (price == 0) { return products; }
             }
 
             throw new NullReferenceException();
@@ -147,23 +134,14 @@ namespace SweetWorld.Core.Services
             throw new NullReferenceException();
         }
 
-        public async Task<IEnumerable<ProductViewModel>> GetProductsFromTypeAsync(string type)
+        public IEnumerable<ProductViewModel> GetProductsFromTypeAsync(IEnumerable<ProductViewModel> products, string type)
         {
-            var products = await this.dbContext.Products.Where(product => product.Type == type).ToListAsync();
-
             if (products != null)
             {
-                return products.Select(product => new ProductViewModel()
-                {
-                    Id = product.Id,
-                    Name = product.Name,
-                    Type = product.Type,
-                    Price = product.Price,
-                    Thumbnail = product.Thumbnail
-                });
+                return products.Where(product => product.Type == type);
             }
 
-            throw new ArgumentException("Invalid type");
+            throw new NullReferenceException();
         }
 
         public async Task<ProductDataViewModel> ProductDataAsync(Guid? id)
@@ -173,6 +151,8 @@ namespace SweetWorld.Core.Services
                                                         .FirstOrDefaultAsync(product => product.Id == id);
             if (product != null)
             {
+                var related = await this.AllProductsAsync();
+
                 return new ProductDataViewModel()
                 {
                     Id = product.Id,
@@ -184,8 +164,9 @@ namespace SweetWorld.Core.Services
                     PiecesCountAndPrice = product?.PiecesCountAndPrice,
                     Images = product?.Images,
                     Ingredients = await this.ingredientService.GetAllIngredientsOfAProductAsync(product?.Id),
-                    Categories = await this.categoryService.GetAllCategoriesOfAProductAsync(product?.Id)
-                };
+                    Categories = await this.categoryService.GetAllCategoriesOfAProductAsync(product?.Id),
+                    Related = related.Where(p => p.Type == product.Type && p.Id != product.Id).Take(4)
+            };
             }
 
             throw new NullReferenceException();

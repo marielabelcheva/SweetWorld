@@ -19,8 +19,7 @@ namespace SweetWorld.Core.Models.ProductViewModels
         [StringLength(60, MinimumLength = 2)]
         public string? Type { get; set; }
 
-        [Required]
-        public decimal? Price { get; set; }
+        public decimal? Price { get; set; } = 0;
 
         [Required]
         public string? Thumbnail { get; set; }

@@ -1,4 +1,5 @@
 ﻿using SweetWorld.Core.Models.ProductViewModels;
+using SweetWorld.Infrastructure.Data.Models;
 
 namespace SweetWorld.Core.Contracts
 {
@@ -6,7 +7,7 @@ namespace SweetWorld.Core.Contracts
     {
         public Task<IEnumerable<ProductViewModel>> AllProductsAsync();
 
-        public Task AddProductAsync(AddProductViewModel viewModel);
+        public Task AddProductAsync(AddProductViewModel viewModel, Guid? confectionerId);
 
         public Task<EditProductViewModel> EditProductAsync(Guid? id);
 
@@ -16,10 +17,14 @@ namespace SweetWorld.Core.Contracts
 
         public Task<ProductDataViewModel> ProductDataAsync(Guid? id);
 
-        public Task<IEnumerable<ProductViewModel>> GetProductsFromTypeAsync(string type);
+        public IEnumerable<ProductViewModel> GetProductsFromTypeAsync(IEnumerable<ProductViewModel> products, string type);
 
         public Task<IEnumerable<ProductViewModel>> GetProductsFromCategoryAsync(Guid? categoryId);
 
-        public Task<IEnumerable<ProductViewModel>> GetProductsByPriceAsync(decimal price = 0.0m);
+        public IEnumerable<ProductViewModel> GetProductsByPriceAsync(IEnumerable<ProductViewModel> products, decimal price = 0.0m);
+
+        //add piecesCountandPriceOfAProduct
+
+        
     }
 }

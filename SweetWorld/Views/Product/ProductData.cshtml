@@ -1,0 +1,126 @@
+﻿@model ProductDataViewModel
+
+<div class="ps-page ps-page--product-detail">
+    <div class="ps-product--detail ps-product--background bg--cover" data-background="img/hero/shop-hero.png">
+        <div class="container">
+            <div class="ps-product__header">
+                <div class="ps-product__thumbnail" data-vertical="true">
+                    <figure>
+                        <div class="ps-wrapper">
+                            <div class="ps-product__gallery" data-arrow="true">
+                                <div class="item">
+                                    <a href="@this.Model.Thumbnail"><img src="@this.Model.Thumbnail" alt=""></a>
+                                </div>
+                                @foreach(var image in this.Model.Images)
+                                {
+                                    <div class="item">
+                                        <a href="@image.URL"><img src="@image.URL" alt=""></a>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </figure>
+                    <div class="ps-product__variants" data-item="5" data-md="4" data-sm="4" data-arrow="false">
+                        <div class="item">
+                            <a href="@this.Model.Thumbnail"><img src="@this.Model.Thumbnail" alt=""></a>
+                        </div>
+                        @foreach (var image in this.Model.Images)
+                        {
+                            <div class="item">
+                                <a href="@image.URL"><img src="@image.URL" alt=""></a>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="ps-product__info">
+                    <h1>@this.Model.Name</h1>
+                    <br />
+                    <div class="ps-product__specification">
+                        <p><strong>Type:</strong> @this.Model.Type</p>
+                        <p><strong>Confectioner:</strong> @this.Model.ConfectionerName</p>
+                        @if (this.Model.Price > 0)
+                        {
+                            <p><strong> Price: @this.Model.Price</strong></p>
+                        }
+                        <p><input class="form-control" type="text" placeholder="Your wishes" asp-for="AdditionalInformation"/></p>
+                    </div>
+                    <div class="ps-product__shopping">
+                        @if (this.Model.PiecesCountAndPrice != null)
+                        {
+                            <select class="ps-select" title="Choose Size" asp-for="Price">
+                                @foreach(var item in this.Model.PiecesCountAndPrice)
+                                {
+                                    <option value="@item.Value">@item.Key</option>
+                                }
+                            </select>
+                        }
+                        <div class="form-group--number">
+                            <input class="form-control" type="number" placeholder="1" asp-for="Amount">
+                        </div>
+                        <a class="ps-btn" asp-controller="Order" asp-action="AddToCart">Order now</a>
+                        <div class="ps-product__actions">
+                            <a href="#"><i class="icon-heart"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ps-product--detail ps-product--background">
+        <div class="container">
+            <div class="ps-product__content ps-tab-root">
+                <ul class="ps-tab-list">
+                    <li class="active"><a>Description</a></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+                <div class="ps-tabs">
+                    <div class="ps-tab active">
+                        <div class="ps-document">
+                            <h5>INGREDIENTS:</h5>
+                            <p>@string.Join("; ",this.Model.Ingredients)</p>
+                            <h5>CATEGORIES:</h5>
+                            <p>@string.Join("\n",this.Model.Categories)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ps-section ps-related-product">
+        <div class="container">
+            <div class="ps-section__header">
+                <p>You may also like</p>
+                <h3>Related Products</h3><i class="chikery-tt3"></i>
+            </div>
+            <div class="ps-section__content">
+                <div class="row">
+                    @foreach (var product in this.Model.Related)
+                    {
+                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-6 ">
+                            <div class="ps-product">
+                                <div class="ps-product__thumbnail">
+                                    <img src="@product.Thumbnail" alt="" style="width:210px; height:180px;" />
+                                    <a class="ps-product__overlay" asp-action="ProductData" asp-controller="Product" asp-route-id="@product.Id"></a>
+                                </div>
+                                <div class="ps-product__content">
+                                    <div class="ps-product__desc">
+                                        <a class="ps-product__title" asp-action="ProductData" asp-controller="Product" asp-route-id="@product.Id">@product.Name</a>
+                                        <p>Type: @product.Type</p>
+                                    </div>
+                                    <div class="ps-product__shopping">
+                                        <a class="ps-btn ps-product__add-to-cart" asp-controller="Order" asp-action="AddToCart">Add to cart</a>
+                                        <div class="ps-product__actions">
+                                            <a href="#"><i class="fa fa-heart-o"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="ps-section__footer"><a class="ps-btn ps-btn--outline" asp-action="Index" asp-controller="Product"> All products</a></div>
+        </div>
+    </div>
+</div>

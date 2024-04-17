@@ -66,7 +66,7 @@ namespace SweetWorld.Core.Services
             throw new NullReferenceException();
         }
 
-        public async Task<ICollection<string?>> GetAllCategoriesOfAProductAsync(Guid? productId)
+        public async Task<IEnumerable<string?>> GetAllCategoriesOfAProductAsync(Guid? productId)
         {
             var product = await this.dbContext.Products.Include(product => product.Categories)
                                                         .ThenInclude(category => category.Category)
@@ -89,6 +89,12 @@ namespace SweetWorld.Core.Services
             }
 
             throw new NullReferenceException();
+        }
+
+        public bool ExistAsync(string name)
+        {
+            if (this.dbContext.Categories.Where(category => category.Name.ToLower() == name.ToLower()).Count() == 0) { return true; }
+            return false;
         }
     }
 }

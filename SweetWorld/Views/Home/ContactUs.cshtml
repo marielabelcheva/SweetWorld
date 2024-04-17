@@ -1,0 +1,78 @@
+﻿<body>
+    <div class="ps-page--contact">
+        <div class="ps-hero bg--cover" data-background="img/hero/shop-hero.png">
+            <div class="ps-hero__container">
+                <div class="ps-breadcrumb">
+                    <ul class="breadcrumb">
+                        <li><a asp-action="Index" asp-controller="Home">Home</a></li>
+                        <li>Contact Us</li>
+                    </ul>
+                </div>
+                <h1 class="ps-hero__heading">Contact Us</h1>
+            </div>
+        </div>
+        <div class="ps-section ps-contact">
+            <div class="container">
+                <div class="ps-section__header">
+                    <p>Contact Info</p>
+                    <h3>Oreshaka 2, Kazanlak [6100], <br> Bulgaria.</h3>
+                </div>
+                <div class="ps-section__content">
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-8 col-md-8 col-sm-12 col-12 ">
+                            <figure>
+                                <figcaption>Call us</figcaption>
+                                <p>  +359 895 714 926</p>
+                            </figure>
+                        </div>
+                        <div class="col-xl-4 col-lg-8 col-md-8 col-sm-12 col-12 ">
+                            <figure>
+                                <figcaption>Email</figcaption>
+                                <p><a><span class="__cf_email__">sweetworld@gmail.com</span></a></p>
+                            </figure>
+                        </div>
+                        <div class="col-xl-4 col-lg-8 col-md-8 col-sm-12 col-12 ">
+                            <figure>
+                                <figcaption>Confectionary Location</figcaption>
+                                <p>Oreshaka 2, Kazanlak [6100], Bulgaria</p>
+                            </figure>
+                        </div>
+                    </div>
+                </div>
+                <form class="ps-form--contact" asp-action="ContactUs" method="post">
+                    <div class="ps-form__header">
+                        <p>Contact</p>
+                        <h3>Get In touch with us</h3>
+                    </div>
+                    <div class="ps-form__content">
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 ">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" placeholder="Your Name">
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 ">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" placeholder="Your Email">
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 ">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" placeholder="Phone">
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 ">
+                                <div class="form-group">
+                                    <textarea class="form-control" placeholder="Your message here" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ps-form__submit">
+                            <button class="ps-btn">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>

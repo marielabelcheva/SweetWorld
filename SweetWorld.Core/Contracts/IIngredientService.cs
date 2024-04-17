@@ -4,16 +4,14 @@ namespace SweetWorld.Core.Contracts
 {
     public interface IIngredientService
     {
-        public Task AddIngredientAsync(IngredientViewModel viewModel);
+        public Task AddIngredientAsync(string name);
 
-        public Task AddIngredientOfAProductAsync(Guid? productId, Guid? ingredientId);
+        public Task AddIngredientOfAProductAsync(Guid? productId, string name);
 
-        public Task<IEnumerable<IngredientViewModel>> GetAllIngredientsAsync();
+        public Task<IEnumerable<string?>> GetAllIngredientsAsync();
 
-        public Task<ICollection<string?>> GetAllIngredientsOfAProductAsync(Guid? productId);
+        public Task<IEnumerable<string?>> GetAllIngredientsOfAProductAsync(Guid? productId);
 
         public Task DeleteIngredientAsync(Guid? id);
-
-        public Task DeleteIngredientOfAProductAsync(Guid? productId, Guid? ingredientId);
     }
 }
