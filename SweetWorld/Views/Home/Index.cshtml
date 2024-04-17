@@ -1,8 +1,147 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿<body>
+    <div id="homepage-6">
+        <div class="ps-home-banner bg--cover" data-background="img/bg/home-2/home-banner.jpg">
+            <div class="ps-carousel--nav owl-slider" data-owl-auto="true" data-owl-loop="true" data-owl-speed="5000" data-owl-gap="0" data-owl-nav="true" data-owl-dots="false" data-owl-item="1" data-owl-item-xs="1" data-owl-item-sm="1" data-owl-item-md="1" data-owl-item-lg="1" data-owl-duration="1000" data-owl-mousedrag="off" data-owl-nav-left="&lt;i class='fa fa-arrow-left'&gt;&lt;/i&gt;" data-owl-nav-right="&lt;i class='fa fa-arrow-right'&gt;&lt;/i&gt;">
+                <div class="ps-product--banner">
+                    <div class="ps-product__thumbnail">
+                        <a asp-controller="Product" asp-action="ProductData"><img src="~/img/banner/home-2/1.png" alt=""></a>
+                    </div>
+                    <div class="ps-product__content">
+                        <h4>FEATURED PRODUCT</h4>
+                        <a class="ps-product__title" asp-controller="Product" asp-action="ProductData"> Chikery Chocolate <br> Black flower</a>
+                        <p>Bakery - Sweet - Bio</p><a class="ps-btn" asp-controller="Product" asp-action="ProductData"> Order Now</a>
+                    </div>
+                </div>
+                <div class="ps-product--banner">
+                    <div class="ps-product__thumbnail">
+                        <a asp-controller="Product" asp-action="ProductData"><img src="~/img/banner/home-6/1.png" alt=""></a>
+                    </div>
+                    <div class="ps-product__content">
+                        <h4>FEATURED PRODUCT</h4>
+                        <a class="ps-product__title" asp-controller="Product" asp-action="ProductData"> Chikery Chocolate <br> Black flower</a>
+                        <p>Bakery - Sweet - Bio</p><a class="ps-btn" asp-controller="Product" asp-action="ProductData"> Order Now</a>
+                    </div>
+                </div>
+                <div class="ps-product--banner">
+                    <div class="ps-product__thumbnail">
+                        <a asp-controller="Product" asp-action="ProductData"><img src="~/img/banner/home-2/2.png" alt=""></a>
+                    </div>
+                    <div class="ps-product__content">
+                        <h4>FEATURED PRODUCT</h4>
+                        <a class="ps-product__title" asp-controller="Product" asp-action="ProductData"> Chikery Chocolate <br> Black flower</a>
+                        <p>Bakery - Sweet - Bio</p><a class="ps-btn" asp-controller="Product" asp-action="ProductData"> Order Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ps-section ps-home-product">
+            <div class="container-fluid">
+                <div class="ps-section__header">
+                    <i class="chikery-tt4"></i>
+                    <p>CAKE Every day</p>
+                    <h3>New products</h3>
+                </div>
+                <div class="ps-section__content">
+                    <div class="row">
+                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-6 ">
+                            <div class="ps-product">
+                                <div class="ps-product__thumbnail">
+                                    <img src="~/img/product/8.png" alt="" />
+                                    <a class="ps-product__overlay" asp-controller="Product" asp-action="ProductData"></a>
+                                </div>
+                                <div class="ps-product__content">
+                                    <div class="ps-product__desc">
+                                        <a class="ps-product__title" asp-controller="Product" asp-action="ProductData">Red sugar flower</a>
+                                        <p><span>type</span></p>
+                                        <span class="ps-product__price">$12.00</span>
+                                    </div>
+                                    <div class="ps-product__shopping">
+                                        <a class="ps-btn ps-product__add-to-cart" asp-controller="Order" asp-action="AddToCart">Add to cart</a>
+                                        @*<div class="ps-product__actions">
+                                        <a href="#"><i class="fa fa-heart-o"></i></a>
+                                        </div>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-6 ">
+                            <div class="ps-product">
+                                <div class="ps-product__thumbnail">
+                                    <img src="~/img/product/21.png" alt="" />
+                                    <a class="ps-product__overlay" asp-controller="Product" asp-action="ProductData"></a>
+                                </div>
+                                <div class="ps-product__content">
+                                    <div class="ps-product__desc">
+                                        <a class="ps-product__title" asp-controller="Product" asp-action="ProductData">Red sugar flower</a>
+                                        <p><span>type</span></p>
+                                        <span class="ps-product__price">$12.00</span>
+                                    </div>
+                                    <div class="ps-product__shopping">
+                                        <a class="ps-btn ps-product__add-to-cart" asp-controller="Order" asp-action="AddToCart">Add to cart</a>
+                                        @*<div class="ps-product__actions">
+                                        <a href="#"><i class="fa fa-heart-o"></i></a>
+                                        </div>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-6 ">
+                            <div class="ps-product">
+                                <div class="ps-product__thumbnail">
+                                    <img src="~/img/product/17.png" alt="" />
+                                    <a class="ps-product__overlay" asp-controller="Product" asp-action="ProductData"></a>
+                                </div>
+                                <div class="ps-product__content">
+                                    <div class="ps-product__desc">
+                                        <a class="ps-product__title" asp-controller="Product" asp-action="ProductData">Red sugar flower</a>
+                                        <p><span>type</span></p>
+                                        <span class="ps-product__price">$12.00</span>
+                                    </div>
+                                    <div class="ps-product__shopping">
+                                        <a class="ps-btn ps-product__add-to-cart" asp-controller="Order" asp-action="AddToCart">Add to cart</a>
+                                        @*<div class="ps-product__actions">
+                                        <a href="#"><i class="fa fa-heart-o"></i></a>
+                                        </div>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-6 ">
+                            <div class="ps-product">
+                                <div class="ps-product__thumbnail">
+                                    <img src="~/img/product/6.png" alt="" />
+                                    <a class="ps-product__overlay" asp-controller="Product" asp-action="ProductData"></a>
+                                </div>
+                                <div class="ps-product__content">
+                                    <div class="ps-product__desc">
+                                        <a class="ps-product__title" asp-controller="Product" asp-action="ProductData">Red sugar flower</a>
+                                        <p><span>type</span></p>
+                                        <span class="ps-product__price">$12.00</span>
+                                    </div>
+                                    <div class="ps-product__shopping">
+                                        <a class="ps-btn ps-product__add-to-cart" asp-controller="Order" asp-action="AddToCart">Add to cart</a>
+                                        @*<div class="ps-product__actions">
+                                        <a href="#"><i class="fa fa-heart-o"></i></a>
+                                        </div>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ps-section__footer">
+                    <a class="ps-btn ps-btn--outline" asp-controller="Product" asp-action="Index"> All products</a>
+                </div>
+            </div>
+        </div>
+        <div class="ps-home-instagram">
+            <div class="owl-slider" data-owl-auto="true" data-owl-loop="true" data-owl-speed="5000" data-owl-gap="0" data-owl-nav="false" data-owl-dots="false" data-owl-item="4" data-owl-item-xs="2" data-owl-item-sm="2" data-owl-item-md="3" data-owl-item-lg="4" data-owl-duration="1000" data-owl-mousedrag="on">
+                <a class="ps-block--instagram"><img src="~/img/homepage/home-6/instagram/1.jpg" alt=""><i>Sweet World</i></a>
+                <a class="ps-block--instagram"><img src="~/img/homepage/home-6/instagram/2.jpg" alt=""><i>Sweet World</i></a>
+                <a class="ps-block--instagram"><img src="~/img/homepage/home-6/instagram/3.jpg" alt=""><i>Sweet World</i></a>
+                <a class="ps-block--instagram"><img src="~/img/homepage/home-6/instagram/4.jpg" alt=""><i>Sweet World</i></a>
+            </div>
+        </div>
+    </div>
+</body>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>

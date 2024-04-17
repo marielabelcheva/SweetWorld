@@ -1,47 +1,243 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>@ViewData["Title"] - SweetWorld</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css?family=Cormorant+Garamond:300i,400,400i,500,500i,600,600i,700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/plugins/bootstrap4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/plugins/owl-carousel/assets/owl.carousel.css">
+    <link rel="stylesheet" href="~/plugins/slick/slick/slick.css">
+    <link rel="stylesheet" href="~/plugins/lightGallery-master/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="~/plugins/jquery-bar-rating/dist/themes/fontawesome-stars.css">
+    <link rel="stylesheet" href="~/plugins/jquery-ui/jquery-ui.min.css">
+    <link rel="stylesheet" href="~/plugins/select2/dist/css/select2.min.css">
+    <link rel="stylesheet" href="~/plugins/chikery-icon/style.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true">
     <link rel="stylesheet" href="~/SweetWorld.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SweetWorld</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                    </ul>
+    <header class="header header--default" data-sticky="true">
+        <div class="header__left"></div>
+        <div class="header__center">
+            <nav class="header__navigation left">
+                <ul class="menu">
+                    <li>
+                        <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                    </li>
+                    <li>
+                        <a asp-area="" asp-controller="Product" asp-action="Index">Products</a>
+                        <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                    </li>
+                </ul>
+            </nav>
+            <div class="header__logo">
+                <a class="ps-logo" asp-area="" asp-controller="Home" asp-action="Index">
+                <img src="~/img/logo.png" alt=""></a>
+            </div>
+            <nav class="header__navigation right">
+                <ul class="menu">
+                    <li>
+                        <a asp-area="" asp-controller="Home" asp-action="AboutUs">About us</a>
+                        <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                    </li>
+                    <li>
+                        <a asp-area="" asp-controller="Home" asp-action="ContactUs">Contact</a>
+                        <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="header__right">
+            <div class="header__actions">
+                @*if (User.IsInRole("client"))*@
+                <a class="ps-search-btn" href="#"><i class="fa fa-search"></i></a>
+                @*<a href="#"><i class="fa fa-heart-o"></i></a>*@
+                <div class="ps-cart--mini">
+                    <a class="ps-cart__toggle" href="#">
+                        <i class="fa fa-shopping-basket"></i>
+                        <span><i>2</i></span> @*count of elements in client's cart*@
+                    </a>
+                    <div class="ps-cart__content">
+                        <div class="ps-cart__items">
+                            @*foreach CartOrder in cart*@
+                            <div class="ps-product--mini-cart">
+                                <div class="ps-product__thumbnail">
+                                    <a asp-area="" asp-controller="Product" asp-action="ProductData">
+                                        <img src="~/img/product/12.png" alt="">
+                                    </a>
+                                </div>
+                                <div class="ps-product__content">
+                                    <span class="ps-btn--close"></span>
+                                    <a class="ps-product__title" asp-area="" asp-controller="Product" asp-action="ProductData">Cake</a>
+                                    <p><strong>Quantity: 1</strong></p><small>$12.00</small>
+                                </div>
+                            </div>
+                            @*---*@
+                        </div>
+                        <div class="ps-cart__footer">
+                            <h3>Sub Total:<strong>$48.00</strong></h3>
+                            <figure>
+                                <a class="ps-btn" asp-area="" asp-controller="Order" asp-action="ViewCart">View Cart</a>
+                                <a class="ps-btn ps-btn--dark" asp-area="" asp-controller="Order" asp-action="CheckoutCart">Checkout</a>
+                            </figure>
+                        </div>
+                    </div>
+                </div>
+                <i><partial name="_LoginPartial" /></i>
+            </div>
+        </div>
+    </header>
+
+    <header class="header header--mobile" data-sticky="false">
+        <div class="header__content">
+            <div class="header__left"><a class="ps-toggle--sidebar" href="#navigation-mobile"><i class="fa fa-bars"></i></a></div>
+            <div class="header__center">
+                <a class="ps-logo" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/img/logo.png" alt="">
+                </a>
+             </div>
+            <div class="header__right">
+                <div class="header__actions">
+                    @*<a href="#"><i class="fa fa-heart-o"></i></a>*@
                     <partial name="_LoginPartial" />
                 </div>
             </div>
-        </nav>
+        </div>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+
+    <div class="ps-panel--sidebar" id="cart-mobile">
+        <div class="ps-panel__header"><h3>Shopping Cart</h3></div>
+        <div class="navigation__content">
+            <div class="ps-cart--mobile">
+                <div class="ps-cart__content">
+                    <div class="ps-cart__items">
+                        @*foreach CartOrder in cart*@
+                        <div class="ps-product--mini-cart">
+                            <div class="ps-product__thumbnail">
+                                <a asp-area="" asp-controller="Product" asp-action="ProductData">
+                                    <img src="~/img/product/12.png" alt="">
+                                </a>
+                            </div>
+                            <div class="ps-product__content">
+                                <span class="ps-btn--close"></span>
+                                <a class="ps-product__title" asp-area="" asp-controller="Product" asp-action="ProductData">Cake</a>
+                                <p><strong>Quantity: 1</strong></p><small>$12.00</small>
+                            </div>
+                        </div>
+                        @*---*@
+                    </div>
+                    <div class="ps-cart__footer">
+                        <h3>Sub Total:<strong>$48.00</strong></h3>
+                        <figure>
+                            <a class="ps-btn" asp-area="" asp-controller="Order" asp-action="ViewCart">View Cart</a>
+                            <a class="ps-btn ps-btn--dark" asp-area="" asp-controller="Order" asp-action="CheckoutCart">Checkout</a>
+                        </figure>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ps-panel--sidebar" id="navigation-mobile">
+        <div class="ps-panel__header"><h3>Menu</h3></div>
+        <div class="ps-panel__content">
+            <ul class="menu--mobile">
+                <li>
+                    <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                    <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="Product" asp-action="Index">Products</a>
+                    <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="Home" asp-action="AboutUs">About us</a>
+                    <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="Home" asp-action="ContactUs">Contact</a>
+                    <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="navigation--list">
+        <div class="navigation__content">
+            <a class="navigation__item active" asp-area="" asp-controller="Home" asp-action="Index"><i class="fa fa-home"></i></a>
+            <a class="navigation__item ps-toggle--sidebar" href="#navigation-mobile"><i class="fa fa-bars"></i></a>
+            <a class="navigation__item ps-toggle--sidebar" href="#search-sidebar"><i class="fa fa-search"></i></a>
+            <a class="navigation__item ps-toggle--sidebar" href="#cart-mobile"><i class="fa fa-shopping-basket"></i></a>
+            <a class="navigation__item ps-toggle--sidebar"></a>
+        </div>
+    </div>
+
+    <div>
+        <main role="main">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - SweetWorld - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="ps-footer ps-footer--light">
+        <div class="ps-footer__content">
+            <div class="container">
+                <div class="ps-footer__left">
+                </div>
+                <div class="ps-footer__center">
+                    <div class="ps-site-info">
+                        <a class="ps-logo" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/img/logo.png" alt=""></a>
+                        <p>Oreshaka 2, Kazanlak [6100], Bulgaria</p>
+                        <p>Email:<a> <span class="__cf_email__">meribelcheva@gmail.com</span></a></p>
+                        <p>Phone:<span class="ps-hightlight"> +359 895 767 256</span></p>
+                    </div>
+                </div>
+                <div class="ps-footer__right">
+                </div>
+            </div>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <div id="back2top"><i class="pe-7s-angle-up"></i></div>
+    <div class="ps-site-overlay"></div>
+    <div id="loader-wrapper">
+        <div class="loader-section section-left "></div>
+        <div class="loader-section section-right"></div>
+    </div>
+    <div class="ps-search" id="site-search">
+        <a class="ps-btn--close" href="#"></a>
+        <div class="ps-search__content">
+            <form class="ps-form--primary-search" asp-action="" asp-controller="" method="post">
+                <input class="form-control" type="text" placeholder="Search for...">
+                <button><i class="fa fa-search"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <script src="~/plugins/jquery-1.12.4.min.js"></script>
+    <script src="~/plugins/owl-carousel/owl.carousel.min.js"></script>
+    <script src="~/plugins/bootstrap4/js/bootstrap.min.js"></script>
+    <script src="~/plugins/imagesloaded.pkgd.js"></script>
+    <script src="~/plugins/masonry.pkgd.min.js"></script>
+    <script src="~/plugins/isotope.pkgd.min.js"></script>
+    <script src="~/plugins/jquery.matchHeight-min.js"></script>
+    <script src="~/plugins/slick/slick/slick.min.js"></script>
+    <script src="~/plugins/jquery-bar-rating/dist/jquery.barrating.min.js"></script>
+    <script src="~/plugins/slick-animation.min.js"></script>
+    <script src="~/plugins/lightGallery-master/dist/js/lightgallery-all.min.js"></script>
+    <script src="~/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <script src="~/plugins/sticky-sidebar/dist/sticky-sidebar.min.js"></script>
+    <script src="~/plugins/jquery.slimscroll.min.js"></script>
+    <script src="~/plugins/select2/dist/js/select2.full.min.js"></script>
+    <script src="~/plugins/gmap3.min.js"></script>
+    <script src="~/js/main.js" asp-append-version="true" defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDxflHHc5FlDVI-J71pO7hM1QJNW1dRp4U&amp;region=GB"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
