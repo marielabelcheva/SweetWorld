@@ -16,5 +16,7 @@ namespace SweetWorld.Infrastructure.Data.Models
         public ICollection<Order> Orders { get; set; } = new HashSet<Order>();
 
         public ICollection<CartOrder> Cart { get; set; } = new HashSet<CartOrder>();
+
+        public ICollection<FavouriteProduct> FavouriteProducts { get; set; } = new HashSet<FavouriteProduct>();
     }
 }

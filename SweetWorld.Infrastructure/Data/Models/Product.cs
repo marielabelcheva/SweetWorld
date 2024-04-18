@@ -35,5 +35,7 @@ namespace SweetWorld.Infrastructure.Data.Models
         public ICollection<Image> Images { get; set; } = new HashSet<Image>();
 
         public ICollection<Order> Orders { get; set; } = new HashSet<Order>();
+
+        public ICollection<FavouriteProduct> FavoriteProducts { get; set;} = new HashSet<FavouriteProduct>();
     }
 }

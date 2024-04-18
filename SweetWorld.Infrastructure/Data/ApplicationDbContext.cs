@@ -17,6 +17,8 @@ namespace SweetWorld.Infrastructure.Data
         public DbSet<ProductsIngredients> ProductsIngredients { get; set; }
         public DbSet<ProductsCategories> ProductsCategories { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<CartOrder> Carts {  get; set; }
+        public DbSet<FavouriteProduct> Favourites { get; set; }
         public DbSet<Image> Images { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -38,6 +40,10 @@ namespace SweetWorld.Infrastructure.Data
             builder.ApplyConfiguration(new ProductsCategoriesConfiguration());
 
             builder.ApplyConfiguration(new OrderConfiguration());
+
+            builder.ApplyConfiguration(new CartOrderConfiguration());
+
+            builder.ApplyConfiguration(new FavouriteProductConfiguration());
 
             builder.ApplyConfiguration(new ImageConfiguration());
 

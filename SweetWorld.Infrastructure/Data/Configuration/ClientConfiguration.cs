@@ -16,7 +16,6 @@ namespace SweetWorld.Infrastructure.Data.Configuration
             builder.ToTable("clients");
             builder.Property(client => client.Id).HasColumnName("id");
             builder.Property(client => client.UserId).HasColumnName("user_id");
-            builder.Ignore(client => client.Cart);
 
             builder.HasData(CreateClients());
         }
