@@ -1,5 +1,6 @@
 ﻿using SweetWorld.Core.Models.OrderViewModels;
 using SweetWorld.Core.Models.UserViewModels;
+using SweetWorld.Infrastructure.Data.Models;
 
 namespace SweetWorld.Core.Contracts
 {
@@ -10,5 +11,7 @@ namespace SweetWorld.Core.Contracts
         public Task<IEnumerable<UserViewModel>> GetAllClientsAsync();
 
         public Task<IEnumerable<OrderClientViewModel>> AllOrdersOfAClientAsync(Guid clientId);
+
+        public Task<Client?> GetClientByUserIdAsync(string userId);
     }
 }

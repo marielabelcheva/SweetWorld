@@ -1,0 +1,55 @@
+﻿@model IEnumerable<ProductViewModel>
+
+<body>
+    <div class="ps-page">
+        <div class="ps-hero bg--cover" data-background="img/hero/shop-hero.png">
+            <div class="ps-hero__container">
+                <div class="ps-breadcrumb">
+                    <ul class="breadcrumb">
+                        <li><a asp-action="Index" asp-controller="Home">Home</a></li>
+                        <li>Whishlist</li>
+                    </ul>
+                </div>
+                <h1 class="ps-hero__heading">Whishlist</h1>
+            </div>
+        </div>
+        <div class="container">
+            <div class="ps-whishlist">
+                <div class="table-responsive">
+                    <table class="table ps-table ps-table--whishlist">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Product Type</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach(var product in this.Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="ps-product--cart">
+                                            <div class="ps-product__thumbnail">
+                                                <img src="@product.Thumbnail" alt="">
+                                                <a class="ps-product__overlay" asp-action="ProductData" asp-controller="Product" asp-route-id="@product.Id"></a>
+                                            </div>
+                                            <div class="ps-product__content">
+                                                <a class="ps-product__title" asp-action="ProductData" asp-controller="Product" asp-route-id="@product.Id">@product.Name</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="ps-instock">@product.Type</span></td>
+                                    <td class="ps-table__actions">
+                                        <a class="ps-btn" asp-action="AddToCart" asp-controller="Order" asp-route-id="@product.Id"> Add to cart</a>
+                                        <a class="ps-btn--close" asp-action="DeleteFromFavourites" asp-controller="Product" asp-route-id="@product.Id"></a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

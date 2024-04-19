@@ -90,11 +90,5 @@ namespace SweetWorld.Core.Services
 
             throw new NullReferenceException();
         }
-
-        public bool ExistAsync(string name)
-        {
-            if (this.dbContext.Categories.Where(category => category.Name.ToLower() == name.ToLower()).Count() == 0) { return true; }
-            return false;
-        }
     }
 }

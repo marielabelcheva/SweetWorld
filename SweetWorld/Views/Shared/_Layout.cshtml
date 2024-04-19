@@ -22,7 +22,9 @@
 </head>
 <body>
     <header class="header header--default" data-sticky="true">
-        <div class="header__left"></div>
+        <div class="header__left">
+            <partial name="_LoginPartial" />
+        </div>
         <div class="header__center">
             <nav class="header__navigation left">
                 <ul class="menu">
@@ -57,7 +59,7 @@
             <div class="header__actions">
                 @*if (User.IsInRole("client"))*@
                 <a class="ps-search-btn" href="#"><i class="fa fa-search"></i></a>
-                @*<a href="#"><i class="fa fa-heart-o"></i></a>*@
+                <a asp-action="Wishlist" asp-controller="Product"><i class="fa fa-heart-o"></i></a>
                 <div class="ps-cart--mini">
                     <a class="ps-cart__toggle" href="#">
                         <i class="fa fa-shopping-basket"></i>
@@ -89,9 +91,10 @@
                         </div>
                     </div>
                 </div>
-                <i><partial name="_LoginPartial" /></i>
+                
             </div>
         </div>
+
     </header>
 
     <header class="header header--mobile" data-sticky="false">

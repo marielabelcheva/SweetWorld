@@ -1,5 +1,6 @@
 ﻿@model ProductDataViewModel
 
+
 <div class="ps-page ps-page--product-detail">
     <div class="ps-product--detail ps-product--background bg--cover" data-background="img/hero/shop-hero.png">
         <div class="container">
@@ -45,22 +46,24 @@
                         <p><input class="form-control" type="text" placeholder="Your wishes" asp-for="AdditionalInformation"/></p>
                     </div>
                     <div class="ps-product__shopping">
-                        @if (this.Model.PiecesCountAndPrice != null)
-                        {
-                            <select class="ps-select" title="Choose Size" asp-for="Price">
-                                @foreach(var item in this.Model.PiecesCountAndPrice)
-                                {
-                                    <option value="@item.Value">@item.Key</option>
-                                }
-                            </select>
-                        }
+                        <select class="ps-select form-control" title="Choose Size" asp-for="Price" asp-items="@ViewBag.Pieces"></select>
                         <div class="form-group--number">
                             <input class="form-control" type="number" placeholder="1" asp-for="Amount">
                         </div>
                         <a class="ps-btn" asp-controller="Order" asp-action="AddToCart">Order now</a>
                         <div class="ps-product__actions">
-                            <a href="#"><i class="icon-heart"></i></a>
+                            <a asp-action="FavouriteProduct" asp-controller="Product" asp-route-id="@this.Model.Id">
+                                <i class="fa fa-heart-o"></i>
+                            </a>
                         </div>
+                    </div>
+                    <div class="ps-product__shopping">
+                        <a class="ps-btn" asp-controller="Product" asp-action="AddIngredient" asp-route-id="@this.Model.Id">Add ingredient</a>
+                        <a class="ps-btn" asp-controller="Product" asp-action="Edit" asp-route-id="@this.Model.Id">Edit data</a>
+                    </div>
+                    <div class="ps-product__shopping">
+                        <a class="ps-btn" asp-controller="Product" asp-action="AddCategory" asp-route-id="@this.Model.Id">Add Category</a>
+                        <a class="ps-btn" asp-controller="Product" asp-action="UploadImage" asp-route-id="@this.Model.Id">Upload image</a>
                     </div>
                 </div>
             </div>

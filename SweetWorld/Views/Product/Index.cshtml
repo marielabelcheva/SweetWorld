@@ -53,15 +53,6 @@
                 </aside>
             </div>
             <div class="ps-shopping__right">
-                <div class="ps-shopping__top">
-                    <figure>
-                        <select class="ps-select" title="Default Sorting">
-                            <option value="1">Default Sorting 1</option>
-                            <option value="2">Default Sorting 2</option>
-                            <option value="3">Default Sorting 3</option>
-                        </select>
-                    </figure>
-                </div>
                 <div class="ps-product-box">
                     <div class="row">
                         @foreach(var product in this.Model)
@@ -83,7 +74,9 @@
                                                 Add to cart
                                             </a>
                                         <div class="ps-product__actions">
-                                            <a href="#"><i class="fa fa-heart-o"></i></a>
+                                            <a asp-action="FavouriteProduct" asp-controller="Product" asp-route-id="@product.Id">
+                                                    <i class="fa fa-heart-o"></i>
+                                            </a>
                                         </div>
                                         </div>
                                     </div>

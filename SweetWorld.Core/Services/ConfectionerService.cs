@@ -85,5 +85,10 @@ namespace SweetWorld.Core.Services
                 ProfilePictureURL = confectioner.User.ProfilePictureUrl
             }).ToListAsync();
         }
+
+        public async Task<Confectioner?> GetConfectionerByUserIdAsync(string userId)
+        {
+            return await this.dbContext.Confectioners.FirstOrDefaultAsync(confectioner => confectioner.UserId == userId);
+        }
     }
 }

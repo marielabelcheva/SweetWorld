@@ -29,5 +29,9 @@ namespace SweetWorld.Core.Models.AccountViewModels
         [Compare(nameof(Password))]
         [DataType(DataType.Password)]
         public string? ConfirmPassword { get; set; }
+
+        [Required]
+        [StringLength(5, MinimumLength = 4)]
+        public string? IsConfectioner { get; set; }
     }
 }

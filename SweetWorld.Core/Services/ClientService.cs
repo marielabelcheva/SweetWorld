@@ -65,5 +65,10 @@ namespace SweetWorld.Core.Services
                 ProfilePictureURL = client.User.ProfilePictureUrl
             }).ToListAsync();
         }
+
+        public async Task<Client?> GetClientByUserIdAsync(string userId)
+        {
+            return await this.dbContext.Clients.FirstOrDefaultAsync(client => client.UserId == userId);
+        }
     }
 }

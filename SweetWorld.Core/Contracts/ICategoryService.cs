@@ -17,7 +17,5 @@ namespace SweetWorld.Core.Contracts
         public Task DeleteCategoryAsync(Guid? id);
 
         public Task DeleteCategoryOfAProductAsync(Guid? productId, Guid? categoryId);
-
-        public bool ExistAsync(string name);
     }
 }

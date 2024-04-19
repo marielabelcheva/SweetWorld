@@ -1,14 +1,17 @@
 ﻿using SweetWorld.Core.Models.IngredientViewModels;
+using System.Web.Mvc;
 
 namespace SweetWorld.Core.Contracts
 {
     public interface IIngredientService
     {
-        public Task AddIngredientAsync(string name);
+        public Task AddIngredientAsync(IngredientViewModel viewModel);
 
-        public Task AddIngredientOfAProductAsync(Guid? productId, string name);
+        public Task AddIngredientOfAProductAsync(Guid? productId, Guid? ingredientId);
 
-        public Task<IEnumerable<string?>> GetAllIngredientsAsync();
+        public Task<IEnumerable<IngredientViewModel>> GetAllIngredientsAsync();
+
+        public SelectList GetIngredientsAsync();
 
         public Task<IEnumerable<string?>> GetAllIngredientsOfAProductAsync(Guid? productId);
 

@@ -1,5 +1,4 @@
-﻿@model IEnumerable<SweetWorld.Core.Models.ProductViewModels.ProductViewModel>?
-
+﻿
 <body>
     <div id="homepage-6">
         <div class="ps-home-banner bg--cover" data-background="img/bg/home-2/home-banner.jpg">
@@ -49,43 +48,42 @@
                 <div class="ps-section__image bg--cover" data-background="img/bg/home-1/home-best-services-2.jpg"></div>
             </div>
         </div>
-        <div class="ps-section ps-home-product">
-            <div class="container-fluid">
+        <div class="ps-section ps-home-about">
+            <div class="container">
                 <div class="ps-section__header">
-                    <i class="chikery-tt4"></i>
-                    <p>CAKE Every day</p>
-                    <h3>Our products</h3>
+                    <i class="chikery-tt5"></i>
+                    <p><h3>WELCOME TO SWEET WORLD</h3></p>
                 </div>
-                <div class="ps-section__content">
+                <div class="ps-section__top">
                     <div class="row">
-                        @foreach(var product in this.Model)
-                        {
-                            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-6 ">
-                                <div class="ps-product">
-                                    <div class="ps-product__thumbnail">
-                                        <img src=@product.Thumbnail alt="" style="width:210px; height:180px;" />
-                                        <a class="ps-product__overlay" asp-controller="Product" asp-action="ProductData" asp-route-id="@product.Id"></a>
-                                    </div>
-                                    <div class="ps-product__content">
-                                        <div class="ps-product__desc">
-                                            <a class="ps-product__title" asp-controller="Product" asp-action="ProductData" asp-route-id="@product.Id">@product.Name</a>
-                                            <p><span>Type: @product.Type</span></p>
-                                            <span class="ps-product__price">BGN @product.Price</span>
-                                        </div>
-                                        <div class="ps-product__shopping">
-                                            <a class="ps-btn ps-product__add-to-cart" asp-controller="Order" asp-action="AddToCart">Add to cart</a>
-                                            @*<div class="ps-product__actions">
-                                        <a href="#"><i class="fa fa-heart-o"></i></a>
-                                        </div>*@
-                                        </div>
-                                    </div>
+                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 ">
+                            <div class="ps-block--award">
+                                <div class="ps-block__header">
+                                    <img src="~/img/awards/1.png" alt="">
+                                    <h4>BAKERY OF THE YEAR</h4>
+                                    <p>1990 - 2010</p>
                                 </div>
                             </div>
-                        }
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 ">
+                            <div class="ps-block--award">
+                                <div class="ps-block__header">
+                                    <img src="~/img/awards/2.png" alt="">
+                                    <h4>CUPCAKES SHOP OF THE YEAR</h4>
+                                    <p>2012 - 2018</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 ">
+                            <div class="ps-block--award">
+                                <div class="ps-block__header">
+                                    <img src="~/img/awards/3.png" alt="">
+                                    <h4>AWARDS BAKERY ACADEMY</h4>
+                                    <p>2020 - 2023</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="ps-section__footer">
-                    <a class="ps-btn ps-btn--outline" asp-controller="Product" asp-action="Index"> All products</a>
                 </div>
             </div>
         </div>

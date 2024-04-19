@@ -41,8 +41,6 @@ namespace SweetWorld.Core.Models.ProductViewModels
 
         public string? AdditionalInformation { get; set; } = null!;
 
-        public int PiecesCount { get; set; } = 0;
-
         public IEnumerable<ProductViewModel> Related { get; set; } = new HashSet<ProductViewModel>();
     }
 }

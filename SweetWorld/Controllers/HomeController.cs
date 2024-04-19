@@ -8,19 +8,16 @@ namespace SweetWorld.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IProductService productService;
 
-        public HomeController(ILogger<HomeController> logger, IProductService productService)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            this.productService = productService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var model = await this.productService.AllProductsAsync();
-            return View(model.Where(product => product.Price > 0).Take(5));
+            return View();
         }
 
         public IActionResult AboutUs()

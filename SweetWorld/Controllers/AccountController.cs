@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SweetWorld.Infrastructure.Data.Models;
 using SweetWorld.Core.Models.AccountViewModels;
+using SweetWorld.Core.Contracts;
 
 namespace SweetWorld.Controllers
 {
@@ -11,11 +12,16 @@ namespace SweetWorld.Controllers
     {
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
+        private readonly IConfectionerService confectionerService;
+        private readonly IClientService clientService;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, 
+                                 IClientService clientService, IConfectionerService confectionerService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+            this.confectionerService = confectionerService;
+            this.clientService = clientService;
         }
 
         [HttpGet]
@@ -42,6 +48,17 @@ namespace SweetWorld.Controllers
             };
 
             var result = await this.userManager.CreateAsync(user, model.Password);
+
+            if (model.IsConfectioner.ToLower() == "true")
+            {
+                await this.confectionerService.AddConfectionerAsync(user.Id);
+                await userManager.AddToRoleAsync(user, "Confectioner");
+            }
+            else
+            {
+                await this.clientService.AddClientAsync(user.Id);
+                await userManager.AddToRoleAsync(user, "Client");
+            }
 
             if (result.Succeeded) { return RedirectToAction("Login", "Account"); }
 

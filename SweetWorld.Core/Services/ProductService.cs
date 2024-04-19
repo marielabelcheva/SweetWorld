@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace SweetWorld.Core.Services
 {
@@ -25,6 +26,20 @@ namespace SweetWorld.Core.Services
             this.categoryService = categoryService;
             this.ingredientService = ingredientService;
             this.imageService = imageService;
+        }
+
+        public async Task AddPiecesCountAndPrice(PiecesCountAndPriceViewModel viewModel, Guid? productId)
+        {
+            var product = await this.dbContext.Products.FindAsync(productId);
+
+            if (product != null)
+            {
+                product.PiecesCountAndPrice.Add(new KeyValuePair<int, decimal>(viewModel.PiecesCount, viewModel.Price));
+
+                await this.dbContext.SaveChangesAsync();
+            }
+
+            throw new ArgumentNullException();
         }
 
         public async Task AddProductAsync(AddProductViewModel viewModel, Guid? confectionerId)
@@ -102,6 +117,27 @@ namespace SweetWorld.Core.Services
             }
         }
 
+        public async Task LikeProduct(Guid? id, Guid? clientId)
+        {
+            var product = await this.dbContext.Products.FindAsync(id) ;
+
+            var client = await this.dbContext.Clients.FindAsync(clientId);
+
+            if (product != null && client != null)
+            {
+                FavouriteProduct favourite = new FavouriteProduct()
+                {
+                    Product = product,
+                    Client = client
+                };
+
+                await this.dbContext.Favourites.AddAsync(favourite);
+                await this.dbContext.SaveChangesAsync();
+            }
+
+            throw new NullReferenceException();
+        }
+
         public IEnumerable<ProductViewModel> GetProductsByPriceAsync(IEnumerable<ProductViewModel> products, decimal price = 0)
         {
             if (products != null)
@@ -165,8 +201,55 @@ namespace SweetWorld.Core.Services
                     Images = product?.Images,
                     Ingredients = await this.ingredientService.GetAllIngredientsOfAProductAsync(product?.Id),
                     Categories = await this.categoryService.GetAllCategoriesOfAProductAsync(product?.Id),
-                    Related = related.Where(p => p.Type == product.Type && p.Id != product.Id).Take(4)
-            };
+                    Related = related.Where(p => p.Type == product.Type && p.Id != product.Id).Take(4),
+                    //IsCake = isCake
+                };
+            }
+
+            throw new NullReferenceException();
+        }
+
+        public async Task<IEnumerable<ProductViewModel>> WishList(Guid? clientId)
+        {
+            Client? products = await this.dbContext.Clients.Where(c => c.Id == clientId).Include(c => c.FavouriteProducts)
+                                                          .ThenInclude(fp => fp.Product).FirstOrDefaultAsync();
+
+
+
+            if (products.FavouriteProducts != null)
+            {
+                return products.FavouriteProducts.Select(product => new ProductViewModel()
+                {
+                    Id = product?.Product?.Id,
+                    Name = product?.Product?.Name,
+                    Type = product?.Product?.Type,
+                    Thumbnail = product?.Product?.Thumbnail
+                });
+            }
+
+            throw new NullReferenceException();
+        }
+
+        public async Task DeleteFromWishList(Guid? productId, Guid? clientId)
+        {
+            var product = await this.dbContext.Favourites.FirstOrDefaultAsync(p => p.ProductId == productId && p.ClientId == clientId);
+
+            if (product != null)
+            {
+                this.dbContext.Favourites.Remove(product);
+                await this.dbContext.SaveChangesAsync();
+            }
+
+            throw new ArgumentNullException();
+        }
+
+        public async Task<SelectList> GetPiecesCountOfAProductAsync(Guid? productId)
+        {
+            var product = await this.dbContext.Products.FindAsync(productId);
+
+            if (product != null)
+            {
+                return new SelectList(product.PiecesCountAndPrice, "Key", "Value");
             }
 
             throw new NullReferenceException();

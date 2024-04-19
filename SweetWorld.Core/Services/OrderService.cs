@@ -20,13 +20,6 @@ namespace SweetWorld.Core.Services
 
         public async Task AddOrderToTheCartAsync(ProductDataViewModel viewModel, Client client)
         {
-            /*decimal price = 0.0m;
-
-            if (viewModel.PiecesCount != 0)
-            {
-                await this.dbContext.Products.FirstOrDefaultAsync(product => product.Id == viewModel.Id)
-            }*/
-
             client.Cart.Add(new CartOrder()
             {
                 ProductId = viewModel.Id,
@@ -35,11 +28,10 @@ namespace SweetWorld.Core.Services
                 ProductType = viewModel.Type,
                 Amount = viewModel.Amount,
                 UnitPrice = viewModel.Price,
-                AdditionalInformation = viewModel.AdditionalInformation,
-                PiecesCount = viewModel.PiecesCount
+                AdditionalInformation = viewModel.AdditionalInformation
             });
 
-            //await this.dbContext.SaveChangesAsync();
+            await this.dbContext.SaveChangesAsync();
         }
 
         public async Task CheckoutCartAsync(DeliveryViewModel viewModel, Client client)
@@ -87,7 +79,7 @@ namespace SweetWorld.Core.Services
         {
             client.Cart.Remove(order);
 
-            //await this.dbContext.SaveChangesAsync();
+            await this.dbContext.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<OrderClientViewModel>> GetAllUnaprovedOrdersAsync()
