@@ -53,6 +53,8 @@
                 </aside>
             </div>
             <div class="ps-shopping__right">
+                <a asp-action="Add" asp-controller="Product" class="ps-btn">Add new product</a>
+                <br />
                 <div class="ps-product-box">
                     <div class="row">
                         @foreach(var product in this.Model)

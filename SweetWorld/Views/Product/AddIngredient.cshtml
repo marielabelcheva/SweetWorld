@@ -1,0 +1,34 @@
+﻿@model ProductAddIngredientOrCategoryViewModel
+
+@{
+    ViewBag.Title = "Add Ingredient";
+}
+
+<div class="ps-page-contact">
+    <div class="ps-hero bg--cover" data-background="img/hero/shop-hero.png">
+        <div class="ps-hero__container">
+            <div class="ps-breadcrumb">
+                <ul class="breadcrumb">
+                    <li><a asp-action="Index" asp-controller="Home">Home</a></li>
+                    <li>Add Ingredient</li>
+                </ul>
+            </div>
+            <h1 class="ps-hero__heading">@ViewData["Title"]</h1>
+        </div>
+    </div>
+    <div class="ps-section ps-contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+                    <form method="post" enctype="multipart/form-data">
+                        <div class="m-3">
+                            <label for="" class="form-label">Choose an ingredient</label>
+                            <select asp-for="ItemId" asp-items="@ViewBag.IngredientsId" class="form-control"></select>
+                        </div>
+                        <button class="ps-btn" type="submit"> Submit </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

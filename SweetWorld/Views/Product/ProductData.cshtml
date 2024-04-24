@@ -58,12 +58,12 @@
                         </div>
                     </div>
                     <div class="ps-product__shopping">
-                        <a class="ps-btn" asp-controller="Product" asp-action="AddIngredient" asp-route-id="@this.Model.Id">Add ingredient</a>
+                        <a class="ps-btn" asp-controller="Product" asp-action="AddIngredient" asp-route-productId="@this.Model.Id">Add ingredient</a>
                         <a class="ps-btn" asp-controller="Product" asp-action="Edit" asp-route-id="@this.Model.Id">Edit data</a>
                     </div>
                     <div class="ps-product__shopping">
                         <a class="ps-btn" asp-controller="Product" asp-action="AddCategory" asp-route-id="@this.Model.Id">Add Category</a>
-                        <a class="ps-btn" asp-controller="Product" asp-action="UploadImage" asp-route-id="@this.Model.Id">Upload image</a>
+                        <a class="ps-btn" asp-controller="Product" asp-action="UploadImage" asp-route-productId="@this.Model.Id">Upload image</a>
                     </div>
                 </div>
             </div>

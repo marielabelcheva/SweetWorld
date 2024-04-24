@@ -32,8 +32,6 @@ namespace SweetWorld.Core.Services
             var uploadParams = new ImageUploadParams() { File = new FileDescription(image.Id.ToString(), stream), Folder = folderName };
             var uploadResult = await cloudinary.UploadAsync(uploadParams);
 
-            if (uploadResult != null) { throw new InvalidOperationException(uploadResult.Error.Message); }
-
             image.URL = uploadResult?.SecureUrl.ToString();
             image.ProductId = productId;
 
@@ -49,8 +47,6 @@ namespace SweetWorld.Core.Services
 
             var uploadParams = new ImageUploadParams() { File = new FileDescription(user.Id, stream), Folder = folderName };
             var uploadResult = await cloudinary.UploadAsync(uploadParams);
-
-            if (uploadResult != null) { throw new InvalidOperationException(uploadResult.Error.Message); }
 
             user.ProfilePictureUrl = uploadResult?.SecureUrl.ToString();
 

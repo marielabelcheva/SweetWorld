@@ -93,7 +93,6 @@ namespace SweetWorld.Core.Services
                 {
                     Id = product.Id,
                     Name = product.Name,
-                    Type = product.Type,
                     Price = product.Price,
                     Thumbnail = product.Thumbnail
                 };
@@ -109,12 +108,13 @@ namespace SweetWorld.Core.Services
             if (product != null ) 
             {
                 product.Name = viewModel.Name;
-                product.Type = viewModel.Type;
                 product.Price = viewModel.Price;
                 product.Thumbnail = viewModel.Thumbnail;
 
                 await this.dbContext.SaveChangesAsync();
             }
+
+            throw new NullReferenceException();
         }
 
         public async Task LikeProduct(Guid? id, Guid? clientId)

@@ -1,5 +1,5 @@
 ﻿using SweetWorld.Core.Models.IngredientViewModels;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace SweetWorld.Core.Contracts
 {
