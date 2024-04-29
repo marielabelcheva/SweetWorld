@@ -58,11 +58,13 @@
                         </div>
                     </div>
                     <div class="ps-product__shopping">
-                        <a class="ps-btn" asp-controller="Product" asp-action="AddIngredient" asp-route-productId="@this.Model.Id">Add ingredient</a>
+                        <a class="ps-btn" asp-controller="Ingredient" asp-action="AddIngredientOfAProduct" asp-route-productId="@this.Model.Id">Add ingredient</a>
+                        <p></p>
                         <a class="ps-btn" asp-controller="Product" asp-action="Edit" asp-route-id="@this.Model.Id">Edit data</a>
                     </div>
                     <div class="ps-product__shopping">
-                        <a class="ps-btn" asp-controller="Product" asp-action="AddCategory" asp-route-id="@this.Model.Id">Add Category</a>
+                        <a class="ps-btn" asp-controller="Category" asp-action="AddCategoryOfAProduct" asp-route-productId="@this.Model.Id">Add Category</a>
+                        <p></p>
                         <a class="ps-btn" asp-controller="Product" asp-action="UploadImage" asp-route-productId="@this.Model.Id">Upload image</a>
                     </div>
                 </div>
@@ -83,7 +85,10 @@
                             <h5>INGREDIENTS:</h5>
                             <p>@string.Join("; ",this.Model.Ingredients)</p>
                             <h5>CATEGORIES:</h5>
-                            <p>@string.Join("\n",this.Model.Categories)</p>
+                            @foreach(var category in this.Model.Categories)
+                            {
+                                <p>@category.Name</p>
+                            }
                         </div>
                     </div>
                 </div>

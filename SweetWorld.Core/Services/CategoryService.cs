@@ -5,6 +5,7 @@ using SweetWorld.Infrastructure.Data.Models;
 using SweetWorld.Core.Models.CategoryViewModels;
 using System.Security.Policy;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using SweetWorld.Core.Models.IngredientViewModels;
 
 namespace SweetWorld.Core.Services
 {
@@ -66,17 +67,6 @@ namespace SweetWorld.Core.Services
             throw new NullReferenceException();
         }
 
-        public async Task<IEnumerable<string?>> GetAllCategoriesOfAProductAsync(Guid? productId)
-        {
-            var product = await this.dbContext.Products.Include(product => product.Categories)
-                                                        .ThenInclude(category => category.Category)
-                                                        .FirstOrDefaultAsync(product => product.Id == productId);
-
-            if (product?.Categories != null) { return product.Categories.Select(category => category?.Category?.Name).ToHashSet(); }
-
-            throw new NullReferenceException();
-        }
-
         public async Task DeleteCategoryOfAProductAsync(Guid? productId, Guid? categoryId)
         {
             var productCat = await this.dbContext.ProductsCategories.FirstOrDefaultAsync(productCategory =>
@@ -86,6 +76,38 @@ namespace SweetWorld.Core.Services
             {
                 this.dbContext.ProductsCategories.Remove(productCat);
                 await this.dbContext.SaveChangesAsync();
+            }
+
+            throw new NullReferenceException();
+        }
+
+        public async Task<IEnumerable<CategoryViewModel>> AllCategoriesAsync()
+        {
+            if (this.dbContext.Categories.Count() != 0)
+            {
+                return await this.dbContext.Categories.Select(category => new CategoryViewModel()
+                {
+                    Id = category.Id,
+                    Name = category.Name
+                }).ToListAsync();
+            }
+
+            throw new NullReferenceException("No categories in the database!");
+        }
+
+        public async Task<IEnumerable<CategoryViewModel>> GetAllCategoriesOfAProductAsync(Guid? productId)
+        {
+            var product = await this.dbContext.Products.Include(product => product.Categories)
+                                                       .ThenInclude(category => category.Category)
+                                                        .FirstOrDefaultAsync(product => product.Id == productId);
+
+            if (product?.Categories != null)
+            {
+                return product.Categories.Select(category => new CategoryViewModel()
+                {
+                    Id = product.Id,
+                    Name = product.Name
+                });
             }
 
             throw new NullReferenceException();

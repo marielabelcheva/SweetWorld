@@ -1,4 +1,5 @@
-﻿using SweetWorld.Infrastructure.Data.Models;
+﻿using SweetWorld.Core.Models.CategoryViewModels;
+using SweetWorld.Infrastructure.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -35,7 +36,7 @@ namespace SweetWorld.Core.Models.ProductViewModels
 
         public IEnumerable<string?> Ingredients { get; set; } = new HashSet<string?>();
 
-        public IEnumerable<string?> Categories { get; set; } = new HashSet<string?>();
+        public IEnumerable<CategoryViewModel?> Categories { get; set; } = new HashSet<CategoryViewModel>();
 
         public int? Amount { get; set; } = 0;
 

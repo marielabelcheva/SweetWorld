@@ -1,0 +1,44 @@
+﻿@model IEnumerable<CategoryViewModel>
+
+<body>
+    <div class="ps-page">
+        <div class="ps-hero bg--cover" data-background="img/hero/shop-hero.png">
+            <div class="ps-hero__container">
+                <div class="ps-breadcrumb">
+                    <ul class="breadcrumb">
+                        <li><a asp-action="Index" asp-controller="Home">Home</a></li>
+                        <li>Categories</li>
+                    </ul>
+                </div>
+                <h1 class="ps-hero__heading">Categories</h1>
+            </div>
+        </div>
+        <div class="container">
+            <div class="ps-whishlist">
+                <div class="table-responsive">
+                    <table class="table ps-table ps-table--whishlist">
+                        <thead>
+                            <tr>
+                                <th>Category Name</th>
+                                <th class="ps-table__actions">
+                                    <a asp-action="Add" asp-controller="Category" class="ps-btn">Add new category</a>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var category in this.Model)
+                            {
+                                <tr>
+                                    <td><span class="ps-instock">@category.Name</span></td>
+                                    <td class="ps-table__actions">
+                                        <a class="ps-btn--close" asp-action="Delete" asp-controller="Category" asp-route-id="@category.Id"></a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

@@ -1,0 +1,56 @@
+﻿@model CategoryViewModel
+
+<body>
+    <div class="ps-page--contact">
+        <div class="ps-hero ps-hero--shopping bg--cover" data-background="img/hero/shop-hero.png">
+            <div class="ps-hero__container">
+                <div class="ps-breadcrumb">
+                    <ul class="breadcrumb">
+                        <li><a asp-action="Index" asp-controller="Home">Home</a></li>
+                        <li>Add new category</li>
+                    </ul>
+                </div>
+                <h1 class="ps-hero__heading">Add new category</h1>
+            </div>
+        </div>
+        <div class="ps-section ps-contact">
+            <div class="container">
+                <div class="ps-section__header">
+                    <h3>Input data format</h3>
+                </div>
+                <div class="ps-section__content">
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-8 col-md-8 col-sm-12 col-12 "></div>
+                        <div class="col-xl-4 col-lg-8 col-md-8 col-sm-12 col-12 ">
+                            <figure>
+                                <figcaption>Name</figcaption>
+                                <p> Starts with capital letter</p>
+                            </figure>
+                        </div>
+                        <div class="col-xl-4 col-lg-8 col-md-8 col-sm-12 col-12 "></div>
+                    </div>
+                </div>
+                <form class="ps-form--contact" asp-action="Add" method="post">
+                    <div class="ps-form__content">
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 "></div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 ">
+                                <div class="form-group">
+                                    <figure>
+                                        <figcaption>Name</figcaption>
+                                    </figure>
+                                    <input class="form-control" type="text" asp-for="Name">
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 "></div>
+                        </div>
+                        <div class="ps-form__submit">
+                            <button class="ps-btn">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>

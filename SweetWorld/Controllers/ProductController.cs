@@ -13,38 +13,26 @@ namespace SweetWorld.Controllers
         private readonly IConfectionerService confectionerService;
         private readonly IClientService clientService;
         private readonly UserManager<User> userManager;
-        private readonly IIngredientService ingredientService;
-        private readonly ICategoryService categoryService;
 
         public ProductController (
             IProductService productService, 
             IImageService imageService, 
             IConfectionerService confectionerService,
             IClientService clientService,
-            UserManager<User> userManager,
-            IIngredientService ingredientService, 
-            ICategoryService categoryService)
+            UserManager<User> userManager)
         {
             this.productService = productService;
             this.imageService = imageService;
             this.confectionerService = confectionerService;
             this.clientService = clientService;
             this.userManager = userManager;
-            this.ingredientService = ingredientService;
-            this.categoryService = categoryService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
-        {
-            return View(await this.productService.AllProductsAsync());
-        }
+        public async Task<IActionResult> Index() { return View(await this.productService.AllProductsAsync()); }
 
         [HttpGet]
-        public IActionResult Add()
-        {
-            return View();
-        }
+        public IActionResult Add() { return View(); }
 
         [HttpPost]
         public async Task<IActionResult> Add(AddProductViewModel viewModel)
@@ -53,14 +41,14 @@ namespace SweetWorld.Controllers
 
             var user = await this.userManager.GetUserAsync(this.User);
 
-            var client = await this.clientService.GetClientByUserIdAsync(user.Id);
+            var confectioner = await this.confectionerService.GetConfectionerByUserIdAsync(user.Id);
 
-            await this.productService.AddProductAsync(viewModel, client.Id);
+            await this.productService.AddProductAsync(viewModel, confectioner.Id);
 
             return RedirectToAction("ProductData");
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> Delete(Guid? id)
         {
             try
@@ -156,28 +144,6 @@ namespace SweetWorld.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AddIngredient(Guid? productId)
-        {
-            ProductAddIngredientOrCategoryViewModel viewModel = new ProductAddIngredientOrCategoryViewModel()
-            {
-                ProductId = productId
-            };
-
-            ViewBag.IngredientsId = this.ingredientService.GetIngredientsAsync();
-
-            return await Task.Run(() => View("AddIngredient", viewModel));
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AddIngredient(ProductAddIngredientOrCategoryViewModel viewModel)
-        {
-            try { await this.ingredientService.AddIngredientOfAProductAsync(viewModel.ProductId, viewModel.ItemId); }
-            catch (Exception ex) { TempData["message"] = ex.Message; }
-
-            return RedirectToAction("Index");
-        }
-
-        [HttpGet]
         public async Task<IActionResult> Edit(Guid? id)
         {
             try
@@ -196,28 +162,6 @@ namespace SweetWorld.Controllers
         public async Task<IActionResult> Edit(EditProductViewModel viewModel)
         {
             try { await this.productService.EditProductAsync(viewModel); }
-            catch (Exception ex) { TempData["message"] = ex.Message; }
-
-            return RedirectToAction("Index");
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> AddCategory(Guid? productId)
-        {
-            ProductAddIngredientOrCategoryViewModel viewModel = new ProductAddIngredientOrCategoryViewModel()
-            {
-                ProductId = productId
-            };
-
-            ViewBag.CategoriesId = this.categoryService.GetAllCategoriesAsync();
-
-            return await Task.Run(() => View("AddCategory", viewModel));
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AddCategory(ProductAddIngredientOrCategoryViewModel viewModel)
-        {
-            try { await this.categoryService.AddCategoryOfaProductAsync(viewModel.ProductId, viewModel.ItemId); }
             catch (Exception ex) { TempData["message"] = ex.Message; }
 
             return RedirectToAction("Index");
