@@ -30,7 +30,7 @@ namespace SweetWorld.Core.Services
             await this.dbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<OrderClientViewModel>> AllOrdersOfAClientAsync(Guid clientId)
+        public async Task<IEnumerable<OrderClientViewModel>> AllOrdersOfAClientAsync(Guid? clientId)
         {
             Client? clientOrders = await this.dbContext.Clients.Where(client => client.Id == clientId).Include(client => client.Orders)
                                                               .ThenInclude(order => order.Product).FirstOrDefaultAsync();
@@ -41,12 +41,7 @@ namespace SweetWorld.Core.Services
                     OrderId = order.Id,
                     ProductName = order.Product?.Name,
                     ProductThumb = order.Product?.Thumbnail,
-                    ProductType = order.Product?.Type,
-                    TotalPrice = order.TotalPrice,
                     CreationDate = order.CreationDate,
-                    Status = order.Status,
-                    AdditionalInformation = order.AdditionalInformation,
-                    Amount = order.Amount
                 });
             }
 

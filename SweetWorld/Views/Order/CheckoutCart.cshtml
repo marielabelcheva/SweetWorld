@@ -1,0 +1,61 @@
+﻿@model DeliveryViewModel
+
+<div class="ps-page--about">
+    <div class="ps-hero bg--cover" data-background="img/hero/shop-hero.png">
+        <div class="ps-hero__container">
+            <div class="ps-breadcrumb">
+                <ul class="breadcrumb">
+                    <li><a asp-action="Index" asp-controller="Home">Home</a></li>
+                    <li>Checkout</li>
+                </ul>
+            </div>
+            <h1 class="ps-hero__heading">Checkout</h1>
+        </div>
+    </div>
+    <div class="container">
+        <div class="ps-checkout">
+            <form class="ps-form--checkout" action="Checkout" method="post">
+                <div class="ps-checkout__left">
+                    <h4>Delivery Detail</h4>
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input class="form-control" type="text" placeholder="" asp-for="Address">
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>City/Town</label>
+                        <input class="form-control" type="text" placeholder="" asp-for="City">
+                        <span asp-validation-for="City" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Zip code</label>
+                        <input class="form-control" type="text" placeholder="" asp-for="ZipCode">
+                        <span asp-validation-for="ZipCode" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="ps-checkout__right">
+                    <div class="ps-block--your-order">
+                        <div class="ps-block__header">
+                            <h3>Your order</h3>
+                        </div>
+                        <div class="ps-block__divider"></div>
+                        <div class="ps-block__detail">
+                            <div class="ps-block__divider"></div>
+                            <p>Subtotal<strong>@ViewBag.Price BGN</strong></p>
+                            <div class="ps-block__divider"></div>
+                            <p>Shipping<span> 7.990 BGN</span></p>
+                            <div class="ps-block__divider"></div>
+                            <p class="total">Total<strong>@ViewBag.Total</strong></p>
+                        </div>
+                        <div class="ps-block__payment-methond">
+                            <label> Cash on delivery</label>
+                        </div>
+                        <div class="ps-block__footer">
+                            <button class="ps-btn ps-btn--fullwidth" type="submit">Place Order</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

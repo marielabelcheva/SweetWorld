@@ -22,6 +22,7 @@ namespace SweetWorld.Core.Services
         {
             client.Cart.Add(new CartOrder()
             {
+                Id = Guid.NewGuid(),
                 ProductId = viewModel.Id,
                 ProductName = viewModel.Name,
                 ProductThumb = viewModel.Thumbnail,
@@ -32,6 +33,11 @@ namespace SweetWorld.Core.Services
             });
 
             await this.dbContext.SaveChangesAsync();
+        }
+
+        public IEnumerable<CartOrder> AllOrdersFromTheCartAsync(Client? client)
+        {
+            return client.Cart.ToList();
         }
 
         public async Task CheckoutCartAsync(DeliveryViewModel viewModel, Client client)
@@ -57,6 +63,13 @@ namespace SweetWorld.Core.Services
                 });
             }
 
+            client.Cart.Clear();
+
+            await this.dbContext.SaveChangesAsync();
+        }
+
+        public async Task ClearCart(Client? client)
+        {
             client.Cart.Clear();
 
             await this.dbContext.SaveChangesAsync();
@@ -93,16 +106,40 @@ namespace SweetWorld.Core.Services
                     OrderId = order.Id,
                     ProductName = order?.Product?.Name,
                     ProductThumb = order?.Product?.Thumbnail,
+                    CreationDate = order?.CreationDate
+                });
+            }
+
+            throw new NullReferenceException("No new orders!");
+        }
+
+        public async Task<OrderClientViewModel> OrderDetailAsync(Guid id)
+        {
+            Order? order = await this.dbContext.Orders.Include(ord => ord.Product).FirstOrDefaultAsync(ord => ord.Id == id);
+
+            if (order != null)
+            {
+                return new OrderClientViewModel()
+                {
+                    OrderId = order.Id,
+                    ProductName = order?.Product?.Name,
+                    ProductThumb = order?.Product?.Thumbnail,
                     ProductType = order?.Product?.Type,
                     CreationDate = order?.CreationDate,
                     Amount = order?.Amount,
                     TotalPrice = order?.TotalPrice,
                     Status = order?.Status,
                     AdditionalInformation = order?.AdditionalInformation
-                });
+                };
             }
 
-            throw new NullReferenceException("No new orders!");
+            throw new NullReferenceException("There's no order with this identifier");
+        }
+
+        public async Task UpdateCartAsyncAsync(IEnumerable<CartOrder> cart, Client? client)
+        {
+            client.Cart = cart.ToList();
+            await this.dbContext.SaveChangesAsync();
         }
 
         public async Task UpdateStatusOfAnOrderAsync(Guid? id, string status)

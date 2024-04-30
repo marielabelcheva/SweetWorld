@@ -1,0 +1,69 @@
+﻿@model IEnumerable<CartOrder> 
+
+<div class="ps-page">
+    <div class="ps-hero bg--cover" data-background="img/hero/shop-hero.png">
+        <div class="ps-hero__container">
+            <div class="ps-breadcrumb">
+                <ul class="breadcrumb">
+                    <li><a asp-action="Index" asp-controller="Home">Home</a></li>
+                    <li>Cart</li>
+                </ul>
+            </div>
+            <h1 class="ps-hero__heading">Cart</h1>
+        </div>
+    </div>
+    <div class="container">
+        <div class="ps-shopping-cart">
+            <div class="table-responsive">
+                <table class="table ps-table ps-table--shopping-cart">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Unit Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var item in this.Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="ps-product--cart">
+                                        <div class="ps-product__thumbnail">
+                                            <img src="@item.ProductThumb" alt="">
+                                            <a class="ps-product__overlay" asp-action="ProductData" asp-controller="Product" asp-route-id="@item.ProductId"></a>
+                                        </div>
+                                        <div class="ps-product__content">
+                                            <a class="ps-product__title" asp-action="ProductData" asp-controller="Product" asp-route-id="@item.ProductId">@item.ProductName</a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>@item.UnitPrice BGN</td>
+                                <td>
+                                    <div class="form-group--number">
+                                        <input class="form-control" type="number" placeholder="@item.Amount" asp-for="@item.Amount">
+                                    </div>
+                                </td>
+                                <td class="total">
+                                    @(item.UnitPrice * item.Amount) BGN
+                                </td>
+                                <td class="ps-table__actions"><a class="ps-btn--close" asp-action="DeleteFromCart" asp-controller="Order" asp-route-order="@item"></a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="ps-section__actions">
+                <figure>
+                    <a class="ps-btn ps-btn--outline" asp-action="ClearCart" asp-controller="Order">Clear Shopping Cart</a>
+                    <a class="ps-btn ps-btn--outline" asp-action="UpdateCart" asp-controller="Order" asp-route-cart="@this.Model">Update Shopping Cart</a></figure>
+                <figure><a class="ps-btn" asp-action="Index" asp-controller="Product">Continue Shopping</a></figure>
+            </div>
+            <div class="ps-section__footer">
+                <a class="ps-btn ps-btn--fullwidth" asp-action="Checkout" asp-controller="Order">Proceed to checkout</a>
+            </div>
+        </div>
+    </div>
+</div>

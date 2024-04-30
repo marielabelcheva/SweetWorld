@@ -18,20 +18,24 @@ namespace SweetWorld.Core.Contracts
 
         public Task<ProductDataViewModel> ProductDataAsync(Guid? id);
 
-        public IEnumerable<ProductViewModel> GetProductsFromTypeAsync(IEnumerable<ProductViewModel> products, string type);
+        public Task<IEnumerable<ProductViewModel>> GetProductsFromTypeAsync(string type);
 
-        public Task<IEnumerable<ProductViewModel>> GetProductsFromCategoryAsync(Guid? categoryId);
+        public Task<IEnumerable<ProductViewModel>> GetProductsFromCategoryAsync(string? categoryName);
 
-        public IEnumerable<ProductViewModel> GetProductsByPriceAsync(IEnumerable<ProductViewModel> products, decimal price = 0.0m);
+        public Task<IEnumerable<ProductViewModel>> GetProductsByPriceAsync(decimal price = 0.0m);
 
-        public Task LikeProduct(Guid? id, Guid? clientId);
+        public Task LikeProductAsync(Guid? id, Guid? clientId);
 
-        public Task<IEnumerable<ProductViewModel>> WishList(Guid? clientId);
+        public Task<IEnumerable<ProductViewModel>> WishListAsync(Guid? clientId);
 
         public Task AddPiecesCountAndPrice(PiecesCountAndPriceViewModel viewModel, Guid? productId);
 
-        public Task DeleteFromWishList(Guid? productId, Guid? clientId);
+        public Task DeleteFromWishListAsync(Guid? productId, Guid? clientId);
 
         public Task<SelectList> GetPiecesCountOfAProductAsync(Guid? productId);
+
+        public Task<IEnumerable<string?>> GetAllTypesAsync();
+
+        public Task<IEnumerable<string?>> GetAllCategoriesAsync();
     }
 }

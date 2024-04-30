@@ -117,7 +117,7 @@ namespace SweetWorld.Core.Services
             throw new NullReferenceException();
         }
 
-        public async Task LikeProduct(Guid? id, Guid? clientId)
+        public async Task LikeProductAsync(Guid? id, Guid? clientId)
         {
             var product = await this.dbContext.Products.FindAsync(id) ;
 
@@ -138,20 +138,40 @@ namespace SweetWorld.Core.Services
             throw new NullReferenceException();
         }
 
-        public IEnumerable<ProductViewModel> GetProductsByPriceAsync(IEnumerable<ProductViewModel> products, decimal price = 0)
+        public async Task<IEnumerable<ProductViewModel>> GetProductsByPriceAsync(decimal price = 0)
         {
+            var products = await this.dbContext.Products.ToListAsync();
+
             if (products != null)
             {
-                if (price > 0) { return products.Where(product => product.Price <= price); }
-                else if (price == 0) { return products; }
+                if (price > 0) 
+                { 
+                    return products.Where(product => product.Price <= price).Select(product => new ProductViewModel()
+                    {
+                        Id = product.Id,
+                        Name = product.Name,
+                        Type = product.Type,
+                        Thumbnail = product.Thumbnail
+                    });
+                }
+                else if (price == 0) 
+                { 
+                    return products.Select(product => new ProductViewModel()
+                    {
+                        Id = product.Id,
+                        Name = product.Name,
+                        Type = product.Type,
+                        Thumbnail = product.Thumbnail
+                    });
+                }
             }
 
             throw new NullReferenceException();
         }
 
-        public async Task<IEnumerable<ProductViewModel>> GetProductsFromCategoryAsync(Guid? categoryId)
+        public async Task<IEnumerable<ProductViewModel>> GetProductsFromCategoryAsync(string? categoryName)
         {
-            var categoryProducts = await this.dbContext.Categories.Where(category => category.Id == categoryId)
+            var categoryProducts = await this.dbContext.Categories.Where(category => category.Name == categoryName)
                                                           .Include(category => category.ProductsCategories)
                                                           .ThenInclude(product => product.Product).FirstOrDefaultAsync();
 
@@ -170,11 +190,19 @@ namespace SweetWorld.Core.Services
             throw new NullReferenceException();
         }
 
-        public IEnumerable<ProductViewModel> GetProductsFromTypeAsync(IEnumerable<ProductViewModel> products, string type)
+        public async Task<IEnumerable<ProductViewModel>> GetProductsFromTypeAsync(string type)
         {
+            var products = await this.dbContext.Products.Where(product => product.Type == type).ToListAsync();
+
             if (products != null)
             {
-                return products.Where(product => product.Type == type);
+                return products.Select(product => new ProductViewModel()
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Type = product.Type,
+                    Thumbnail = product.Thumbnail
+                }); 
             }
 
             throw new NullReferenceException();
@@ -209,7 +237,7 @@ namespace SweetWorld.Core.Services
             throw new NullReferenceException();
         }
 
-        public async Task<IEnumerable<ProductViewModel>> WishList(Guid? clientId)
+        public async Task<IEnumerable<ProductViewModel>> WishListAsync(Guid? clientId)
         {
             Client? products = await this.dbContext.Clients.Where(c => c.Id == clientId).Include(c => c.FavouriteProducts)
                                                           .ThenInclude(fp => fp.Product).FirstOrDefaultAsync();
@@ -230,7 +258,7 @@ namespace SweetWorld.Core.Services
             throw new NullReferenceException();
         }
 
-        public async Task DeleteFromWishList(Guid? productId, Guid? clientId)
+        public async Task DeleteFromWishListAsync(Guid? productId, Guid? clientId)
         {
             var product = await this.dbContext.Favourites.FirstOrDefaultAsync(p => p.ProductId == productId && p.ClientId == clientId);
 
@@ -253,6 +281,16 @@ namespace SweetWorld.Core.Services
             }
 
             throw new NullReferenceException();
+        }
+
+        public async Task<IEnumerable<string?>> GetAllTypesAsync()
+        {
+            return await this.dbContext.Products.Select(product => product.Type).Distinct().ToListAsync();
+        }
+
+        public async Task<IEnumerable<string?>> GetAllCategoriesAsync()
+        {
+            return await this.dbContext.Categories.Select(category => category.Name).ToListAsync();
         }
     }
 }

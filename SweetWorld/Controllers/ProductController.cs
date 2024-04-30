@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SweetWorld.Core.Contracts;
 using SweetWorld.Core.Models.ProductViewModels;
+using SweetWorld.Infrastructure.Data.Migrations;
 using SweetWorld.Infrastructure.Data.Models;
 
 namespace SweetWorld.Controllers
@@ -29,7 +30,13 @@ namespace SweetWorld.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index() { return View(await this.productService.AllProductsAsync()); }
+        public async Task<IActionResult> Index() 
+        {
+            ViewBag.Categories = await this.productService.GetAllCategoriesAsync();
+            ViewBag.Types = await this.productService.GetAllTypesAsync();
+
+            return View(await this.productService.AllProductsAsync());
+        }
 
         [HttpGet]
         public IActionResult Add() { return View(); }
@@ -81,7 +88,7 @@ namespace SweetWorld.Controllers
             try 
             {
                 //for checking if it works - instead client.Id put Guid.Parse("fa6c6780-40d5-4c7e-9e48-fd82d03190b5")
-                await this.productService.LikeProduct(id, client.Id); 
+                await this.productService.LikeProductAsync(id, client.Id); 
             }
             catch(Exception ex) { TempData["message"] = ex.Message; }
 
@@ -98,7 +105,7 @@ namespace SweetWorld.Controllers
             try 
             {
                 //for checking if it works - instead client.Id put Guid.Parse("fa6c6780-40d5-4c7e-9e48-fd82d03190b5")
-                return View(await this.productService.WishList(client.Id)); 
+                return View(await this.productService.WishListAsync(client.Id)); 
             }
             catch(Exception ex) { TempData["message"] = ex.Message; return RedirectToAction("Index"); }
         }
@@ -113,7 +120,7 @@ namespace SweetWorld.Controllers
             try 
             {
                 //for checking if it works - instead client.Id put Guid.Parse("fa6c6780-40d5-4c7e-9e48-fd82d03190b5")
-                await this.productService.DeleteFromWishList(id, client.Id); 
+                await this.productService.DeleteFromWishListAsync(id, client.Id); 
             }
             catch (Exception ex) { TempData["message"] = ex.Message; }
 
@@ -165,6 +172,45 @@ namespace SweetWorld.Controllers
             catch (Exception ex) { TempData["message"] = ex.Message; }
 
             return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> FilterByType(string type)
+        {
+            try
+            {
+                ViewBag.Categories = await this.productService.GetAllCategoriesAsync();
+                ViewBag.Types = await this.productService.GetAllTypesAsync();
+
+                return View("Index", await this.productService.GetProductsFromTypeAsync(type));
+            }
+            catch (Exception ex) { TempData["message"] = ex.Message; return RedirectToAction("Index"); }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> FilterByPrice(string price)
+        {
+            try
+            {
+                ViewBag.Categories = await this.productService.GetAllCategoriesAsync();
+                ViewBag.Types = await this.productService.GetAllTypesAsync();
+
+                return View("Index", await this.productService.GetProductsByPriceAsync(decimal.Parse(price)));
+            }
+            catch (Exception ex) { TempData["message"] = ex.Message; return RedirectToAction("Index"); }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> FilterByCategory(string category)
+        {
+            try
+            {
+                ViewBag.Categories = await this.productService.GetAllCategoriesAsync();
+                ViewBag.Types = await this.productService.GetAllTypesAsync();
+
+                return View("Index", await this.productService.GetProductsFromCategoryAsync(category));
+            }
+            catch (Exception ex) { TempData["message"] = ex.Message; return RedirectToAction("Index"); }
         }
     }
 }

@@ -117,9 +117,9 @@
                                         <p>Type: @product.Type</p>
                                     </div>
                                     <div class="ps-product__shopping">
-                                        <a class="ps-btn ps-product__add-to-cart" asp-controller="Order" asp-action="AddToCart">Add to cart</a>
+                                        <a class="ps-btn ps-product__add-to-cart" asp-action="ProductData" asp-controller="Product" asp-route-id="@product.Id">Add to cart</a>
                                         <div class="ps-product__actions">
-                                            <a href="#"><i class="fa fa-heart-o"></i></a>
+                                            <a asp-action="FavouriteProduct" asp-controller="Product" asp-route-id="@product.Id"><i class="fa fa-heart-o"></i></a>
                                         </div>
                                     </div>
                                 </div>

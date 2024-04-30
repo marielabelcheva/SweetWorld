@@ -31,7 +31,7 @@ namespace SweetWorld.Core.Services
             await this.dbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<OrderClientViewModel>> AllOrdersForExecutingAsync(Confectioner confectioner)
+        public async Task<IEnumerable<OrderClientViewModel>> AllOrdersForExecutingAsync(Confectioner? confectioner)
         {
             var orders = await this.dbContext.Orders.Where(order => order.Status == "approved").Include(order => order.Product)
                                                     .Where(product => product.Product.ConfectionerId == confectioner.Id).ToListAsync();
@@ -42,12 +42,7 @@ namespace SweetWorld.Core.Services
                     OrderId = order.Id,
                     ProductName = order.Product.Name,
                     ProductThumb = order.Product.Thumbnail,
-                    ProductType = order.Product.Type,
-                    CreationDate = order.CreationDate,
-                    TotalPrice = order.TotalPrice,
-                    Amount = order.Amount,
-                    Status = order.Status,
-                    AdditionalInformation = order.AdditionalInformation
+                    CreationDate = order.CreationDate
                 });
             }
             throw new NullReferenceException("No new orders!");
