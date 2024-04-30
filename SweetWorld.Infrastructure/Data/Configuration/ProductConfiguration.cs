@@ -20,7 +20,6 @@ namespace SweetWorld.Infrastructure.Data.Configuration
             builder.Property(product => product.Price).HasColumnName("price").HasPrecision(10, 3);
             builder.Property(product => product.ConfectionerId).HasColumnName("confectioner_id");
             builder.Property(product => product.Thumbnail).HasColumnName("thumbnail");
-            builder.Ignore(product => product.PiecesCountAndPrice);
 
             builder.HasData(CreateProducts());
         }
@@ -35,13 +34,7 @@ namespace SweetWorld.Infrastructure.Data.Configuration
                 Name = "French village cake",
                 Type = "Ordinary",
                 ConfectionerId = Guid.Parse("cec94c18-629d-4491-8b26-dee405de2cfd"),
-                Thumbnail = "https://parmy.bg/media/cache/48/a6/thumb7_IMG_9075.jpg",
-                PiecesCountAndPrice = new HashSet<KeyValuePair<int, decimal>>()
-                {
-                    new KeyValuePair<int, decimal>(1, 4.79m),
-                    new KeyValuePair<int, decimal>(16, 70.49m),
-                    new KeyValuePair<int, decimal>(28, 94.49m)
-                }
+                Thumbnail = "https://parmy.bg/media/cache/48/a6/thumb7_IMG_9075.jpg"
             });
 
             products.Add(new Product()
@@ -50,15 +43,7 @@ namespace SweetWorld.Infrastructure.Data.Configuration
                 Name = "Eclair cake",
                 Type = "Ordinary",
                 ConfectionerId = Guid.Parse("0c10b01e-1b74-48fb-ab1f-7577c7c837de"),
-                Thumbnail = "https://local.deweys.com/uploads/1/3/0/7/130725445/s190270156824480679_p237_i3_w1200.png",
-                PiecesCountAndPrice = new HashSet<KeyValuePair<int, decimal>>()
-                {
-                    new KeyValuePair<int, decimal>(1, 6.29m),
-                    new KeyValuePair<int, decimal>(8, 52.49m),
-                    new KeyValuePair<int, decimal>(14, 82.49m),
-                    new KeyValuePair<int, decimal>(21, 115.49m),
-                    new KeyValuePair<int, decimal>(28, 127.49m)
-                }
+                Thumbnail = "https://local.deweys.com/uploads/1/3/0/7/130725445/s190270156824480679_p237_i3_w1200.png"
             });
 
             products.Add(new Product()
@@ -67,16 +52,7 @@ namespace SweetWorld.Infrastructure.Data.Configuration
                 Name = "Red velvet cake",
                 Type = "Ordinary",
                 ConfectionerId = Guid.Parse("e2b8a345-064a-4381-ab50-70724003fcbd"),
-                Thumbnail = "https://pabalefoodandbeverage.in/wp-content/uploads/2024/03/Red-Velvet-Cake.jpg",
-                PiecesCountAndPrice = new HashSet<KeyValuePair<int, decimal>>()
-                {
-                    new KeyValuePair<int, decimal>(1, 4.49m),
-                    new KeyValuePair<int, decimal>(8, 37.49m),
-                    new KeyValuePair<int, decimal>(14, 59.99m),
-                    new KeyValuePair<int, decimal>(16, 67.49m),
-                    new KeyValuePair<int, decimal>(21, 85.49m),
-                    new KeyValuePair<int, decimal>(28, 97.49m)
-                }
+                Thumbnail = "https://pabalefoodandbeverage.in/wp-content/uploads/2024/03/Red-Velvet-Cake.jpg"
             });
 
             products.Add(new Product()
@@ -85,14 +61,7 @@ namespace SweetWorld.Infrastructure.Data.Configuration
                 Name = "Red velvet cake with strawberries",
                 Type = "Ordinary",
                 ConfectionerId = Guid.Parse("cec94c18-629d-4491-8b26-dee405de2cfd"),
-                Thumbnail = "https://tiffanysbakeryphilly.com/media/catalog/category/RedVelvetStrawberryShortcake_2_1.jpg",
-                PiecesCountAndPrice = new HashSet<KeyValuePair<int, decimal>>()
-                {
-                    new KeyValuePair<int, decimal>(1, 5.29m),
-                    new KeyValuePair<int, decimal>(14, 67.49m),
-                    new KeyValuePair<int, decimal>(25, 103.49m),
-                    new KeyValuePair<int, decimal>(28, 107.99m)
-                }
+                Thumbnail = "https://tiffanysbakeryphilly.com/media/catalog/category/RedVelvetStrawberryShortcake_2_1.jpg"
             });
 
             products.Add(new Product()
@@ -101,13 +70,7 @@ namespace SweetWorld.Infrastructure.Data.Configuration
                 Name = "Napoleon cake",
                 Type = "Ordinary",
                 ConfectionerId = Guid.Parse("0c10b01e-1b74-48fb-ab1f-7577c7c837de"),
-                Thumbnail = "https://i.ytimg.com/vi/Q78skleBhp4/maxresdefault.jpg",
-                PiecesCountAndPrice = new HashSet<KeyValuePair<int, decimal>>()
-                {
-                    new KeyValuePair<int, decimal>(1, 5.69m),
-                    new KeyValuePair<int, decimal>(14, 74.99m),
-                    new KeyValuePair<int, decimal>(21, 94.49m)
-                }
+                Thumbnail = "https://i.ytimg.com/vi/Q78skleBhp4/maxresdefault.jpg"
             });
 
             products.Add(new Product()
@@ -116,15 +79,7 @@ namespace SweetWorld.Infrastructure.Data.Configuration
                 Name = "Vanilla cake",
                 Type = "Ordinary",
                 ConfectionerId = Guid.Parse("e2b8a345-064a-4381-ab50-70724003fcbd"),
-                Thumbnail = "https://www.gratefulbites.org/wp-content/uploads/2018/02/VanillaVanillaCake.jpg",
-                PiecesCountAndPrice = new HashSet<KeyValuePair<int, decimal>>()
-                {
-                    new KeyValuePair<int, decimal>(1, 3.29m),
-                    new KeyValuePair<int, decimal>(8, 29.99m),
-                    new KeyValuePair<int, decimal>(16, 52.49m),
-                    new KeyValuePair<int, decimal>(25, 77.99m),
-                    new KeyValuePair<int, decimal>(28, 82.49m)
-                }
+                Thumbnail = "https://www.gratefulbites.org/wp-content/uploads/2018/02/VanillaVanillaCake.jpg"
             });
 
             products.Add(new Product()
@@ -133,15 +88,7 @@ namespace SweetWorld.Infrastructure.Data.Configuration
                 Name = "Chocolate cake",
                 Type = "Ordinary",
                 ConfectionerId = Guid.Parse("cec94c18-629d-4491-8b26-dee405de2cfd"),
-                Thumbnail = "https://womenfitnessmag.com/wp-content/uploads/2020/07/Delight-Your-Mood-with-Thes.jpg",
-                PiecesCountAndPrice = new HashSet<KeyValuePair<int, decimal>>()
-                {
-                    new KeyValuePair<int, decimal>(1, 4.79m),
-                    new KeyValuePair<int, decimal>(8, 37.49m),
-                    new KeyValuePair<int, decimal>(16, 67.49m),
-                    new KeyValuePair<int, decimal>(28, 94.49m),
-                    new KeyValuePair<int, decimal>(36, 137.99m)
-                }
+                Thumbnail = "https://womenfitnessmag.com/wp-content/uploads/2020/07/Delight-Your-Mood-with-Thes.jpg"
             });
 
             products.Add(new Product()
@@ -150,15 +97,7 @@ namespace SweetWorld.Infrastructure.Data.Configuration
                 Name = "Fruit cake",
                 Type = "Ordinary",
                 ConfectionerId = Guid.Parse("0c10b01e-1b74-48fb-ab1f-7577c7c837de"),
-                Thumbnail = "https://www.bakinglikeachef.com/wp-content/uploads/fresh-fruit-cake.jpg",
-                PiecesCountAndPrice = new HashSet<KeyValuePair<int, decimal>>()
-                {
-                    new KeyValuePair<int, decimal>(1, 5.99m),
-                    new KeyValuePair<int, decimal>(8, 49.49m),
-                    new KeyValuePair<int, decimal>(14, 77.99m),
-                    new KeyValuePair<int, decimal>(21, 112.49m),
-                    new KeyValuePair<int, decimal>(28, 119.99m)
-                }
+                Thumbnail = "https://www.bakinglikeachef.com/wp-content/uploads/fresh-fruit-cake.jpg"
             });
 
             products.Add(new Product()

@@ -30,7 +30,7 @@ namespace SweetWorld.Core.Models.ProductViewModels
         [Required]
         public string? Thumbnail { get; set; }
 
-        public ICollection<KeyValuePair<int, decimal>>? PiecesCountAndPrice { get; set; } = new HashSet<KeyValuePair<int, decimal>>();
+        public ICollection<PiecesCount>? PiecesCountAndPrice { get; set; } = new HashSet<PiecesCount>();
 
         public ICollection<Image>? Images { get; set; } = new HashSet<Image>();
 

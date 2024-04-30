@@ -34,7 +34,12 @@ namespace SweetWorld.Core.Services
 
             if (product != null)
             {
-                product.PiecesCountAndPrice.Add(new KeyValuePair<int, decimal>(viewModel.PiecesCount, viewModel.Price));
+                product.PiecesCountAndPrice.Add(new PiecesCount()
+                {
+                    Id = Guid.NewGuid(),
+                    Count = viewModel.PiecesCount,
+                    Price = viewModel.Price
+                });
 
                 await this.dbContext.SaveChangesAsync();
             }
