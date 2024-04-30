@@ -1,0 +1,60 @@
+﻿@model IEnumerable<ProductViewModel>
+
+<div class="ps-hero ps-hero--shopping bg--cover" data-background="img/hero/shop-hero.png">
+    <div class="ps-hero__container">
+        <div class="ps-breadcrumb">
+            <ul class="breadcrumb">
+                <li><a asp-action="Index" asp-controller="Home">Home</a></li>
+                <li>Products</li>
+            </ul>
+        </div>
+        <h1 class="ps-hero__heading">Products</h1>
+    </div>
+</div>
+<div class="ps-page--shop">
+    <div class="container">
+        <div class="ps-shopping ps-shopping--no-sidebar">
+            @if (this.User.IsInRole("Confectioner"))
+            {
+                <a asp-action="Add" asp-controller="Product" class="ps-btn">Add new product</a>
+                <p></p>
+            }
+            <div class="ps-product-box">
+                <div class="row">
+                    @foreach (var product in this.Model)
+                    {
+                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-6 ">
+                            <div class="ps-product">
+                                <div class="ps-product__thumbnail">
+                                    <img src="@product.Thumbnail" alt="" style="width:210px; height:180px;" />
+                                    <a class="ps-product__overlay" asp-action="ProductData" asp-controller="Product" asp-route-id="@product.Id"></a>
+                                </div>
+                                <br>
+                                <div class="ps-product__content">
+                                    <div class="ps-product__desc">
+                                        <a class="ps-product__title" asp-action="ProductData" asp-controller="Product" asp-route-id="@product.Id">@product.Name</a>
+                                        <p><span>Type: @product.Type</span></p>
+                                    </div>
+                                    <div class="ps-product__shopping">
+                                        <a class="ps-btn ps-product__add-to-cart" asp-action="ProductData" asp-controller="Product" asp-route-id="@product.Id">
+                                            Product data
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="ps-pagination">
+                <ul class="pagination">
+                    <li><a href="#"><i class="fa fa-caret-left"></i></a></li>
+                    <li class="active"><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#"><i class="fa fa-caret-right"></i></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

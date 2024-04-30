@@ -48,14 +48,14 @@ namespace SweetWorld.Core.Services
             throw new NullReferenceException("No new orders!");
         }
 
-        public async Task<IEnumerable<ProductConfectionerViewModel>> AllProductsOfAConfectionerAsync(Guid? confectionerId)
+        public async Task<IEnumerable<ProductViewModel>> AllProductsOfAConfectionerAsync(Guid? confectionerId)
         {
             Confectioner? confectionerProducts = await this.dbContext.Confectioners.Where(confectioner => confectioner.Id == confectionerId)
                                                                                    .Include(confectioner => confectioner.Products)
                                                                                    .FirstOrDefaultAsync();
             if (confectionerProducts != null)
             {
-                return confectionerProducts.Products.Select(product => new ProductConfectionerViewModel()
+                return confectionerProducts.Products.Select(product => new ProductViewModel()
                 {
                     Id = product.Id,
                     Name = product.Name,
@@ -76,7 +76,7 @@ namespace SweetWorld.Core.Services
                 FirstName = confectioner.User.FirstName,
                 LastName = confectioner.User.LastName,
                 Email = confectioner.User.Email,
-                Phone = confectioner.User.PhoneNumber,
+                Role = "Confectioner",
                 ProfilePictureURL = confectioner.User.ProfilePictureUrl
             }).ToListAsync();
         }

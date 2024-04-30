@@ -28,14 +28,38 @@
         <div class="header__center">
             <nav class="header__navigation left">
                 <ul class="menu">
-                    <li>
-                        <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
-                    </li>
-                    <li>
-                        <a asp-area="" asp-controller="Product" asp-action="Index">Products</a>
-                        <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
-                    </li>
+                    @if (this.User.IsInRole("Confectioner") || this.User.IsInRole("Administrator"))
+                    {
+                        <li>
+                            <a asp-area="" asp-controller="Product" asp-action="MyProducts">Home</a>
+                            <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                        </li>
+                        <li>
+                            <a asp-area="" asp-controller="Order" asp-action="AllOrders">Products</a>
+                            <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                        </li>
+                    }
+                    else
+                    {
+                        if (this.User.IsInRole("Client"))
+                        {
+                            <li>
+                                <a asp-area="" asp-controller="Order" asp-action="AllOrders">Home</a>
+                                <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                            </li>
+                        }
+                        <li>
+                            <a asp-area="" asp-controller="Product" asp-action="Index">Products</a>
+                            <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                        </li>
+                    }
                 </ul>
             </nav>
             <div class="header__logo">
@@ -44,30 +68,55 @@
             </div>
             <nav class="header__navigation right">
                 <ul class="menu">
-                    <li>
-                        <a asp-area="" asp-controller="Home" asp-action="AboutUs">About us</a>
-                        <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
-                    </li>
-                    <li>
-                        <a asp-area="" asp-controller="Home" asp-action="ContactUs">Contact</a>
-                        <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
-                    </li>
+                    @if (this.User.IsInRole("Confectioner"))
+                    {
+                        <li>
+                            <a asp-area="" asp-controller="Ingredient" asp-action="Index">Ingredients</a>
+                            <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                        </li>
+                        <li>
+                            <a asp-area="" asp-controller="Category" asp-action="Index">Categories</a>
+                            <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                        </li>
+                    }
+                    else if (this.User.IsInRole("Administrator"))
+                    {
+                        <li>
+                            <a asp-area="" asp-controller="Account" asp-action="Index">Users</a>
+                            <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                        </li>
+                        <li>
+                            <a asp-area="" asp-controller="Category" asp-action="Index">Categories</a>
+                            <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                        </li>
+                    }
+                    else
+                    {
+                        <li>
+                            <a asp-area="" asp-controller="Home" asp-action="AboutUs">About us</a>
+                            <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                        </li>
+                        <li>
+                            <a asp-area="" asp-controller="Home" asp-action="ContactUs">Contact</a>
+                            <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                        </li>
+                    }
                 </ul>
             </nav>
         </div>
         <div class="header__right">
-            <div class="header__actions">
-                @*if (User.IsInRole("client"))*@
-                <a class="ps-search-btn" href="#"><i class="fa fa-search"></i></a>
-                <a asp-action="Wishlist" asp-controller="Product"><i class="fa fa-heart-o"></i></a>
-                <div class="ps-cart--mini">
-                    <a class="ps-cart__toggle" href="#">
-                        <i class="fa fa-shopping-basket"></i>
-                        <span><i>2</i></span> @*count of elements in client's cart*@
-                    </a>
-                    <div class="ps-cart__content">
-                        <div class="ps-cart__items">
-                            @*foreach CartOrder in cart*@
+            @if (this.User.IsInRole("Client"))
+            {
+                <div class="header__actions">
+                    <a class="ps-search-btn" href="#"><i class="fa fa-search"></i></a>
+                    <a asp-action="Wishlist" asp-controller="Product"><i class="fa fa-heart-o"></i></a>
+                    <div class="ps-cart--mini">
+                        <a class="ps-cart__toggle" href="#">
+                            <i class="fa fa-shopping-basket"></i>
+                        </a>
+                        <div class="ps-cart__content">
+                            <div class="ps-cart__items">
+                            @*foreach CartOrder in cart
                             <div class="ps-product--mini-cart">
                                 <div class="ps-product__thumbnail">
                                     <a asp-area="" asp-controller="Product" asp-action="ProductData">
@@ -80,19 +129,19 @@
                                     <p><strong>Quantity: 1</strong></p><small>$12.00</small>
                                 </div>
                             </div>
-                            @*---*@
-                        </div>
-                        <div class="ps-cart__footer">
-                            <h3>Sub Total:<strong>$48.00</strong></h3>
-                            <figure>
-                                <a class="ps-btn" asp-area="" asp-controller="Order" asp-action="ViewCart">View Cart</a>
-                                <a class="ps-btn ps-btn--dark" asp-area="" asp-controller="Order" asp-action="CheckoutCart">Checkout</a>
-                            </figure>
+                            ---*@
+                            </div>
+                            <div class="ps-cart__footer">
+                                <h3>Sub Total:<strong>$48.00</strong></h3>
+                                <figure>
+                                    <a class="ps-btn" asp-area="" asp-controller="Order" asp-action="CartOrders">View Cart</a>
+                                    <a class="ps-btn ps-btn--dark" asp-area="" asp-controller="Order" asp-action="CheckoutCart">Checkout</a>
+                                </figure>
+                            </div>
                         </div>
                     </div>
                 </div>
-                
-            </div>
+            }
         </div>
 
     </header>
@@ -107,8 +156,7 @@
              </div>
             <div class="header__right">
                 <div class="header__actions">
-                    @*<a href="#"><i class="fa fa-heart-o"></i></a>*@
-                    <partial name="_LoginPartial" />
+                    <a asp-action="Wishlist" asp-controller="Product"><i class="fa fa-heart-o"></i></a>
                 </div>
             </div>
         </div>
@@ -120,25 +168,25 @@
             <div class="ps-cart--mobile">
                 <div class="ps-cart__content">
                     <div class="ps-cart__items">
-                        @*foreach CartOrder in cart*@
+                        @*foreach CartOrder in cart
                         <div class="ps-product--mini-cart">
-                            <div class="ps-product__thumbnail">
-                                <a asp-area="" asp-controller="Product" asp-action="ProductData">
-                                    <img src="~/img/product/12.png" alt="">
-                                </a>
-                            </div>
-                            <div class="ps-product__content">
-                                <span class="ps-btn--close"></span>
-                                <a class="ps-product__title" asp-area="" asp-controller="Product" asp-action="ProductData">Cake</a>
-                                <p><strong>Quantity: 1</strong></p><small>$12.00</small>
-                            </div>
+                        <div class="ps-product__thumbnail">
+                        <a asp-area="" asp-controller="Product" asp-action="ProductData">
+                        <img src="~/img/product/12.png" alt="">
+                        </a>
                         </div>
-                        @*---*@
+                        <div class="ps-product__content">
+                        <span class="ps-btn--close"></span>
+                        <a class="ps-product__title" asp-area="" asp-controller="Product" asp-action="ProductData">Cake</a>
+                        <p><strong>Quantity: 1</strong></p><small>$12.00</small>
+                        </div>
+                        </div>
+                        ---*@
                     </div>
                     <div class="ps-cart__footer">
                         <h3>Sub Total:<strong>$48.00</strong></h3>
                         <figure>
-                            <a class="ps-btn" asp-area="" asp-controller="Order" asp-action="ViewCart">View Cart</a>
+                            <a class="ps-btn" asp-area="" asp-controller="Order" asp-action="CartOrders">View Cart</a>
                             <a class="ps-btn ps-btn--dark" asp-area="" asp-controller="Order" asp-action="CheckoutCart">Checkout</a>
                         </figure>
                     </div>
@@ -151,21 +199,66 @@
         <div class="ps-panel__header"><h3>Menu</h3></div>
         <div class="ps-panel__content">
             <ul class="menu--mobile">
+                @if (this.User.IsInRole("Confectioner") || this.User.IsInRole("Administrator"))
+                {
+                    <li>
+                        <a asp-area="" asp-controller="Product" asp-action="MyProducts">Home</a>
+                        <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                    </li>
+                    <li>
+                        <a asp-area="" asp-controller="Orders" asp-action="AllOrders">Products</a>
+                        <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                    </li>
+                    if (this.User.IsInRole("Confectioner"))
+                    {
+                        <li>
+                            <a asp-area="" asp-controller="Ingredient" asp-action="Index">Ingredients</a>
+                            <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                        </li>
+                    }
+                    else
+                    {
+                        <li>
+                            <a asp-area="" asp-controller="Account" asp-action="Index">Users</a>
+                            <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                        </li>
+                    }
+                    <li>
+                        <a asp-area="" asp-controller="Category" asp-action="Index">Categories</a>
+                        <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                    </li>
+                }
+                else
+                {
+                    if (this.User.IsInRole("Client"))
+                    {
+                        <li>
+                            <a asp-area="" asp-controller="Order" asp-action="AllOrders">Home</a>
+                            <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                        </li>
+                    }
+                    else
+                    {
+                        <li>
+                            <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                        </li>
+                    }
+                    <li>
+                        <a asp-area="" asp-controller="Product" asp-action="Index">Products</a>
+                        <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                    </li>
+                    <li>
+                        <a asp-area="" asp-controller="Home" asp-action="AboutUs">About us</a>
+                        <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                    </li>
+                    <li>
+                        <a asp-area="" asp-controller="Home" asp-action="ContactUs">Contact</a>
+                        <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                    </li>
+                }
                 <li>
-                    <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                    <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
-                </li>
-                <li>
-                    <a asp-area="" asp-controller="Product" asp-action="Index">Products</a>
-                    <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
-                </li>
-                <li>
-                    <a asp-area="" asp-controller="Home" asp-action="AboutUs">About us</a>
-                    <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
-                </li>
-                <li>
-                    <a asp-area="" asp-controller="Home" asp-action="ContactUs">Contact</a>
-                    <span class="sub-toggle"><i class="fa fa-angle-down"></i></span>
+                    <partial name="_LoginPartial" />
                 </li>
             </ul>
         </div>
@@ -175,8 +268,11 @@
         <div class="navigation__content">
             <a class="navigation__item active" asp-area="" asp-controller="Home" asp-action="Index"><i class="fa fa-home"></i></a>
             <a class="navigation__item ps-toggle--sidebar" href="#navigation-mobile"><i class="fa fa-bars"></i></a>
-            <a class="navigation__item ps-toggle--sidebar" href="#search-sidebar"><i class="fa fa-search"></i></a>
-            <a class="navigation__item ps-toggle--sidebar" href="#cart-mobile"><i class="fa fa-shopping-basket"></i></a>
+            @if (this.User.IsInRole("Client"))
+            {
+                <a class="navigation__item ps-toggle--sidebar" href="#search-sidebar"><i class="fa fa-search"></i></a>
+                <a class="navigation__item ps-toggle--sidebar" href="#cart-mobile"><i class="fa fa-shopping-basket"></i></a>
+            }
             <a class="navigation__item ps-toggle--sidebar"></a>
         </div>
     </div>
@@ -212,6 +308,7 @@
         <div class="loader-section section-left "></div>
         <div class="loader-section section-right"></div>
     </div>
+
     <div class="ps-search" id="site-search">
         <a class="ps-btn--close" href="#"></a>
         <div class="ps-search__content">

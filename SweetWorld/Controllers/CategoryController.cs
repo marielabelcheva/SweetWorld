@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SweetWorld.Core.Contracts;
 using SweetWorld.Core.Models.CategoryViewModels;
 using SweetWorld.Core.Models.ProductViewModels;
 
 namespace SweetWorld.Controllers
 {
+    [Authorize]
     public class CategoryController : Controller
     {
         private readonly ICategoryService categoryService;
@@ -12,6 +14,7 @@ namespace SweetWorld.Controllers
         public CategoryController(ICategoryService categoryService) { this.categoryService = categoryService; }
 
         [HttpGet]
+        [Authorize(Roles = "Confectioner,Administrator")]
         public async Task<IActionResult> Index()
         {
             try
@@ -26,12 +29,14 @@ namespace SweetWorld.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Administrator")]
         public IActionResult Add()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Add(CategoryViewModel viewModel)
         {
             try { await this.categoryService.AddCategoryAsync(viewModel); }
@@ -41,6 +46,7 @@ namespace SweetWorld.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Delete(Guid? id)
         {
             try { await this.categoryService.DeleteCategoryAsync(id); }
@@ -50,6 +56,7 @@ namespace SweetWorld.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Confectioner,Administrator")]
         public async Task<IActionResult> AddCategoryOfAProduct(Guid? productId)
         {
             ProductAddIngredientOrCategoryViewModel viewModel = new ProductAddIngredientOrCategoryViewModel()
@@ -63,6 +70,7 @@ namespace SweetWorld.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Confectioner,Administrator")]
         public async Task<IActionResult> AddCategoryOfAProduct(ProductAddIngredientOrCategoryViewModel viewModel)
         {
             try { await this.categoryService.AddCategoryOfaProductAsync(viewModel.ProductId, viewModel.ItemId); }
@@ -72,6 +80,7 @@ namespace SweetWorld.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Confectioner,Administrator")]
         public async Task<IActionResult> DeleteCategoryOfAProduct(Guid? productId)
         {
             //
@@ -84,6 +93,7 @@ namespace SweetWorld.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Confectioner,Administrator")]
         public async Task<IActionResult> DeleteCategoryOfAProduct(ProductAddIngredientOrCategoryViewModel viewModel)
         {
             try { await this.categoryService.AddCategoryOfaProductAsync(viewModel.ProductId, viewModel.ItemId); }

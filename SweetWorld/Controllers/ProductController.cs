@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SweetWorld.Core.Contracts;
 using SweetWorld.Core.Models.ProductViewModels;
@@ -39,9 +40,27 @@ namespace SweetWorld.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Confectioner,Administrator")]
+        public async Task<IActionResult> MyProducts()
+        {
+            if (this.User.IsInRole("Confectioner"))
+            {
+                var user = await this.userManager.GetUserAsync(this.User);
+
+                var confectioner = await this.confectionerService.GetConfectionerByUserIdAsync(user.Id);
+
+                return View(await this.confectionerService.AllProductsOfAConfectionerAsync(confectioner?.Id));
+            }
+
+            return View(await this.productService.AllProductsAsync());
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Confectioner")]
         public IActionResult Add() { return View(); }
 
         [HttpPost]
+        [Authorize(Roles = "Confectioner")]
         public async Task<IActionResult> Add(AddProductViewModel viewModel)
         {
             if (!ModelState.IsValid) { return View(viewModel); }
@@ -56,6 +75,7 @@ namespace SweetWorld.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Confectioner,Administrator")]
         public async Task<IActionResult> Delete(Guid? id)
         {
             try
@@ -79,6 +99,7 @@ namespace SweetWorld.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Client")]
         public async Task<IActionResult> FavouriteProduct(Guid? id)
         {
             var user = await this.userManager.GetUserAsync(this.User);
@@ -96,6 +117,7 @@ namespace SweetWorld.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Client")]
         public async Task<IActionResult> Wishlist()
         {
             var user = await this.userManager.GetUserAsync(this.User);
@@ -111,6 +133,7 @@ namespace SweetWorld.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "CLient")]
         public async Task<IActionResult> DeleteFromFavourites(Guid? id)
         {
             var user = await this.userManager.GetUserAsync(this.User);
@@ -128,6 +151,7 @@ namespace SweetWorld.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Confectioner")]
         public async Task<IActionResult> UploadImage(Guid? productId)
         {
             ProductImageViewModel viewModel = new ProductImageViewModel()
@@ -139,6 +163,7 @@ namespace SweetWorld.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Confectioner")]
         public async Task<IActionResult> UploadImage(ProductImageViewModel viewModel)
         {
             IFormFile? image = viewModel.Picture;
@@ -151,6 +176,7 @@ namespace SweetWorld.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Client")]
         public async Task<IActionResult> Edit(Guid? id)
         {
             try
@@ -166,6 +192,7 @@ namespace SweetWorld.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Client")]
         public async Task<IActionResult> Edit(EditProductViewModel viewModel)
         {
             try { await this.productService.EditProductAsync(viewModel); }
@@ -175,6 +202,8 @@ namespace SweetWorld.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Client")]
+        [AllowAnonymous]
         public async Task<IActionResult> FilterByType(string type)
         {
             try
@@ -188,6 +217,8 @@ namespace SweetWorld.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Client")]
+        [AllowAnonymous]
         public async Task<IActionResult> FilterByPrice(string price)
         {
             try
@@ -201,6 +232,8 @@ namespace SweetWorld.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Client")]
+        [AllowAnonymous]
         public async Task<IActionResult> FilterByCategory(string category)
         {
             try

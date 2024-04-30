@@ -14,14 +14,16 @@ namespace SweetWorld.Controllers
         private readonly SignInManager<User> signInManager;
         private readonly IConfectionerService confectionerService;
         private readonly IClientService clientService;
+        private readonly IUserService userService;
 
         public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, 
-                                 IClientService clientService, IConfectionerService confectionerService)
+                                 IClientService clientService, IConfectionerService confectionerService, IUserService userService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.confectionerService = confectionerService;
             this.clientService = clientService;
+            this.userService = userService;
         }
 
         [HttpGet]
@@ -49,7 +51,7 @@ namespace SweetWorld.Controllers
 
             var result = await this.userManager.CreateAsync(user, model.Password);
 
-            if (model.IsConfectioner.ToLower() == "true")
+            if (model.IsConfectioner?.ToLower() == "true")
             {
                 await this.confectionerService.AddConfectionerAsync(user.Id);
                 await userManager.AddToRoleAsync(user, "Confectioner");
@@ -101,6 +103,25 @@ namespace SweetWorld.Controllers
             await this.signInManager.SignOutAsync();
 
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> Index()
+        {
+            var result = await this.clientService.GetAllClientsAsync();
+            result.Union(await this.confectionerService.GetAllConfectionersAsync());
+
+            return View(result);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            await this.userService.DeleteUserAsync(id);
+
+            return RedirectToAction("Index");
         }
     }
 }

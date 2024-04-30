@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SweetWorld.Core.Contracts;
 using SweetWorld.Core.Models;
 using System.Diagnostics;
 
 namespace SweetWorld.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -15,23 +17,36 @@ namespace SweetWorld.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Index()
         {
+            if (this.User.IsInRole("Confectioner") || this.User.IsInRole("Administrator"))
+            {
+                return RedirectToAction("MyProducts", "Product");
+            }
+            else if (this.User.IsInRole("Client")) { return RedirectToAction("AllOrders", "Order"); }
+
             return View();
         }
 
+        [AllowAnonymous]
+        [Authorize(Roles = "Client")]
         public IActionResult AboutUs()
         {
             return View();
         }
 
         [HttpGet]
+        [AllowAnonymous]
+        [Authorize(Roles = "Client")]
         public IActionResult ContactUs()
         {
             return View();
         }
 
         /*[HttpPost]
+        [AllowAnonymous]
+        [Authorize(Roles = "Client")]
         public IActionResult ContactUs(ContactUsViewModel model)
         {
             if (!ModelState.IsValid) { return View(model); }

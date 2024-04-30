@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SweetWorld.Core.Contracts;
 using SweetWorld.Core.Models.IngredientViewModels;
 using SweetWorld.Core.Models.ProductViewModels;
 
 namespace SweetWorld.Controllers
 {
+    [Authorize(Roles = "Confectioner")]
     public class IngredientController : Controller
     {
         private readonly IIngredientService ingredientService;

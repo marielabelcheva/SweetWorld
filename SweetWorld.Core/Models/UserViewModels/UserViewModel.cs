@@ -25,10 +25,7 @@ namespace SweetWorld.Core.Models.UserViewModels
         [EmailAddress]
         public string? Email { get; set; }
 
-        [Required]
-        [Phone]
-        [StringLength(10, MinimumLength = 9)]
-        public string? Phone { get; set; }
+        public string? Role {  get; set; }
 
         public string? ProfilePictureURL {  get; set; }
 

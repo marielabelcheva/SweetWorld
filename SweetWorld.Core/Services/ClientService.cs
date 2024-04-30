@@ -56,7 +56,7 @@ namespace SweetWorld.Core.Services
                 FirstName = client.User.FirstName,
                 LastName = client.User.LastName,
                 Email = client.User.Email,
-                Phone = client.User.PhoneNumber,
+                Role = "Client",
                 ProfilePictureURL = client.User.ProfilePictureUrl
             }).ToListAsync();
         }

@@ -43,30 +43,52 @@
                         {
                             <p><strong> Price: @this.Model.Price</strong></p>
                         }
-                        <p><input class="form-control" type="text" placeholder="Your wishes" asp-for="AdditionalInformation"/></p>
+                        @if (this.User.IsInRole("Client"))
+                        {
+                            <p><input class="form-control" type="text" placeholder="Your wishes" asp-for="AdditionalInformation" /></p>
+                        }
+                        else if (! this.User.Identity.IsAuthenticated)
+                        {
+                            <p><strong>To make an order you need to have a profile!</strong></p>
+                        }
                     </div>
                     <div class="ps-product__shopping">
-                        <select class="ps-select form-control" title="Choose Size" asp-for="Price" asp-items="@ViewBag.Pieces"></select>
-                        <div class="form-group--number">
-                            <input class="form-control" type="number" placeholder="1" asp-for="Amount">
+                        @if (this.User.IsInRole("Client"))
+                        {
+                            <select class="ps-select form-control" title="Choose Size" asp-for="Price" asp-items="@ViewBag.Pieces"></select>
+                            <div class="form-group--number">
+                                <input class="form-control" type="number" placeholder="1" asp-for="Amount">
+                            </div>
+                            <a class="ps-btn" asp-controller="Order" asp-action="AddToCart">Order now</a>
+                            <div class="ps-product__actions">
+                                <a asp-action="FavouriteProduct" asp-controller="Product" asp-route-id="@this.Model.Id">
+                                    <i class="fa fa-heart-o"></i>
+                                </a>
+                            </div>
+                        }
+                        else if (this.User.IsInRole("Confectioner"))
+                        {
+                            <a class="ps-btn" asp-controller="Ingredient" asp-action="AddIngredientOfAProduct" asp-route-productId="@this.Model.Id">Add ingredient</a>
+                            <p></p>
+                            <a class="ps-btn" asp-controller="Product" asp-action="Edit" asp-route-id="@this.Model.Id">Edit data</a>
+                        }
+                        else if (this.User.IsInRole("Administrator"))
+                        {
+                            <a class="ps-btn" asp-controller="Category" asp-action="AddCategoryOfAProduct" asp-route-productId="@this.Model.Id">Add Category</a>
+                            <p></p>
+                            <a class="ps-btn" asp-controller="Product" asp-action="Delete" asp-route-id="@this.Model.Id">Delete</a>
+                        }
+                    </div>
+                    @if (this.User.IsInRole("Confectioner"))
+                    {
+                        <div class="ps-product__shopping">
+                            <a class="ps-btn" asp-controller="Category" asp-action="AddCategoryOfAProduct" asp-route-productId="@this.Model.Id">Add Category</a>
+                            <p></p>
+                            <a class="ps-btn" asp-controller="Product" asp-action="UploadImage" asp-route-productId="@this.Model.Id">Upload image</a>
+                            <p></p>
+                            <a class="ps-btn" asp-controller="Product" asp-action="Delete" asp-route-id="@this.Model.Id">Delete</a>
                         </div>
-                        <a class="ps-btn" asp-controller="Order" asp-action="AddToCart">Order now</a>
-                        <div class="ps-product__actions">
-                            <a asp-action="FavouriteProduct" asp-controller="Product" asp-route-id="@this.Model.Id">
-                                <i class="fa fa-heart-o"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="ps-product__shopping">
-                        <a class="ps-btn" asp-controller="Ingredient" asp-action="AddIngredientOfAProduct" asp-route-productId="@this.Model.Id">Add ingredient</a>
-                        <p></p>
-                        <a class="ps-btn" asp-controller="Product" asp-action="Edit" asp-route-id="@this.Model.Id">Edit data</a>
-                    </div>
-                    <div class="ps-product__shopping">
-                        <a class="ps-btn" asp-controller="Category" asp-action="AddCategoryOfAProduct" asp-route-productId="@this.Model.Id">Add Category</a>
-                        <p></p>
-                        <a class="ps-btn" asp-controller="Product" asp-action="UploadImage" asp-route-productId="@this.Model.Id">Upload image</a>
-                    </div>
+                    }
                 </div>
             </div>
         </div>
@@ -95,40 +117,43 @@
             </div>
         </div>
     </div>
-    <div class="ps-section ps-related-product">
-        <div class="container">
-            <div class="ps-section__header">
-                <p>You may also like</p>
-                <h3>Related Products</h3><i class="chikery-tt3"></i>
-            </div>
-            <div class="ps-section__content">
-                <div class="row">
-                    @foreach (var product in this.Model.Related)
-                    {
-                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-6 ">
-                            <div class="ps-product">
-                                <div class="ps-product__thumbnail">
-                                    <img src="@product.Thumbnail" alt="" style="width:210px; height:180px;" />
-                                    <a class="ps-product__overlay" asp-action="ProductData" asp-controller="Product" asp-route-id="@product.Id"></a>
-                                </div>
-                                <div class="ps-product__content">
-                                    <div class="ps-product__desc">
-                                        <a class="ps-product__title" asp-action="ProductData" asp-controller="Product" asp-route-id="@product.Id">@product.Name</a>
-                                        <p>Type: @product.Type</p>
+    @if (!this.User.Identity.IsAuthenticated || this.User.IsInRole("Client"))
+    {
+        <div class="ps-section ps-related-product">
+            <div class="container">
+                <div class="ps-section__header">
+                    <p>You may also like</p>
+                    <h3>Related Products</h3><i class="chikery-tt3"></i>
+                </div>
+                <div class="ps-section__content">
+                    <div class="row">
+                        @foreach (var product in this.Model.Related)
+                        {
+                            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-6 ">
+                                <div class="ps-product">
+                                    <div class="ps-product__thumbnail">
+                                        <img src="@product.Thumbnail" alt="" style="width:210px; height:180px;" />
+                                        <a class="ps-product__overlay" asp-action="ProductData" asp-controller="Product" asp-route-id="@product.Id"></a>
                                     </div>
-                                    <div class="ps-product__shopping">
-                                        <a class="ps-btn ps-product__add-to-cart" asp-action="ProductData" asp-controller="Product" asp-route-id="@product.Id">Add to cart</a>
-                                        <div class="ps-product__actions">
-                                            <a asp-action="FavouriteProduct" asp-controller="Product" asp-route-id="@product.Id"><i class="fa fa-heart-o"></i></a>
+                                    <div class="ps-product__content">
+                                        <div class="ps-product__desc">
+                                            <a class="ps-product__title" asp-action="ProductData" asp-controller="Product" asp-route-id="@product.Id">@product.Name</a>
+                                            <p>Type: @product.Type</p>
+                                        </div>
+                                        <div class="ps-product__shopping">
+                                            <a class="ps-btn ps-product__add-to-cart" asp-action="ProductData" asp-controller="Product" asp-route-id="@product.Id">Add to cart</a>
+                                            <div class="ps-product__actions">
+                                                <a asp-action="FavouriteProduct" asp-controller="Product" asp-route-id="@product.Id"><i class="fa fa-heart-o"></i></a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    }
+                        }
+                    </div>
                 </div>
+                <div class="ps-section__footer"><a class="ps-btn ps-btn--outline" asp-action="Index" asp-controller="Product"> All products</a></div>
             </div>
-            <div class="ps-section__footer"><a class="ps-btn ps-btn--outline" asp-action="Index" asp-controller="Product"> All products</a></div>
         </div>
-    </div>
+    }
 </div>

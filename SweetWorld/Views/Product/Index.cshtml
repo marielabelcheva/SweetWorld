@@ -5,7 +5,7 @@
         <div class="ps-breadcrumb">
             <ul class="breadcrumb">
                 <li><a asp-action="Index" asp-controller="Home">Home</a></li>
-                <li>Shop Page</li>
+                <li>Products</li>
             </ul>
         </div>
         <h1 class="ps-hero__heading">Products</h1>
@@ -47,8 +47,6 @@
                 </aside>
             </div>
             <div class="ps-shopping__right">
-                <a asp-action="Add" asp-controller="Product" class="ps-btn">Add new product</a>
-                <br />
                 <div class="ps-product-box">
                     <div class="row">
                         @foreach(var product in this.Model)
@@ -69,11 +67,11 @@
                                             <a class="ps-btn ps-product__add-to-cart" asp-action="ProductData" asp-controller="Product" asp-route-id="@product.Id">
                                                 Add to cart
                                             </a>
-                                        <div class="ps-product__actions">
-                                            <a asp-action="FavouriteProduct" asp-controller="Product" asp-route-id="@product.Id">
+                                            <div class="ps-product__actions">
+                                                <a asp-action="FavouriteProduct" asp-controller="Product" asp-route-id="@product.Id">
                                                     <i class="fa fa-heart-o"></i>
-                                            </a>
-                                        </div>
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

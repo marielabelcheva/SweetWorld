@@ -42,7 +42,6 @@ namespace SweetWorld.Core.Services
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Email = user.Email,
-                    Phone = user.PhoneNumber,
                     ProfilePictureURL = user.ProfilePictureUrl
                 };
             }
@@ -58,7 +57,6 @@ namespace SweetWorld.Core.Services
             if (user != null) 
             {
                 user.Email = viewModel.Email;
-                user.PhoneNumber = viewModel.Phone;
                 user.ProfilePictureUrl = await this.imageService.UploadImageAsync(viewModel.ProfilePicture, "users", user);
 
                 await this.userManager.UpdateAsync(user);

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using SweetWorld.Core.Contracts;
@@ -8,6 +9,7 @@ using SweetWorld.Infrastructure.Data.Models;
 
 namespace SweetWorld.Controllers
 {
+    [Authorize]
     public class OrderController : Controller
     {
         private IOrderService orderService;
@@ -27,6 +29,7 @@ namespace SweetWorld.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> AllOrders()
         {
             try
@@ -57,9 +60,11 @@ namespace SweetWorld.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> OrderDetail(Guid id) { return View(await this.orderService.OrderDetailAsync(id)); }
 
         [HttpGet]
+        [Authorize(Roles = "Client,Administrator")]
         public async Task<IActionResult> Delete(Guid? id)
         {
             try
@@ -72,6 +77,7 @@ namespace SweetWorld.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Client")]
         public async Task<IActionResult> CartOrders()
         {
             var user = await this.userManager.GetUserAsync(this.User);
@@ -82,6 +88,7 @@ namespace SweetWorld.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Client")]
         public async Task<IActionResult> UpdateCart(IEnumerable<CartOrder> cart)
         {
             var user = await this.userManager.GetUserAsync(this.User);
@@ -94,6 +101,7 @@ namespace SweetWorld.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Client")]
         public async Task<IActionResult> ClearCart()
         {
             var user = await this.userManager.GetUserAsync(this.User);
@@ -106,6 +114,7 @@ namespace SweetWorld.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Client")]
         public async Task<IActionResult> DeleteFromCart(CartOrder order)
         {
             var user = await this.userManager.GetUserAsync(this.User);
@@ -118,6 +127,7 @@ namespace SweetWorld.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Client")]
         public async Task<IActionResult> AddToCart(ProductDataViewModel viewModel)
         {
             var user = await this.userManager.GetUserAsync(this.User);
@@ -130,6 +140,7 @@ namespace SweetWorld.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Client")]
         public async Task<IActionResult> CheckoutCart() 
         {
             var user = await this.userManager.GetUserAsync(this.User);
@@ -145,6 +156,7 @@ namespace SweetWorld.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Client")]
         public async Task<IActionResult> CheckoutCart(DeliveryViewModel viewModel)
         {
             if (!ModelState.IsValid) { return View(viewModel); }

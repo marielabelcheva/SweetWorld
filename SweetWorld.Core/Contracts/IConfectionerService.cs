@@ -11,7 +11,7 @@ namespace SweetWorld.Core.Contracts
 
         public Task<IEnumerable<UserViewModel>> GetAllConfectionersAsync();
 
-        public Task<IEnumerable<ProductConfectionerViewModel>> AllProductsOfAConfectionerAsync(Guid? confectionerId);
+        public Task<IEnumerable<ProductViewModel>> AllProductsOfAConfectionerAsync(Guid? confectionerId);
 
         public Task<IEnumerable<OrderClientViewModel>> AllOrdersForExecutingAsync(Confectioner? confectioner);
 

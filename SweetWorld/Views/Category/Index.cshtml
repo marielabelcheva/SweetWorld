@@ -21,7 +21,10 @@
                             <tr>
                                 <th>Category Name</th>
                                 <th class="ps-table__actions">
-                                    <a asp-action="Add" asp-controller="Category" class="ps-btn">Add new category</a>
+                                    @if (this.User.IsInRole("Administrator"))
+                                    {
+                                        <a asp-action="Add" asp-controller="Category" class="ps-btn">Add new category</a>
+                                    }
                                 </th>
                             </tr>
                         </thead>
@@ -31,7 +34,10 @@
                                 <tr>
                                     <td><span class="ps-instock">@category.Name</span></td>
                                     <td class="ps-table__actions">
-                                        <a class="ps-btn--close" asp-action="Delete" asp-controller="Category" asp-route-id="@category.Id"></a>
+                                        @if (this.User.IsInRole("Administrator"))
+                                        {
+                                            <a class="ps-btn--close" asp-action="Delete" asp-controller="Category" asp-route-id="@category.Id"></a>
+                                        }
                                     </td>
                                 </tr>
                             }
