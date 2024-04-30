@@ -110,7 +110,7 @@ namespace SweetWorld.Controllers
         public async Task<IActionResult> Index()
         {
             var result = await this.clientService.GetAllClientsAsync();
-            result.Union(await this.confectionerService.GetAllConfectionersAsync());
+            result = result.Union(await this.confectionerService.GetAllConfectionersAsync());
 
             return View(result);
         }

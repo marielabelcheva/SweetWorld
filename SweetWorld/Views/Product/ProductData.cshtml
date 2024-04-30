@@ -47,10 +47,6 @@
                         {
                             <p><input class="form-control" type="text" placeholder="Your wishes" asp-for="AdditionalInformation" /></p>
                         }
-                        else if (! this.User.Identity.IsAuthenticated)
-                        {
-                            <p><strong>To make an order you need to have a profile!</strong></p>
-                        }
                     </div>
                     <div class="ps-product__shopping">
                         @if (this.User.IsInRole("Client"))
@@ -77,6 +73,10 @@
                             <a class="ps-btn" asp-controller="Category" asp-action="AddCategoryOfAProduct" asp-route-productId="@this.Model.Id">Add Category</a>
                             <p></p>
                             <a class="ps-btn" asp-controller="Product" asp-action="Delete" asp-route-id="@this.Model.Id">Delete</a>
+                        }
+                        else
+                        {
+                            <h3 style="color: red">To make an order you need to have a profile!</h3>
                         }
                     </div>
                     @if (this.User.IsInRole("Confectioner"))

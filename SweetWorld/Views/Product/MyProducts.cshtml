@@ -14,11 +14,13 @@
 <div class="ps-page--shop">
     <div class="container">
         <div class="ps-shopping ps-shopping--no-sidebar">
-            @if (this.User.IsInRole("Confectioner"))
-            {
-                <a asp-action="Add" asp-controller="Product" class="ps-btn">Add new product</a>
-                <p></p>
-            }
+            <div class="ps-shopping__top">
+                @if (this.User.IsInRole("Confectioner"))
+                {
+                    <a asp-action="Add" asp-controller="Product" class="ps-btn">Add new product</a>
+                    <p></p>
+                }
+            </div>
             <div class="ps-product-box">
                 <div class="row">
                     @foreach (var product in this.Model)
@@ -26,7 +28,7 @@
                         <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-6 ">
                             <div class="ps-product">
                                 <div class="ps-product__thumbnail">
-                                    <img src="@product.Thumbnail" alt="" style="width:210px; height:180px;" />
+                                    <img src="@product.Thumbnail" alt="" style="width:350px; height:280px;" />
                                     <a class="ps-product__overlay" asp-action="ProductData" asp-controller="Product" asp-route-id="@product.Id"></a>
                                 </div>
                                 <br>
