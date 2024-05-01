@@ -153,12 +153,49 @@ namespace SweetWorld.Tests.UnitTests
                 }
             };
 
+            products = new List<Product>()
+            {
+                new Product()
+                {
+                    Id = Guid.Parse("aeb3a25b-3b13-48d0-b8d6-c8c9500a7e32"),
+                    Name = "Red velvet cake with strawberries",
+                    Type = "Ordinary",
+                    ConfectionerId = Guid.Parse("55f67761-62f4-4263-95b0-0302b3e0f8ee"),
+                    Thumbnail = "https://tiffanysbakeryphilly.com/media/catalog/category/RedVelvetStrawberryShortcake_2_1.jpg"
+                },
+                new Product()
+                {
+                    Id = Guid.Parse("9720d6ab-fc73-4f3d-873f-8b9a5c47ddb3"),
+                    Name = "Chocolate chip cookies / 100g",
+                    Type = "Gluten-free",
+                    ConfectionerId = Guid.Parse("55f67761-62f4-4263-95b0-0302b3e0f8ee"),
+                    Thumbnail = "https://images.aws.nestle.recipes/resized/5b069c3ed2feea79377014f6766fcd49_Original_NTH_Chocolate_Chip_Cookie_1080_850.jpg",
+                    Price = 4.99m
+                }
+            };
+
+            productsCategories = new List<ProductsCategories>()
+            {
+                new ProductsCategories()
+                {
+                    ProductId = Guid.Parse("aeb3a25b-3b13-48d0-b8d6-c8c9500a7e32"),
+                    CategoryId = Guid.Parse("8d9c3c58-d7d1-402a-98fa-95dcaa062ffa")
+                },
+                new ProductsCategories()
+                {
+                    ProductId = Guid.Parse("9720d6ab-fc73-4f3d-873f-8b9a5c47ddb3"),
+                    CategoryId = Guid.Parse("39f03388-a904-402c-91de-7f09e5ba6df5")
+                }
+            };
+
             await this.context.Users.AddRangeAsync(this.users);
             await this.context.Roles.AddRangeAsync(this.roles);
             await this.context.UserRoles.AddRangeAsync(this.userRoles);
             await this.context.Clients.AddRangeAsync(this.clients);
             await this.context.Confectioners.AddRangeAsync(this.confectioners);
             await this.context.Categories.AddRangeAsync(this.categories);
+            await this.context.Products.AddRangeAsync(this.products);
+            await this.context.ProductsCategories.AddRangeAsync(this.productsCategories);
 
             await this.context.SaveChangesAsync();
         }

@@ -42,7 +42,7 @@ namespace SweetWorld.Core.Services
                 await this.dbContext.SaveChangesAsync();
             }
 
-            throw new NullReferenceException();
+            else throw new NullReferenceException();
         }
 
         public SelectList GetAllCategoriesAsync() { return new SelectList(this.dbContext.Categories, "Id", "Name"); }
@@ -64,7 +64,7 @@ namespace SweetWorld.Core.Services
                 await this.dbContext.SaveChangesAsync();
             }
 
-            throw new NullReferenceException();
+            else throw new NullReferenceException();
         }
 
         public async Task DeleteCategoryOfAProductAsync(Guid? productId, Guid? categoryId)
@@ -72,13 +72,13 @@ namespace SweetWorld.Core.Services
             var productCat = await this.dbContext.ProductsCategories.FirstOrDefaultAsync(productCategory =>
                                                       productCategory.ProductId == productId && productCategory.CategoryId == categoryId);
 
-            if (productCat != null)
+            if (productCat?.ProductId == productId && productCat?.CategoryId == categoryId)
             {
                 this.dbContext.ProductsCategories.Remove(productCat);
                 await this.dbContext.SaveChangesAsync();
             }
 
-            throw new NullReferenceException();
+            else throw new NullReferenceException();
         }
 
         public async Task<IEnumerable<CategoryViewModel>> AllCategoriesAsync()
@@ -101,12 +101,12 @@ namespace SweetWorld.Core.Services
                                                        .ThenInclude(category => category.Category)
                                                         .FirstOrDefaultAsync(product => product.Id == productId);
 
-            if (product?.Categories != null)
+            if (product?.Id == productId)
             {
                 return product.Categories.Select(category => new CategoryViewModel()
                 {
-                    Id = product.Id,
-                    Name = product.Name
+                    Id = category.Category?.Id,
+                    Name = category.Category?.Name
                 });
             }
 
