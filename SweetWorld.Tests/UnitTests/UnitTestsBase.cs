@@ -19,12 +19,12 @@ namespace SweetWorld.Tests.UnitTests
         protected List<User> users;
         protected List<Client> clients;
         protected List<Confectioner> confectioners;
-        protected List<CartOrder> cartOrders;
-        protected List<FavouriteProduct> favouriteProducts;
+        protected List<CartOrder> cartOrders = new List<CartOrder>();
+        protected List<FavouriteProduct> favouriteProducts = new List<FavouriteProduct>();
         protected List<Ingredient> ingredients;
-        protected List<Image> images;
+        protected List<Image> images = new List<Image>();
         protected List<Category> categories;
-        protected List<Order> orders;
+        protected List<Order> orders = new List<Order>();
         protected List<Product> products;
         protected List<ProductsCategories> productsCategories;
         protected List<ProductsIngredients> productsIngredients;
@@ -216,6 +216,38 @@ namespace SweetWorld.Tests.UnitTests
                 }
             };
 
+            piecesCounts = new List<PiecesCount>()
+            {
+                new PiecesCount()
+                {
+                    Id = Guid.NewGuid(),
+                    Count = 1,
+                    Price = 5.29m,
+                    ProductId = Guid.Parse("aeb3a25b-3b13-48d0-b8d6-c8c9500a7e32")
+                },
+                new PiecesCount()
+                {
+                    Id = Guid.NewGuid(),
+                    Count = 14,
+                    Price = 67.49m,
+                    ProductId = Guid.Parse("aeb3a25b-3b13-48d0-b8d6-c8c9500a7e32")
+                },
+                new PiecesCount()
+                {
+                    Id = Guid.NewGuid(),
+                    Count = 25,
+                    Price = 103.49m,
+                    ProductId = Guid.Parse("aeb3a25b-3b13-48d0-b8d6-c8c9500a7e32")
+                },
+                new PiecesCount()
+                {
+                    Id = Guid.NewGuid(),
+                    Count = 28,
+                    Price = 107.99m,
+                    ProductId = Guid.Parse("aeb3a25b-3b13-48d0-b8d6-c8c9500a7e32")
+                }
+            };
+
             await this.context.Users.AddRangeAsync(this.users);
             await this.context.Roles.AddRangeAsync(this.roles);
             await this.context.UserRoles.AddRangeAsync(this.userRoles);
@@ -223,9 +255,14 @@ namespace SweetWorld.Tests.UnitTests
             await this.context.Confectioners.AddRangeAsync(this.confectioners);
             await this.context.Categories.AddRangeAsync(this.categories);
             await this.context.Products.AddRangeAsync(this.products);
+            await this.context.Pieces.AddRangeAsync(this.piecesCounts);
             await this.context.ProductsCategories.AddRangeAsync(this.productsCategories);
-            await this.context.Ingredients.AddRangeAsync(ingredients);
-            await this.context.ProductsIngredients.AddRangeAsync(productsIngredients);
+            await this.context.Ingredients.AddRangeAsync(this.ingredients);
+            await this.context.ProductsIngredients.AddRangeAsync(this.productsIngredients);
+            await this.context.Carts.AddRangeAsync(this.cartOrders);
+            await this.context.Images.AddRangeAsync(this.images);
+            await this.context.Favourites.AddRangeAsync(this.favouriteProducts);
+            await this.context.Orders.AddRangeAsync(this.orders);
 
             await this.context.SaveChangesAsync();
         }

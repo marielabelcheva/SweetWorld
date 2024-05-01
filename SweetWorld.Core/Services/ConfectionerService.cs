@@ -42,7 +42,7 @@ namespace SweetWorld.Core.Services
         {
             var orders = await this.dbContext.Orders.Where(order => order.Status == "approved").Include(order => order.Product)
                                                     .Where(product => product.Product.ConfectionerId == confectioner.Id).ToListAsync();
-            if (orders != null)
+            if (orders.Count != 0)
             {
                 return orders.Select(order => new OrderClientViewModel()
                 {
@@ -52,6 +52,7 @@ namespace SweetWorld.Core.Services
                     CreationDate = order.CreationDate
                 });
             }
+
             throw new NullReferenceException("No new orders!");
         }
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using SweetWorld.Core.Contracts;
+using SweetWorld.Core.Models.OrderViewModels;
 using SweetWorld.Core.Models.ProductViewModels;
 using SweetWorld.Core.Models.UserViewModels;
 using SweetWorld.Core.Services;
@@ -102,6 +103,52 @@ namespace SweetWorld.Tests.UnitTests
             Assert.IsNotNull(dbConfectioner);
             Assert.That(dbConfectioner?.UserId, Is.EqualTo("75a16645-a8f9-452d-8415-6902861b4bb5"));
             Assert.That(confectioner?.UserId, Is.EqualTo("75a16645-a8f9-452d-8415-6902861b4bb5"));
+        }
+
+        [Test]
+        public async Task AllOrdersForExecutingShouldThrowException()
+        {
+            var user = await this.confectionerService.GetConfectionerByUserIdAsync("75a16645-a8f9-452d-8415-6902861b4bb5");
+
+            var ex = Assert.ThrowsAsync<NullReferenceException>(async () => await this.confectionerService.AllOrdersForExecutingAsync(user));
+            Assert.That(ex.Message, Is.EqualTo("No new orders!"));
+        }
+
+        [Test]
+        public async Task AllOrdersForExecutingShouldReturnCorrectResult()
+        {
+            var order = new Order()
+            {
+                Id = Guid.Parse("66cd2178-03e8-477f-a534-222ceecf50d6"),
+                ClientId = Guid.Parse("6d3f2835-3cfb-456e-a355-0725d13509d3"),
+                ProductId = Guid.Parse("aeb3a25b-3b13-48d0-b8d6-c8c9500a7e32"),
+                Amount = 1,
+                CreationDate = DateTime.Today,
+                TotalPrice = 20.99m,
+                DeliveryAddress = "TestAddress",
+                Status = "approved"
+            };
+
+            await this.context.Orders.AddAsync(order);
+            await this.context.SaveChangesAsync();
+
+            var user = await this.confectionerService.GetConfectionerByUserIdAsync("75a16645-a8f9-452d-8415-6902861b4bb5");
+
+            var dbOrders = this.context.Orders.Where(order => order.Status == "approved").Include(order => order.Product)
+                                                    .Where(product => product.Product.ConfectionerId == user.Id)
+                                                    .Select(order => new OrderClientViewModel()
+                                                    {
+                                                        OrderId = order.Id,
+                                                        ProductName = order.Product.Name,
+                                                        ProductThumb = order.Product.Thumbnail,
+                                                        CreationDate = order.CreationDate
+                                                    });
+
+            var allOrders = await this.confectionerService.AllOrdersForExecutingAsync(user);
+
+            Assert.That(allOrders?.ToList().Count, Is.EqualTo(dbOrders?.ToList().Count));
+            Assert.That(allOrders.ToList()[0].OrderId, Is.EqualTo(Guid.Parse("66cd2178-03e8-477f-a534-222ceecf50d6")));
+            Assert.That(dbOrders?.ToList()[0].OrderId, Is.EqualTo(Guid.Parse("66cd2178-03e8-477f-a534-222ceecf50d6")));
         }
     }
 }
