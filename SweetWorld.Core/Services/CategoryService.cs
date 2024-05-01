@@ -23,13 +23,13 @@ namespace SweetWorld.Core.Services
                 Name = viewModel.Name
             };
 
-            if(!await this.dbContext.Categories.ContainsAsync(category))
+            if(await this.dbContext.Categories.Where(cat => cat.Name.ToLower() == viewModel.Name.ToLower()).CountAsync() == 0)
             {
                 await this.dbContext.Categories.AddAsync(category);
                 await this.dbContext.SaveChangesAsync();
             }
 
-            throw new ArgumentException("Category has already exists!");
+            else throw new ArgumentException("Category has already exists!");
         }
 
         public async Task DeleteCategoryAsync(Guid? id)
