@@ -21,14 +21,21 @@ namespace SweetWorld.Core.Services
 
         public async Task AddConfectionerAsync(string userId)
         {
-            Confectioner confectioner = new Confectioner()
-            {
-                Id = Guid.NewGuid(),
-                UserId = userId
-            };
+            var user = await dbContext.Users.FindAsync(userId);
 
-            await this.dbContext.Confectioners.AddAsync(confectioner);
-            await this.dbContext.SaveChangesAsync();
+            if (user != null)
+            {
+                Confectioner confectioner = new Confectioner()
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = userId
+                };
+
+                await this.dbContext.Confectioners.AddAsync(confectioner);
+                await this.dbContext.SaveChangesAsync();
+            }
+
+            else throw new NullReferenceException();
         }
 
         public async Task<IEnumerable<OrderClientViewModel>> AllOrdersForExecutingAsync(Confectioner? confectioner)
@@ -48,14 +55,14 @@ namespace SweetWorld.Core.Services
             throw new NullReferenceException("No new orders!");
         }
 
-        public async Task<IEnumerable<ProductViewModel>> AllProductsOfAConfectionerAsync(Guid? confectionerId)
+        public async Task<IEnumerable<ProductViewModel>?> AllProductsOfAConfectionerAsync(Guid? confectionerId)
         {
             Confectioner? confectionerProducts = await this.dbContext.Confectioners.Where(confectioner => confectioner.Id == confectionerId)
                                                                                    .Include(confectioner => confectioner.Products)
                                                                                    .FirstOrDefaultAsync();
-            if (confectionerProducts != null)
+            if (confectionerProducts?.Id == confectionerId)
             {
-                return confectionerProducts.Products.Select(product => new ProductViewModel()
+                return confectionerProducts?.Products.Select(product => new ProductViewModel()
                 {
                     Id = product.Id,
                     Name = product.Name,
@@ -65,7 +72,7 @@ namespace SweetWorld.Core.Services
                 });
             }
 
-            throw new NullReferenceException("No orders!");
+            throw new NullReferenceException();
         }
 
         public async Task<IEnumerable<UserViewModel>> GetAllConfectionersAsync()
@@ -83,7 +90,11 @@ namespace SweetWorld.Core.Services
 
         public async Task<Confectioner?> GetConfectionerByUserIdAsync(string userId)
         {
-            return await this.dbContext.Confectioners.FirstOrDefaultAsync(confectioner => confectioner.UserId == userId);
+            var confectioner =  await this.dbContext.Confectioners.FirstOrDefaultAsync(confectioner => confectioner.UserId == userId);
+
+            if (confectioner?.UserId == userId) { return confectioner; }
+
+            throw new NullReferenceException();
         }
     }
 }

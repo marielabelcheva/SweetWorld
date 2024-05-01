@@ -20,23 +20,30 @@ namespace SweetWorld.Core.Services
 
         public async Task AddClientAsync(string userId)
         {
-            Client client = new Client()
-            {
-                Id = Guid.NewGuid(),
-                UserId = userId
-            };
+            var user = await dbContext.Users.FindAsync(userId);
 
-            await this.dbContext.Clients.AddAsync(client);
-            await this.dbContext.SaveChangesAsync();
+            if (user != null)
+            {
+                Client client = new Client()
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = user.Id
+                };
+
+                await this.dbContext.Clients.AddAsync(client);
+                await this.dbContext.SaveChangesAsync();
+            }
+
+            else throw new NullReferenceException();
         }
 
-        public async Task<IEnumerable<OrderClientViewModel>> AllOrdersOfAClientAsync(Guid? clientId)
+        public async Task<IEnumerable<OrderClientViewModel>?> AllOrdersOfAClientAsync(Guid? clientId)
         {
             Client? clientOrders = await this.dbContext.Clients.Where(client => client.Id == clientId).Include(client => client.Orders)
                                                               .ThenInclude(order => order.Product).FirstOrDefaultAsync();
-            if (clientOrders != null) 
+            if (clientOrders?.Id == clientId) 
             {
-                return clientOrders.Orders.Select(order => new OrderClientViewModel()
+                return clientOrders?.Orders.Select(order => new OrderClientViewModel()
                 {
                     OrderId = order.Id,
                     ProductName = order.Product?.Name,
@@ -45,7 +52,7 @@ namespace SweetWorld.Core.Services
                 });
             }
 
-            throw new NullReferenceException("No orders!");
+            throw new NullReferenceException();
         }
 
         public async Task<IEnumerable<UserViewModel>> GetAllClientsAsync()
@@ -63,7 +70,11 @@ namespace SweetWorld.Core.Services
 
         public async Task<Client?> GetClientByUserIdAsync(string userId)
         {
-            return await this.dbContext.Clients.FirstOrDefaultAsync(client => client.UserId == userId);
+            var client =  await this.dbContext.Clients.FirstOrDefaultAsync(client => client.UserId == userId);
+
+            if (client?.UserId == userId) { return client; }
+
+            throw new NullReferenceException();
         }
     }
 }

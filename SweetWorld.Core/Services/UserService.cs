@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using SweetWorld.Core.Contracts;
 using SweetWorld.Core.Models.UserViewModels;
+using SweetWorld.Infrastructure.Data;
 using SweetWorld.Infrastructure.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -12,27 +13,29 @@ namespace SweetWorld.Core.Services
 {
     public class UserService : IUserService
     {
-        private readonly UserManager<User> userManager;
-        private readonly IImageService imageService;
+        private readonly ApplicationDbContext dbContext;
 
-        public UserService(UserManager<User> userManager, IImageService imageService) 
+        public UserService(ApplicationDbContext dbContext) 
         { 
-            this.userManager = userManager;
-            this.imageService = imageService;
+            this.dbContext = dbContext;
         }
 
         public async Task DeleteUserAsync(string? id)
         {
-            User user = await this.userManager.FindByIdAsync(id);
+            User? user = await this.dbContext.Users.FindAsync(id);
 
-            if (user != null) { await this.userManager.DeleteAsync(user); }
+            if (user != null) 
+            { 
+                this.dbContext.Users.Remove(user);
+                await this.dbContext.SaveChangesAsync();
+            }
 
-            throw new NullReferenceException();
+            else throw new NullReferenceException();
         }
 
         public async Task<UserViewModel> GetUserByIdAsync(string? id)
         {
-            User user = await this.userManager.FindByIdAsync(id);
+            User? user = await this.dbContext.Users.FindAsync(id);
 
             if (user != null)
             {
@@ -52,17 +55,18 @@ namespace SweetWorld.Core.Services
 
         public async Task UpdateUserAsync(UserViewModel viewModel)
         {
-            User user = await this.userManager.FindByIdAsync(viewModel.Id);
+            User? user = await this.dbContext.Users.FindAsync(viewModel.Id);
 
             if (user != null) 
             {
+                user.FirstName = viewModel.FirstName;
+                user.LastName = viewModel.LastName;
                 user.Email = viewModel.Email;
-                user.ProfilePictureUrl = await this.imageService.UploadImageAsync(viewModel.ProfilePicture, "users", user);
 
-                await this.userManager.UpdateAsync(user);
+                await this.dbContext.SaveChangesAsync();
             }
 
-            throw new NullReferenceException();
+            else throw new NullReferenceException();
         }
     }
 }

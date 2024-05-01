@@ -15,13 +15,13 @@ namespace SweetWorld.Core.Services
 
         public async Task AddIngredientAsync(IngredientViewModel viewModel)
         {
-            Ingredient ingredient = new Ingredient()
+            Ingredient? ingredient = new Ingredient()
             {
                 Id = Guid.NewGuid(),
                 Name = viewModel.Name
             };
 
-            if (!await this.dbContext.Ingredients.Select(ing => ing.Name).ContainsAsync(ingredient.Name))
+            if (!await this.dbContext.Ingredients.Select(ing => ing.Name.ToLower()).ContainsAsync(ingredient?.Name?.ToLower()))
             {
                 await this.dbContext.Ingredients.AddAsync(ingredient);
                 await this.dbContext.SaveChangesAsync();

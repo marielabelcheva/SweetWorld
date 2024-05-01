@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SweetWorld.Infrastructure.Data;
+using SweetWorld.Infrastructure.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
