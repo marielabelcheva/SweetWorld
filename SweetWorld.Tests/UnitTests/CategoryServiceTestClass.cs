@@ -15,7 +15,7 @@ namespace SweetWorld.Tests.UnitTests
         private ICategoryService categoryService;
 
         [SetUp]
-        public async Task Setup()
+        public async Task SetUp()
         {
             this.categoryService = new CategoryService(this.context);
         }
@@ -29,6 +29,16 @@ namespace SweetWorld.Tests.UnitTests
 
             Assert.That(allCategories.Count, Is.EqualTo(dbCategories.Count));
             Assert.That(allCategories[1].Id, Is.EqualTo(dbCategories[1].Id));
+        }
+
+        [Test]
+        public async Task AllCategoriesShoulThrowException()
+        {
+            this.context.Categories.RemoveRange(await this.context.Categories.ToListAsync());
+            await this.context.SaveChangesAsync();
+
+            var ex = Assert.ThrowsAsync<NullReferenceException>(async () => await this.categoryService.AllCategoriesAsync());
+            Assert.That(ex.Message, Is.EqualTo("No categories in the database!"));
         }
 
         [Test]

@@ -27,7 +27,7 @@ namespace SweetWorld.Core.Services
                 await this.dbContext.SaveChangesAsync();
             }
 
-            throw new ArgumentException("Ingredient has alredy exists!");
+            else throw new ArgumentException("Ingredient has alredy exists!");
         }
 
         public async Task<IEnumerable<IngredientViewModel>> GetAllIngredientsAsync()
@@ -56,7 +56,7 @@ namespace SweetWorld.Core.Services
                 await this.dbContext.SaveChangesAsync();
             }
 
-            throw new NullReferenceException();
+            else throw new NullReferenceException();
         }
 
         public async Task AddIngredientOfAProductAsync(Guid? productId, Guid? ingredientId)
@@ -76,16 +76,16 @@ namespace SweetWorld.Core.Services
                 await this.dbContext.SaveChangesAsync();
             }
 
-            throw new NullReferenceException();
+            else throw new NullReferenceException();
         }
 
-        public async Task<IEnumerable<string?>> GetAllIngredientsOfAProductAsync(Guid? productId)
+        public async Task<IEnumerable<string?>?> GetAllIngredientsOfAProductAsync(Guid? productId)
         {
             var product = await this.dbContext.Products.Include(product => product.Ingredients)
                                                         .ThenInclude(ingredient => ingredient.Ingredient)
                                                         .FirstOrDefaultAsync(product => product.Id == productId);
 
-            if (product?.Ingredients != null) { return product.Ingredients.Select(ingredient => ingredient?.Ingredient?.Name).ToHashSet(); }
+            if (product?.Id == productId) { return product?.Ingredients.Select(ingredient => ingredient?.Ingredient?.Name); }
 
             throw new NullReferenceException();
         }

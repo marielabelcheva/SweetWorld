@@ -188,6 +188,34 @@ namespace SweetWorld.Tests.UnitTests
                 }
             };
 
+            ingredients = new List<Ingredient>()
+            {
+                new Ingredient()
+                {
+                    Id = Guid.Parse("3a367cd3-b14c-4431-86e0-6d463ce4dafe"),
+                    Name = "wipping cream"
+                },
+                new Ingredient()
+                {
+                    Id = Guid.Parse("d6148ba7-d9c6-45ea-aa6b-d880f5c8cd83"),
+                    Name = "flour"
+                }
+            };
+
+            productsIngredients = new List<ProductsIngredients>()
+            {
+                new ProductsIngredients()
+                {
+                    ProductId = Guid.Parse("aeb3a25b-3b13-48d0-b8d6-c8c9500a7e32"),
+                    IngredientId = Guid.Parse("3a367cd3-b14c-4431-86e0-6d463ce4dafe")
+                },
+                new ProductsIngredients()
+                {
+                    ProductId = Guid.Parse("9720d6ab-fc73-4f3d-873f-8b9a5c47ddb3"),
+                    IngredientId = Guid.Parse("d6148ba7-d9c6-45ea-aa6b-d880f5c8cd83")
+                }
+            };
+
             await this.context.Users.AddRangeAsync(this.users);
             await this.context.Roles.AddRangeAsync(this.roles);
             await this.context.UserRoles.AddRangeAsync(this.userRoles);
@@ -196,6 +224,8 @@ namespace SweetWorld.Tests.UnitTests
             await this.context.Categories.AddRangeAsync(this.categories);
             await this.context.Products.AddRangeAsync(this.products);
             await this.context.ProductsCategories.AddRangeAsync(this.productsCategories);
+            await this.context.Ingredients.AddRangeAsync(ingredients);
+            await this.context.ProductsIngredients.AddRangeAsync(productsIngredients);
 
             await this.context.SaveChangesAsync();
         }

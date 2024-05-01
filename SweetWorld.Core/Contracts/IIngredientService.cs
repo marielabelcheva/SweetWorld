@@ -13,7 +13,7 @@ namespace SweetWorld.Core.Contracts
 
         public SelectList GetIngredientsAsync();
 
-        public Task<IEnumerable<string?>> GetAllIngredientsOfAProductAsync(Guid? productId);
+        public Task<IEnumerable<string?>?> GetAllIngredientsOfAProductAsync(Guid? productId);
 
         public Task DeleteIngredientAsync(Guid? id);
     }
