@@ -88,11 +88,9 @@
                             <a class="ps-btn" asp-controller="Product" asp-action="UploadImage" asp-route-productId="@this.Model.Id">Upload image</a>
                             <p></p>
                             <a class="ps-btn" asp-controller="Product" asp-action="Delete" asp-route-id="@this.Model.Id">Delete</a>
-                            <p></p>
-                            <a class="ps-btn" asp-controller="Category" asp-action="ViewAllCategoriesOfAProduct" asp-route-productId="@this.Model.Id">Categories of the product</a>
                         </div>
                         <div class="ps-product__shopping">
-                            <a class="ps-btn" asp-controller="Category" asp-action="AddCategoryOfAProduct" asp-route-productId="@this.Model.Id">Add Category</a>
+                            <a class="ps-btn" asp-controller="Category" asp-action="AllCategoriesOfAProduct" asp-route-productId="@this.Model.Id">Categories of the product</a>
                             <p></p>
                             <a class="ps-btn" asp-controller="Product" asp-action="AddPiecesCount" asp-route-productId="@this.Model.Id">Add pieces count</a>
                         </div>
