@@ -115,11 +115,12 @@ namespace SweetWorld.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Client")]
-        public async Task<IActionResult> DeleteFromCart(CartOrder order)
+        public async Task<IActionResult> DeleteFromCart(Guid id)
         {
             var user = await this.userManager.GetUserAsync(this.User);
 
             var client = await this.clientService.GetClientByUserIdAsync(user.Id);
+            var order = client?.Cart.FirstOrDefault(c => c.Id == id);
 
             await this.orderService.DeleteOrderFromTheCartAsync(order, client);
 

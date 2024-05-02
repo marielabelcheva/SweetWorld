@@ -15,21 +15,21 @@ namespace SweetWorld.Tests.UnitTests
 {
     public class UnitTestsBase
     {
-        protected List<IdentityRole> roles;
-        protected List<User> users;
-        protected List<Client> clients;
-        protected List<Confectioner> confectioners;
-        protected List<CartOrder> cartOrders = new List<CartOrder>();
-        protected List<FavouriteProduct> favouriteProducts = new List<FavouriteProduct>();
-        protected List<Ingredient> ingredients;
-        protected List<Image> images = new List<Image>();
-        protected List<Category> categories;
-        protected List<Order> orders = new List<Order>();
-        protected List<Product> products;
-        protected List<ProductsCategories> productsCategories;
-        protected List<ProductsIngredients> productsIngredients;
-        protected List<PiecesCount> piecesCounts;
-        protected List<IdentityUserRole<string>> userRoles;
+        private List<IdentityRole> roles;
+        private List<User> users;
+        private List<Client> clients;
+        private List<Confectioner> confectioners;
+        private List<CartOrder> cartOrders = new List<CartOrder>();
+        private List<FavouriteProduct> favouriteProducts = new List<FavouriteProduct>();
+        private List<Ingredient> ingredients;
+        private List<Image> images = new List<Image>();
+        private List<Category> categories;
+        private List<Order> orders = new List<Order>();
+        private List<Product> products;
+        private List<ProductsCategories> productsCategories;
+        private List<ProductsIngredients> productsIngredients;
+        private List<PiecesCount> piecesCounts;
+        private List<IdentityUserRole<string>> userRoles;
 
         protected ApplicationDbContext context;
 

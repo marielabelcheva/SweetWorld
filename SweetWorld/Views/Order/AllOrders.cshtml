@@ -5,10 +5,32 @@
         <div class="ps-breadcrumb">
             <ul class="breadcrumb">
                 <li><a asp-action="Index" asp-controller="Home">Home</a></li>
-                <li>Unapproved orders</li>
+                @if (this.User.IsInRole("Administrator"))
+                {
+                    <li>Unapproved orders</li>
+                }
+                else if (this.User.IsInRole("Confectioner"))
+                {
+                    <li>Orders for executing</li>
+                }
+                else
+                {
+                    <li>All orders</li>
+                }
             </ul>
         </div>
-        <h1 class="ps-hero__heading">Unapproved orders</h1>
+        @if (this.User.IsInRole("Administrator"))
+        {
+            <h1 class="ps-hero__heading">Unapproved orders</h1>
+        }
+        else if (this.User.IsInRole("Confectioner"))
+        {
+            <h1 class="ps-hero__heading">Orders for executing</h1>
+        }
+        else
+        {
+            <h1 class="ps-hero__heading">All orders</h1>
+        }
     </div>
 </div>
 <div class="ps-page--shop">

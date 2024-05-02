@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SweetWorld.Core\SweetWorld.Core.csproj" />
     <ProjectReference Include="..\SweetWorld\SweetWorld.csproj" />
   </ItemGroup>
 

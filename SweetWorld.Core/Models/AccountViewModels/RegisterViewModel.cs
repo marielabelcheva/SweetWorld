@@ -22,6 +22,11 @@ namespace SweetWorld.Core.Models.AccountViewModels
         public string? Email { get; set; }
 
         [Required]
+        [Phone]
+        [StringLength(10, MinimumLength = 9)]
+        public string? PhoneNumber { get; set; }
+
+        [Required]
         [StringLength(20, MinimumLength = 5)]
         [DataType(DataType.Password)]
         public string? Password { get; set; }

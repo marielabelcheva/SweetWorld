@@ -81,25 +81,24 @@ namespace SweetWorld.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Confectioner,Administrator")]
-        public async Task<IActionResult> DeleteCategoryOfAProduct(Guid? productId)
+        public async Task<IActionResult> DeleteCategoryOfAProduct(Guid? productId, Guid? categoryId)
         {
-            //
-            try
-            {
-                return View(await this.categoryService.GetAllCategoriesOfAProductAsync(productId));
-            }
+            try { await this.categoryService.DeleteCategoryOfAProductAsync(productId, categoryId); }
             catch (Exception ex) { TempData["message"] = ex.Message; }
+
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
+        [HttpGet]
         [Authorize(Roles = "Confectioner,Administrator")]
-        public async Task<IActionResult> DeleteCategoryOfAProduct(ProductAddIngredientOrCategoryViewModel viewModel)
+        public async Task<IActionResult> AllCategoriesOfAProduct(Guid? productId)
         {
-            try { await this.categoryService.AddCategoryOfaProductAsync(viewModel.ProductId, viewModel.ItemId); }
-            catch (Exception ex) { TempData["message"] = ex.Message; }
-
-            return RedirectToAction("Index");
+            try 
+            {
+                ViewBag.ProductId = productId;
+                return View(await this.categoryService.GetAllCategoriesOfAProductAsync(productId)); 
+            }
+            catch (Exception ex) { TempData["message"] = ex.Message; return RedirectToAction("Index"); }
         }
     }
 }

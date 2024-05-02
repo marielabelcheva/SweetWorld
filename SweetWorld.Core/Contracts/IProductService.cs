@@ -24,15 +24,15 @@ namespace SweetWorld.Core.Contracts
 
         public Task<IEnumerable<ProductViewModel>> GetProductsByPriceAsync(decimal price = 0.0m);
 
+        public Task<IEnumerable<ProductViewModel>> GetProductsByNameAsync(string? name);
+
         public Task LikeProductAsync(Guid? id, Guid? clientId);
 
         public Task<IEnumerable<ProductViewModel>> WishListAsync(Guid? clientId);
 
-        public Task AddPiecesCountAndPrice(PiecesCountAndPriceViewModel viewModel, Guid? productId);
+        public Task AddPiecesCountAndPrice(PiecesCountAndPriceViewModel viewModel);
 
         public Task DeleteFromWishListAsync(Guid? productId, Guid? clientId);
-
-        public Task<SelectList> GetPiecesCountOfAProductAsync(Guid? productId);
 
         public Task<IEnumerable<string?>> GetAllTypesAsync();
 

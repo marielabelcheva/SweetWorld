@@ -8,6 +8,8 @@ namespace SweetWorld.Core.Models.ProductViewModels
 {
     public class PiecesCountAndPriceViewModel
     {
+        public Guid? ProductId {  get; set; }
+
         public int PiecesCount { get; set; }
 
         public decimal Price { get; set; }

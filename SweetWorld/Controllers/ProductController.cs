@@ -92,7 +92,6 @@ namespace SweetWorld.Controllers
         {
             try
             {
-                //ViewBag.Pieces = await this.productService.GetPiecesCountOfAProductAsync(id);
                 return View(await this.productService.ProductDataAsync(id));
             }
             catch(Exception ex) { TempData["message"] = ex.Message; return RedirectToAction("Index"); }
@@ -108,7 +107,6 @@ namespace SweetWorld.Controllers
 
             try 
             {
-                //for checking if it works - instead client.Id put Guid.Parse("fa6c6780-40d5-4c7e-9e48-fd82d03190b5")
                 await this.productService.LikeProductAsync(id, client.Id); 
             }
             catch(Exception ex) { TempData["message"] = ex.Message; }
@@ -126,14 +124,13 @@ namespace SweetWorld.Controllers
 
             try 
             {
-                //for checking if it works - instead client.Id put Guid.Parse("fa6c6780-40d5-4c7e-9e48-fd82d03190b5")
                 return View(await this.productService.WishListAsync(client.Id)); 
             }
             catch(Exception ex) { TempData["message"] = ex.Message; return RedirectToAction("Index"); }
         }
 
         [HttpGet]
-        [Authorize(Roles = "CLient")]
+        [Authorize(Roles = "Client")]
         public async Task<IActionResult> DeleteFromFavourites(Guid? id)
         {
             var user = await this.userManager.GetUserAsync(this.User);
@@ -142,7 +139,6 @@ namespace SweetWorld.Controllers
 
             try 
             {
-                //for checking if it works - instead client.Id put Guid.Parse("fa6c6780-40d5-4c7e-9e48-fd82d03190b5")
                 await this.productService.DeleteFromWishListAsync(id, client.Id); 
             }
             catch (Exception ex) { TempData["message"] = ex.Message; }
@@ -176,7 +172,7 @@ namespace SweetWorld.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Client")]
+        [Authorize(Roles = "Confectioner")]
         public async Task<IActionResult> Edit(Guid? id)
         {
             try
@@ -192,13 +188,30 @@ namespace SweetWorld.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Client")]
+        [Authorize(Roles = "Confectioner")]
         public async Task<IActionResult> Edit(EditProductViewModel viewModel)
         {
             try { await this.productService.EditProductAsync(viewModel); }
             catch (Exception ex) { TempData["message"] = ex.Message; }
 
             return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Confectioner")]
+        public IActionResult AddPiecesCount(Guid? productId)
+        {
+            return View(new PiecesCountAndPriceViewModel() { ProductId = productId });
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Confectioner")]
+        public async Task<IActionResult> AddPiecesCount(PiecesCountAndPriceViewModel viewModel)
+        {
+            try { await this.productService.AddPiecesCountAndPrice(viewModel); }
+            catch (Exception ex) { TempData["message"] = ex.Message; }
+            
+            return RedirectToAction("ProductData", viewModel.ProductId);
         }
 
         [HttpGet]
@@ -242,6 +255,21 @@ namespace SweetWorld.Controllers
                 ViewBag.Types = await this.productService.GetAllTypesAsync();
 
                 return View("Index", await this.productService.GetProductsFromCategoryAsync(category));
+            }
+            catch (Exception ex) { TempData["message"] = ex.Message; return RedirectToAction("Index"); }
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Client")]
+        [AllowAnonymous]
+        public async Task<IActionResult> FilterByName(string? name)
+        {
+            try
+            {
+                ViewBag.Categories = await this.productService.GetAllCategoriesAsync();
+                ViewBag.Types = await this.productService.GetAllTypesAsync();
+
+                return View("Index", await this.productService.GetProductsByNameAsync(name));
             }
             catch (Exception ex) { TempData["message"] = ex.Message; return RedirectToAction("Index"); }
         }

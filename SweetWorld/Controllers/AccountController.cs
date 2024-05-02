@@ -46,7 +46,8 @@ namespace SweetWorld.Controllers
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 Email = model.Email,
-                UserName = model.UserName
+                UserName = model.UserName,
+                PhoneNumber = model.PhoneNumber
             };
 
             var result = await this.userManager.CreateAsync(user, model.Password);

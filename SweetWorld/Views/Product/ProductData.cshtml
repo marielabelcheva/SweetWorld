@@ -1,6 +1,5 @@
 ﻿@model ProductDataViewModel
 
-
 <div class="ps-page ps-page--product-detail">
     <div class="ps-product--detail ps-product--background bg--cover" data-background="img/hero/shop-hero.png">
         <div class="container">
@@ -51,11 +50,15 @@
                     <div class="ps-product__shopping">
                         @if (this.User.IsInRole("Client"))
                         {
-                            <select class="ps-select form-control" title="Choose Size" asp-for="Price" asp-items="@ViewBag.Pieces"></select>
+                            if (this.Model.PiecesCountAndPrice.Count != 0)
+                            {
+                                var items = new SelectList(this.Model.PiecesCountAndPrice, "Price", "Count");
+                                <select class="ps-select form-control" title="Choose Size" asp-for="Price" asp-items="items"></select>
+                            }
                             <div class="form-group--number">
                                 <input class="form-control" type="number" placeholder="1" asp-for="Amount">
                             </div>
-                            <a class="ps-btn" asp-controller="Order" asp-action="AddToCart">Order now</a>
+                            <a class="ps-btn" asp-controller="Order" asp-action="AddToCart" asp-route-viewModel="@this.Model">Order now</a>
                             <div class="ps-product__actions">
                                 <a asp-action="FavouriteProduct" asp-controller="Product" asp-route-id="@this.Model.Id">
                                     <i class="fa fa-heart-o"></i>
@@ -70,9 +73,9 @@
                         }
                         else if (this.User.IsInRole("Administrator"))
                         {
-                            <a class="ps-btn" asp-controller="Category" asp-action="AddCategoryOfAProduct" asp-route-productId="@this.Model.Id">Add Category</a>
-                            <p></p>
                             <a class="ps-btn" asp-controller="Product" asp-action="Delete" asp-route-id="@this.Model.Id">Delete</a>
+                            <p></p>
+                            <a class="ps-btn" asp-controller="Category" asp-action="AllCategoriesOfAProduct" asp-route-productId="@this.Model.Id">Categories of the product</a>
                         }
                         else
                         {
@@ -82,11 +85,16 @@
                     @if (this.User.IsInRole("Confectioner"))
                     {
                         <div class="ps-product__shopping">
-                            <a class="ps-btn" asp-controller="Category" asp-action="AddCategoryOfAProduct" asp-route-productId="@this.Model.Id">Add Category</a>
-                            <p></p>
                             <a class="ps-btn" asp-controller="Product" asp-action="UploadImage" asp-route-productId="@this.Model.Id">Upload image</a>
                             <p></p>
                             <a class="ps-btn" asp-controller="Product" asp-action="Delete" asp-route-id="@this.Model.Id">Delete</a>
+                            <p></p>
+                            <a class="ps-btn" asp-controller="Category" asp-action="ViewAllCategoriesOfAProduct" asp-route-productId="@this.Model.Id">Categories of the product</a>
+                        </div>
+                        <div class="ps-product__shopping">
+                            <a class="ps-btn" asp-controller="Category" asp-action="AddCategoryOfAProduct" asp-route-productId="@this.Model.Id">Add Category</a>
+                            <p></p>
+                            <a class="ps-btn" asp-controller="Product" asp-action="AddPiecesCount" asp-route-productId="@this.Model.Id">Add pieces count</a>
                         </div>
                     }
                 </div>
@@ -110,6 +118,14 @@
                             @foreach(var category in this.Model.Categories)
                             {
                                 <p>@category.Name</p>
+                            }
+                            @if ((this.User.IsInRole("Confectioner") || this.User.IsInRole("Administrator")) && this.Model.PiecesCountAndPrice.Count != 0)
+                            {
+                                <h5>SIZES:</h5>
+                                @foreach (var size in this.Model.PiecesCountAndPrice)
+                                {
+                                    <p>@size.Count - @size.Price BGN</p>
+                                }
                             }
                         </div>
                     </div>

@@ -1,0 +1,44 @@
+﻿@model IEnumerable<CategoryViewModel>
+
+<body>
+    <div class="ps-page">
+        <div class="ps-hero bg--cover" data-background="img/hero/shop-hero.png">
+            <div class="ps-hero__container">
+                <div class="ps-breadcrumb">
+                    <ul class="breadcrumb">
+                        <li><a asp-action="Index" asp-controller="Home">Home</a></li>
+                        <li>Categories of a product</li>
+                    </ul>
+                </div>
+                <h1 class="ps-hero__heading">Categories of a product</h1>
+            </div>
+        </div>
+        <div class="container">
+            <div class="ps-whishlist">
+                <div class="table-responsive">
+                    <table class="table ps-table ps-table--whishlist">
+                        <thead>
+                            <tr>
+                                <th>Category Name</th>
+                                <th class="ps-table__actions">
+                                    <a class="ps-btn" asp-controller="Category" asp-action="AddCategoryOfAProduct" asp-route-productId="@ViewBag.ProductId">Add Category</a>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var category in this.Model)
+                            {
+                                <tr>
+                                    <td><span class="ps-instock">@category.Name</span></td>
+                                    <td class="ps-table__actions">
+                                        <a class="ps-btn" asp-controller="Category" asp-action="DeleteCategoryOfAProduct" asp-route-productId="@ViewBag.ProductId" asp-route-categoryId="@category.Id"></a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
