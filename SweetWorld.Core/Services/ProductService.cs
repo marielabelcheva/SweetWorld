@@ -17,15 +17,13 @@ namespace SweetWorld.Core.Services
         private readonly ApplicationDbContext dbContext;
         private readonly ICategoryService categoryService;
         private readonly IIngredientService ingredientService;
-        private readonly IImageService imageService;
 
         public ProductService(ApplicationDbContext dbContext, ICategoryService categoryService,
-                              IIngredientService ingredientService, IImageService imageService)
+                              IIngredientService ingredientService)
         {
             this.dbContext = dbContext;
             this.categoryService = categoryService;
             this.ingredientService = ingredientService;
-            this.imageService = imageService;
         }
 
         public async Task AddPiecesCountAndPrice(PiecesCountAndPriceViewModel viewModel)
@@ -45,7 +43,7 @@ namespace SweetWorld.Core.Services
                 await this.dbContext.SaveChangesAsync();
             }
 
-            throw new ArgumentNullException();
+            else throw new ArgumentNullException();
         }
 
         public async Task AddProductAsync(AddProductViewModel viewModel, Guid? confectionerId)
@@ -78,7 +76,7 @@ namespace SweetWorld.Core.Services
 
         public async Task DeleteProductAsync(Guid? id)
         {
-            Product? product = await this.dbContext.Products.FirstOrDefaultAsync(product => product.Id == id);
+            Product? product = await this.dbContext.Products.FindAsync(id);
 
             if (product != null)
             {
@@ -86,7 +84,7 @@ namespace SweetWorld.Core.Services
                 await this.dbContext.SaveChangesAsync();
             }
 
-            throw new NullReferenceException();
+            else throw new NullReferenceException();
         }
 
         public async Task<EditProductViewModel> EditProductAsync(Guid? id)
@@ -120,7 +118,7 @@ namespace SweetWorld.Core.Services
                 await this.dbContext.SaveChangesAsync();
             }
 
-            throw new NullReferenceException();
+            else throw new NullReferenceException();
         }
 
         public async Task LikeProductAsync(Guid? id, Guid? clientId)
@@ -141,14 +139,14 @@ namespace SweetWorld.Core.Services
                 await this.dbContext.SaveChangesAsync();
             }
 
-            throw new NullReferenceException();
+            else throw new NullReferenceException();
         }
 
         public async Task<IEnumerable<ProductViewModel>> GetProductsByPriceAsync(decimal price = 0)
         {
             var products = await this.dbContext.Products.ToListAsync();
 
-            if (products != null)
+            if (products.Count != 0)
             {
                 if (price > 0) 
                 { 
@@ -181,7 +179,7 @@ namespace SweetWorld.Core.Services
                                                           .Include(category => category.ProductsCategories)
                                                           .ThenInclude(product => product.Product).FirstOrDefaultAsync();
 
-            if (categoryProducts?.ProductsCategories != null)
+            if (categoryProducts?.Name == categoryName)
             {
                 return categoryProducts.ProductsCategories.Select(product => new ProductViewModel()
                 {
@@ -200,7 +198,7 @@ namespace SweetWorld.Core.Services
         {
             var products = await this.dbContext.Products.Where(product => product.Type == type).ToListAsync();
 
-            if (products != null)
+            if (products.Count != 0)
             {
                 return products.Select(product => new ProductViewModel()
                 {
@@ -219,16 +217,16 @@ namespace SweetWorld.Core.Services
             Product? product = await this.dbContext.Products.Include(product => product.Confectioner)
                                                         .ThenInclude(confectioner => confectioner.User)
                                                         .FirstOrDefaultAsync(product => product.Id == id);
-            if (product != null)
+            if (product?.Id == id)
             {
                 var related = await this.AllProductsAsync();
 
                 return new ProductDataViewModel()
                 {
-                    Id = product.Id,
-                    Name = product.Name,
-                    Type = product.Type,
-                    Price = product.Price,
+                    Id = product?.Id,
+                    Name = product?.Name,
+                    Type = product?.Type,
+                    Price = product?.Price,
                     ConfectionerName = $"{product?.Confectioner?.User?.FirstName} {product?.Confectioner?.User?.LastName}",
                     Thumbnail = product?.Thumbnail,
                     PiecesCountAndPrice = product?.PiecesCountAndPrice,
@@ -249,7 +247,7 @@ namespace SweetWorld.Core.Services
 
 
 
-            if (products.FavouriteProducts != null)
+            if (products?.Id == clientId)
             {
                 return products.FavouriteProducts.Select(product => new ProductViewModel()
                 {
@@ -273,7 +271,7 @@ namespace SweetWorld.Core.Services
                 await this.dbContext.SaveChangesAsync();
             }
 
-            throw new ArgumentNullException();
+            else throw new ArgumentNullException();
         }
 
         public async Task<IEnumerable<string?>> GetAllTypesAsync()
@@ -290,7 +288,7 @@ namespace SweetWorld.Core.Services
         {
             var products = await this.dbContext.Products.Where(product => product.Name.ToLower().Contains(name.ToLower())).ToListAsync();
 
-            if (products != null)
+            if (products.Count != 0)
             {
                 return products.Select(product => new ProductViewModel()
                 {
@@ -301,7 +299,7 @@ namespace SweetWorld.Core.Services
                 });
             }
 
-            throw new NullReferenceException("No products with this name!");
+            else throw new NullReferenceException("No products with this name!");
         }
     }
 }

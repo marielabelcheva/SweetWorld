@@ -1,0 +1,46 @@
+﻿@model PiecesCountAndPriceViewModel
+
+<body>
+    <div class="ps-page--contact">
+        <div class="ps-hero bg--cover" data-background="img/hero/shop-hero.png">
+            <div class="ps-hero__container">
+                <div class="ps-breadcrumb">
+                    <ul class="breadcrumb">
+                        <li><a asp-action="Index" asp-controller="Home">Home</a></li>
+                        <li>Add size and price of a product</li>
+                    </ul>
+                </div>
+                <h1 class="ps-hero__heading">Add size and price of a product</h1>
+            </div>
+        </div>
+        <div class="ps-section ps-contact">
+            <div class="container">
+                <form class="ps-form--contact" asp-action="AddPiecesCount" method="post">
+                    <div class="ps-form__content">
+                        <div class="row">
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 ">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" placeholder="Count of pieces" asp-for="PiecesCount">
+                                    <span asp-validation-for="PiecesCount" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 ">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" placeholder="Price" asp-for="Price">
+                                    <span asp-validation-for="Price" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ps-form__submit">
+                            <button class="ps-btn">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+    }
+</body>
