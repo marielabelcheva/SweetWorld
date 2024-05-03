@@ -204,7 +204,7 @@
                                             </a>
                                         </div>
                                         <div class="ps-product__content">
-                                            <span class="ps-btn--close"></span>
+                                            <span class="ps-btn--close"><a asp-action="DeleteFromCart" asp-controller="Order" asp-route-id="@order.Id"></a></span>
                                             <a class="ps-product__title" asp-area="" asp-controller="Product" asp-action="ProductData" asp-route-id="@order.ProductId">@order.ProductName</a>
                                             <p><strong>@order.Amount</strong></p><small>@order.UnitPrice BGN</small>
                                         </div>

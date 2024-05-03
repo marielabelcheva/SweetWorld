@@ -49,7 +49,7 @@
                                 <td class="total">
                                     @(item.UnitPrice * item.Amount) BGN
                                 </td>
-                                <td class="ps-table__actions"><a class="ps-btn--close" asp-action="DeleteFromCart" asp-controller="Order" asp-route-order="@item"></a></td>
+                                <td class="ps-table__actions"><a class="ps-btn--close" asp-action="DeleteFromCart" asp-controller="Order" asp-route-id="@item.Id"></a></td>
                             </tr>
                         }
                     </tbody>

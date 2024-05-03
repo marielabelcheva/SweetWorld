@@ -20,24 +20,29 @@ namespace SweetWorld.Core.Services
 
         public async Task AddOrderToTheCartAsync(ProductDataViewModel viewModel, Client client)
         {
-            client.Cart.Add(new CartOrder()
+            if (client != null)
             {
-                Id = Guid.NewGuid(),
-                ProductId = viewModel.Id,
-                ProductName = viewModel.Name,
-                ProductThumb = viewModel.Thumbnail,
-                ProductType = viewModel.Type,
-                Amount = viewModel.Amount,
-                UnitPrice = viewModel.Price,
-                AdditionalInformation = viewModel.AdditionalInformation
-            });
+                await this.dbContext.Carts.AddAsync(new CartOrder()
+                {
+                    Id = Guid.NewGuid(),
+                    ProductId = viewModel.Id,
+                    ProductName = viewModel.Name,
+                    ProductThumb = viewModel.Thumbnail,
+                    ProductType = viewModel.Type,
+                    Amount = viewModel.Amount,
+                    UnitPrice = viewModel.Price,
+                    AdditionalInformation = viewModel.AdditionalInformation,
+                    ClientId = client.Id
+                });
 
-            await this.dbContext.SaveChangesAsync();
+                await this.dbContext.SaveChangesAsync();
+            }
+            else throw new NullReferenceException();
         }
 
-        public IEnumerable<CartOrder> AllOrdersFromTheCartAsync(Client? client)
+        public async Task<IEnumerable<CartOrder>> AllOrdersFromTheCartAsync(Client? client)
         {
-            return client.Cart.ToList();
+            return await this.dbContext.Carts.Where(order => order.ClientId == client.Id).ToListAsync();
         }
 
         public async Task CheckoutCartAsync(DeliveryViewModel viewModel, Client client)
@@ -70,14 +75,16 @@ namespace SweetWorld.Core.Services
 
         public async Task ClearCart(Client? client)
         {
-            client.Cart.Clear();
+            var orders = await this.dbContext.Carts.Where(order => order.ClientId == client.Id).ToListAsync();
+
+            this.dbContext.Carts.RemoveRange(orders);
 
             await this.dbContext.SaveChangesAsync();
         }
 
         public async Task DeleteOrderAsync(Guid? id)
         {
-            Order? order = await this.dbContext.Orders.FirstOrDefaultAsync(order => order.Id == id);
+            Order? order = await this.dbContext.Orders.FindAsync(id);
 
             if (order != null)
             {
@@ -85,21 +92,27 @@ namespace SweetWorld.Core.Services
                 await this.dbContext.SaveChangesAsync();
             }
 
-            throw new NullReferenceException();
+            else throw new NullReferenceException();
         }
 
-        public async Task DeleteOrderFromTheCartAsync(CartOrder order, Client client)
+        public async Task DeleteOrderFromTheCartAsync(Guid? cartOrderId, Client client)
         {
-            client.Cart.Remove(order);
+            var order = await this.dbContext.Carts.FindAsync(cartOrderId);
 
-            await this.dbContext.SaveChangesAsync();
+            if (order != null)
+            {
+                this.dbContext.Carts.Remove(order);
+                await this.dbContext.SaveChangesAsync();
+            }
+
+            else throw new NullReferenceException();
         }
 
         public async Task<IEnumerable<OrderClientViewModel>> GetAllUnaprovedOrdersAsync()
         {
             var orders = await this.dbContext.Orders.Where(order => order.Status == "unapproved")
                                                     .Include(order => order.Product).ToListAsync();
-            if (orders != null)
+            if (orders.Count != 0)
             {
                 return orders.Select(order => new OrderClientViewModel()
                 {
@@ -110,14 +123,14 @@ namespace SweetWorld.Core.Services
                 });
             }
 
-            throw new NullReferenceException("No new orders!");
+            else throw new NullReferenceException("No new orders!");
         }
 
-        public async Task<OrderClientViewModel> OrderDetailAsync(Guid id)
+        public async Task<OrderClientViewModel> OrderDetailAsync(Guid? id)
         {
             Order? order = await this.dbContext.Orders.Include(ord => ord.Product).FirstOrDefaultAsync(ord => ord.Id == id);
 
-            if (order != null)
+            if (order?.Id == id)
             {
                 return new OrderClientViewModel()
                 {
@@ -138,7 +151,14 @@ namespace SweetWorld.Core.Services
 
         public async Task UpdateCartAsyncAsync(IEnumerable<CartOrder> cart, Client? client)
         {
-            client.Cart = cart.ToList();
+            int index = 0;
+
+            foreach(var order in this.dbContext.Carts.Where(order => order.ClientId == client.Id))
+            {
+                order.Amount = cart.ToList()[index].Amount;
+                order.AdditionalInformation = cart.ToList()[index].AdditionalInformation;
+            }
+
             await this.dbContext.SaveChangesAsync();
         }
 
@@ -153,7 +173,7 @@ namespace SweetWorld.Core.Services
                 await this.dbContext.SaveChangesAsync();
             }
 
-            throw new NullReferenceException();
+            else throw new NullReferenceException();
         }
     }
 }

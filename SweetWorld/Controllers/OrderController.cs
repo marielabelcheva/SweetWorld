@@ -120,9 +120,8 @@ namespace SweetWorld.Controllers
             var user = await this.userManager.GetUserAsync(this.User);
 
             var client = await this.clientService.GetClientByUserIdAsync(user.Id);
-            var order = client?.Cart.FirstOrDefault(c => c.Id == id);
 
-            await this.orderService.DeleteOrderFromTheCartAsync(order, client);
+            await this.orderService.DeleteOrderFromTheCartAsync(id, client);
 
             return RedirectToAction("CartOrders");
         }
@@ -148,7 +147,8 @@ namespace SweetWorld.Controllers
 
             var client = await this.clientService.GetClientByUserIdAsync(user.Id);
 
-            var sum = this.orderService.AllOrdersFromTheCartAsync(client).Sum(order => order.UnitPrice * order.Amount);
+            var orders = await this.orderService.AllOrdersFromTheCartAsync(client);
+            var sum = orders.ToList().Sum(order => order.UnitPrice * order.Amount);
 
             ViewBag.Price = sum;
             ViewBag.Total = sum + 7.99m;
