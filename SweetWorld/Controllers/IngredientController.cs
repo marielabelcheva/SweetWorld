@@ -17,11 +17,17 @@ namespace SweetWorld.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
             try
             {
-                return View(await this.ingredientService.GetAllIngredientsAsync());
+                var items = await this.ingredientService.GetAllIngredientsAsync(page);
+
+                this.ingredientService.Pager.Controller = "Ingredient";
+                this.ingredientService.Pager.Action = "Index";
+                ViewBag.Pager = this.ingredientService.Pager;
+
+                return View(items);
             }
             catch (Exception ex)
             {

@@ -27,7 +27,7 @@ namespace SweetWorld.Tests.UnitTests
         {
             var dbIngredients = await this.context.Ingredients.ToListAsync();
 
-            var allIngredients = (List<IngredientViewModel>)await this.ingredientService.GetAllIngredientsAsync();
+            var allIngredients = (List<IngredientViewModel>)await this.ingredientService.GetAllIngredientsAsync(1);
 
             Assert.That(allIngredients.Count, Is.EqualTo(dbIngredients.Count));
             Assert.That(allIngredients[1].Id, Is.EqualTo(dbIngredients[1].Id));
@@ -39,7 +39,7 @@ namespace SweetWorld.Tests.UnitTests
             this.context.Ingredients.RemoveRange(await this.context.Ingredients.ToListAsync());
             await this.context.SaveChangesAsync();
 
-            var ex = Assert.ThrowsAsync<NullReferenceException>(async () => await this.ingredientService.GetAllIngredientsAsync());
+            var ex = Assert.ThrowsAsync<NullReferenceException>(async () => await this.ingredientService.GetAllIngredientsAsync(1));
             Assert.That(ex.Message, Is.EqualTo("No ingredients in the database!"));
         }
 

@@ -30,7 +30,7 @@
                     <div class="ps-product__shopping">
                         @if (this.User.IsInRole("Administrator"))
                         {
-                            <a class="ps-btn" asp-controller="Order" asp-action="UpdateStatus" asp-route-id="@this.Model.OrderId" asp-route-status="approve">Approve</a>
+                            <a class="ps-btn" asp-controller="Order" asp-action="UpdateStatus" asp-route-id="@this.Model.OrderId" asp-route-status="approved">Approve</a>
                             <p></p>
                             <a class="ps-btn" asp-controller="Order" asp-action="Delete" asp-route-id="@this.Model.OrderId">Delete</a>
                         }

@@ -101,12 +101,15 @@
                         <div class="ps-document">
                             <h5>INGREDIENTS:</h5>
                             <p>@string.Join("; ",this.Model.Ingredients)</p>
-                            <h5>CATEGORIES:</h5>
-                            @foreach(var category in this.Model.Categories)
+                            @if (!this.User.Identity.IsAuthenticated || this.User.IsInRole("Client"))
                             {
-                                <p>@category.Name</p>
+                                <h5>CATEGORIES:</h5>
+                                @foreach (var category in this.Model.Categories)
+                                {
+                                    <p>@category.Name</p>
+                                }
                             }
-                            @if ((this.User.IsInRole("Confectioner") || this.User.IsInRole("Administrator")) && this.Model.PiecesCountAndPrice.Count != 0)
+                            else if ((this.User.IsInRole("Confectioner") || this.User.IsInRole("Administrator")) && this.Model.PiecesCountAndPrice.Count != 0)
                             {
                                 <h5>SIZES:</h5>
                                 @foreach (var size in this.Model.PiecesCountAndPrice)

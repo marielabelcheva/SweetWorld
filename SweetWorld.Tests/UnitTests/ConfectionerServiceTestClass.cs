@@ -48,7 +48,7 @@ namespace SweetWorld.Tests.UnitTests
         {
             Guid? user = Guid.Parse(id);
 
-            Assert.ThrowsAsync<NullReferenceException>(async () => await this.confectionerService.AllProductsOfAConfectionerAsync(user));
+            Assert.ThrowsAsync<NullReferenceException>(async () => await this.confectionerService.AllProductsOfAConfectionerAsync(1, user));
         }
 
         [Test]
@@ -67,7 +67,7 @@ namespace SweetWorld.Tests.UnitTests
                 Thumbnail = product.Thumbnail
             });
 
-            var allProducts = await this.confectionerService.AllProductsOfAConfectionerAsync(Guid.Parse("55f67761-62f4-4263-95b0-0302b3e0f8ee"));
+            var allProducts = await this.confectionerService.AllProductsOfAConfectionerAsync(1, Guid.Parse("55f67761-62f4-4263-95b0-0302b3e0f8ee"));
 
             Assert.That(allProducts?.ToList().Count, Is.EqualTo(dbProducts?.ToList().Count));
             Assert.That(allProducts.ToList()[0].Id, Is.EqualTo(dbProducts?.ToList()[0].Id));
@@ -110,7 +110,7 @@ namespace SweetWorld.Tests.UnitTests
         {
             var user = await this.confectionerService.GetConfectionerByUserIdAsync("75a16645-a8f9-452d-8415-6902861b4bb5");
 
-            var ex = Assert.ThrowsAsync<NullReferenceException>(async () => await this.confectionerService.AllOrdersForExecutingAsync(user));
+            var ex = Assert.ThrowsAsync<NullReferenceException>(async () => await this.confectionerService.AllOrdersForExecutingAsync(1, user));
             Assert.That(ex.Message, Is.EqualTo("No new orders!"));
         }
 
@@ -144,7 +144,7 @@ namespace SweetWorld.Tests.UnitTests
                                                         CreationDate = order.CreationDate
                                                     });
 
-            var allOrders = await this.confectionerService.AllOrdersForExecutingAsync(user);
+            var allOrders = await this.confectionerService.AllOrdersForExecutingAsync(1, user);
 
             Assert.That(allOrders?.ToList().Count, Is.EqualTo(dbOrders?.ToList().Count));
             Assert.That(allOrders.ToList()[0].OrderId, Is.EqualTo(Guid.Parse("66cd2178-03e8-477f-a534-222ceecf50d6")));

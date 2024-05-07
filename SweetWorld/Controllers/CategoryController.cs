@@ -15,11 +15,17 @@ namespace SweetWorld.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Confectioner,Administrator")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
             try
             {
-                return View(await this.categoryService.AllCategoriesAsync());
+                var items = await this.categoryService.AllCategoriesAsync(page);
+
+                this.categoryService.Pager.Controller = "Category";
+                this.categoryService.Pager.Action = "Index";
+                ViewBag.Pager = this.categoryService.Pager;
+
+                return View(items);
             }
             catch (Exception ex) 
             {

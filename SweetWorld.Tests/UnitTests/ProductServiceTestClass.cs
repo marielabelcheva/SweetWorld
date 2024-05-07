@@ -90,7 +90,7 @@ namespace SweetWorld.Tests.UnitTests
         {
             var dbProducts = await this.context.Products.ToListAsync();
 
-            var allProducts = await this.productService.AllProductsAsync();
+            var allProducts = await this.productService.AllProductsAsync(1);
 
             Assert.That(allProducts.ToList().Count, Is.EqualTo(dbProducts.Count));
             Assert.That(allProducts.ToList()[1].Id, Is.EqualTo(dbProducts[1].Id));
@@ -304,7 +304,7 @@ namespace SweetWorld.Tests.UnitTests
 
             var dbFavorites = await this.context.Favourites.Where(f => f.ClientId == Guid.Parse("6d3f2835-3cfb-456e-a355-0725d13509d3")).ToListAsync();
 
-            var allFavorites = await this.productService.WishListAsync(Guid.Parse("6d3f2835-3cfb-456e-a355-0725d13509d3"));
+            var allFavorites = await this.productService.WishListAsync(1, Guid.Parse("6d3f2835-3cfb-456e-a355-0725d13509d3"));
 
             Assert.That(allFavorites.ToList().Count, Is.EqualTo(dbFavorites.Count));
             Assert.That(allFavorites.ToList()[0].Id, Is.EqualTo(dbFavorites[0].ProductId));
@@ -317,7 +317,7 @@ namespace SweetWorld.Tests.UnitTests
         {
             var client = Guid.Parse(id);
 
-            Assert.ThrowsAsync<NullReferenceException>(async () => await this.productService.WishListAsync(client));
+            Assert.ThrowsAsync<NullReferenceException>(async () => await this.productService.WishListAsync(1, client));
         }
 
         [Test]

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SweetWorld.Core.Contracts;
 using SweetWorld.Core.Models.OrderViewModels;
+using SweetWorld.Core.Models.Pagination;
 using SweetWorld.Core.Models.ProductViewModels;
 using SweetWorld.Infrastructure.Data;
 using SweetWorld.Infrastructure.Data.Models;
@@ -17,7 +18,13 @@ namespace SweetWorld.Core.Services
     {
         private readonly ApplicationDbContext dbContext;
 
-        public OrderService(ApplicationDbContext dbContext) { this.dbContext = dbContext; }
+        public OrderService(ApplicationDbContext dbContext) 
+        { 
+            this.dbContext = dbContext;
+            this.Pager = null!;
+        }
+
+        public Pager Pager { get; set; }
 
         public async Task<CartOrderViewModel> AddOrderToTheCartAsync(Guid? productId)
         {
@@ -140,19 +147,23 @@ namespace SweetWorld.Core.Services
             else throw new NullReferenceException();
         }
 
-        public async Task<IEnumerable<OrderClientViewModel>> GetAllUnaprovedOrdersAsync()
+        public async Task<IEnumerable<OrderClientViewModel>> GetAllUnaprovedOrdersAsync(int page)
         {
             var orders = await this.dbContext.Orders.Where(order => order.Status == "unapproved")
                                                     .Include(order => order.Product).ToListAsync();
             if (orders.Count != 0)
             {
+                int totalItems = orders.Count;
+                this.Pager = new Pager(totalItems, page);
+                int skipItems = (page - 1) * this.Pager.PageSize;
+
                 return orders.Select(order => new OrderClientViewModel()
                 {
                     OrderId = order.Id,
                     ProductName = order?.Product?.Name,
                     ProductThumb = order?.Product?.Thumbnail,
                     CreationDate = order?.CreationDate
-                });
+                }).Skip(skipItems).Take(this.Pager.PageSize);
             }
 
             else throw new NullReferenceException("No new orders!");

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SweetWorld.Infrastructure.Data.Models;
 using SweetWorld.Core.Models.AccountViewModels;
 using SweetWorld.Core.Contracts;
+using SweetWorld.Core.Models.Pagination;
 
 namespace SweetWorld.Controllers
 {
@@ -108,12 +109,23 @@ namespace SweetWorld.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Administrator")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
             var result = await this.clientService.GetAllClientsAsync();
             result = result.Union(await this.confectionerService.GetAllConfectionersAsync());
 
-            return View(result);
+
+            if (page < 1) { page = 1; }
+
+            int totalItems =  result.Count();
+            var pager = new Pager(totalItems, page);
+            pager.Controller = "Account";
+            pager.Action = "Index";
+            int skipUsers = (page - 1) * pager.PageSize;
+
+            ViewBag.Pager = pager;
+
+            return View(result.Skip(skipUsers).Take(pager.PageSize));
         }
 
         [HttpGet]

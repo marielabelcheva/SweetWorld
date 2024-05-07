@@ -1,5 +1,11 @@
 ﻿@model IEnumerable<ProductViewModel>
 
+@{
+    Pager pager = new Pager();
+    if (ViewBag.Pager != null) { pager = ViewBag.Pager; }
+}
+
+
 <body>
     <div class="ps-page">
         <div class="ps-hero bg--cover" data-background="img/hero/shop-hero.png">
@@ -49,6 +55,7 @@
                         </tbody>
                     </table>
                 </div>
+                <partial name="_Pager" model="@pager" />
             </div>
         </div>
     </div>

@@ -1,6 +1,7 @@
 ﻿using SweetWorld.Infrastructure.Data.Models;
 using SweetWorld.Core.Models.CategoryViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using SweetWorld.Core.Models.Pagination;
 
 namespace SweetWorld.Core.Contracts
 {
@@ -18,6 +19,8 @@ namespace SweetWorld.Core.Contracts
 
         public Task DeleteCategoryOfAProductAsync(Guid? productId, Guid? categoryId);
 
-        public Task<IEnumerable<CategoryViewModel>> AllCategoriesAsync();
+        public Task<IEnumerable<CategoryViewModel>> AllCategoriesAsync(int page);
+
+        public Pager Pager { get; set; }
     }
 }

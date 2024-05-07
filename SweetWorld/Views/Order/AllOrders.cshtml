@@ -1,81 +1,81 @@
 ﻿@model IEnumerable<OrderClientViewModel>
 
-<div class="ps-hero ps-hero--shopping bg--cover" data-background="img/hero/shop-hero.png">
-    <div class="ps-hero__container">
-        <div class="ps-breadcrumb">
-            <ul class="breadcrumb">
-                <li><a asp-action="Index" asp-controller="Home">Home</a></li>
-                @if (this.User.IsInRole("Administrator"))
-                {
-                    <li>Unapproved orders</li>
-                }
-                else if (this.User.IsInRole("Confectioner"))
-                {
-                    <li>Orders for executing</li>
-                }
-                else
-                {
-                    <li>All orders</li>
-                }
-            </ul>
-        </div>
-        @if (this.User.IsInRole("Administrator"))
-        {
-            <h1 class="ps-hero__heading">Unapproved orders</h1>
-        }
-        else if (this.User.IsInRole("Confectioner"))
-        {
-            <h1 class="ps-hero__heading">Orders for executing</h1>
-        }
-        else
-        {
-            <h1 class="ps-hero__heading">All orders</h1>
-        }
-    </div>
-</div>
-<div class="ps-page--shop">
-    <div class="container">
-        <div class="ps-shopping">
-            <div class="ps-shopping__left">
+@{
+    Pager pager = new Pager();
+    if (ViewBag.Pager != null) { pager = ViewBag.Pager; }
+}
+
+
+<body>
+    <div class="ps-hero ps-hero--shopping bg--cover" data-background="img/hero/shop-hero.png">
+        <div class="ps-hero__container">
+            <div class="ps-breadcrumb">
+                <ul class="breadcrumb">
+                    <li><a asp-action="Index" asp-controller="Home">Home</a></li>
+                    @if (this.User.IsInRole("Administrator"))
+                    {
+                        <li>Unapproved orders</li>
+                    }
+                    else if (this.User.IsInRole("Confectioner"))
+                    {
+                        <li>Orders for executing</li>
+                    }
+                    else
+                    {
+                        <li>All orders</li>
+                    }
+                </ul>
             </div>
-            <div class="ps-shopping__right">
-                <div class="ps-product-box">
-                    <div class="row">
-                        @foreach (var order in this.Model)
-                        {
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-6 ">
-                                <div class="ps-product">
-                                    <div class="ps-product__thumbnail">
-                                        <img src="@order.ProductThumb" alt="" style="width:210px; height:180px;" />
-                                        <a class="ps-product__overlay" asp-action="OrderDetail" asp-controller="Order" asp-route-id="@order.OrderId"></a>
-                                    </div>
-                                    <br>
-                                    <div class="ps-product__content">
-                                        <div class="ps-product__desc">
-                                            <a class="ps-product__title" asp-action="OrderDetail" asp-controller="Order" asp-route-id="@order.OrderId">@order.ProductName</a>
-                                            <p><span>Creation date: @order.CreationDate</span></p>
+            @if (this.User.IsInRole("Administrator"))
+            {
+                <h1 class="ps-hero__heading">Unapproved orders</h1>
+            }
+            else if (this.User.IsInRole("Confectioner"))
+            {
+                <h1 class="ps-hero__heading">Orders for executing</h1>
+            }
+            else
+            {
+                <h1 class="ps-hero__heading">All orders</h1>
+            }
+        </div>
+    </div>
+    <div class="ps-page--shop">
+        <div class="container">
+            <div class="ps-shopping">
+                <div class="ps-shopping__left">
+                </div>
+                <div class="ps-shopping__right">
+                    <div class="ps-product-box">
+                        <div class="row">
+                            @foreach (var order in this.Model)
+                            {
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-6 ">
+                                    <div class="ps-product">
+                                        <div class="ps-product__thumbnail">
+                                            <img src="@order.ProductThumb" alt="" style="width:210px; height:180px;" />
+                                            <a class="ps-product__overlay" asp-action="OrderDetail" asp-controller="Order" asp-route-id="@order.OrderId"></a>
                                         </div>
-                                        <div class="ps-product__shopping">
-                                            <a class="ps-btn ps-product__add-to-cart" asp-controller="Order" asp-action="OrderDetail" asp-route-id="@order.OrderId">
-                                                Order detail
-                                            </a>
+                                        <br>
+                                        <div class="ps-product__content">
+                                            <div class="ps-product__desc">
+                                                <a class="ps-product__title" asp-action="OrderDetail" asp-controller="Order" asp-route-id="@order.OrderId">@order.ProductName</a>
+                                                <p><span>Creation date: @order.CreationDate</span></p>
+                                            </div>
+                                            <div class="ps-product__shopping">
+                                                <a class="ps-btn ps-product__add-to-cart" asp-controller="Order" asp-action="OrderDetail" asp-route-id="@order.OrderId">
+                                                    Order detail
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        }
+                            }
+                        </div>
                     </div>
-                </div>
-                <div class="ps-pagination">
-                    <ul class="pagination">
-                        <li><a href="#"><i class="fa fa-caret-left"></i></a></li>
-                        <li class="active"><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#"><i class="fa fa-caret-right"></i></a></li>
-                    </ul>
+                    <partial name="_Pager" model="@pager" />
                 </div>
             </div>
         </div>
     </div>
-</div>
+</body>

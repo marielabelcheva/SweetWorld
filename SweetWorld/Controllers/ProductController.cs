@@ -31,17 +31,23 @@ namespace SweetWorld.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index() 
+        public async Task<IActionResult> Index(int page = 1) 
         {
+            var items = await this.productService.AllProductsAsync(page);
+
+            this.productService.Pager.Controller = "Product";
+            this.productService.Pager.Action = "Index";
+            ViewBag.Pager = this.productService.Pager;
+
             ViewBag.Categories = await this.productService.GetAllCategoriesAsync();
             ViewBag.Types = await this.productService.GetAllTypesAsync();
 
-            return View(await this.productService.AllProductsAsync());
+            return View(items);
         }
 
         [HttpGet]
         [Authorize(Roles = "Confectioner,Administrator")]
-        public async Task<IActionResult> MyProducts()
+        public async Task<IActionResult> MyProducts(int page = 1)
         {
             if (this.User.IsInRole("Confectioner"))
             {
@@ -49,10 +55,16 @@ namespace SweetWorld.Controllers
 
                 var confectioner = await this.confectionerService.GetConfectionerByUserIdAsync(user.Id);
 
-                return View(await this.confectionerService.AllProductsOfAConfectionerAsync(confectioner?.Id));
+                var items = await this.confectionerService.AllProductsOfAConfectionerAsync(page, confectioner?.Id);
+
+                this.confectionerService.Pager.Controller = "Product";
+                this.confectionerService.Pager.Action = "MyProducts";
+                ViewBag.Pager = this.confectionerService.Pager;
+
+                return View(items);
             }
 
-            return View(await this.productService.AllProductsAsync());
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
@@ -116,7 +128,7 @@ namespace SweetWorld.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Client")]
-        public async Task<IActionResult> Wishlist()
+        public async Task<IActionResult> Wishlist(int page = 1)
         {
             var user = await this.userManager.GetUserAsync(this.User);
 
@@ -124,7 +136,13 @@ namespace SweetWorld.Controllers
 
             try 
             {
-                return View(await this.productService.WishListAsync(client.Id)); 
+                var items = await this.productService.WishListAsync(page, client.Id);
+
+                this.productService.Pager.Controller = "Product";
+                this.productService.Pager.Action = "Wishlist";
+                ViewBag.Pager = this.productService.Pager;
+
+                return View(items); 
             }
             catch(Exception ex) { TempData["message"] = ex.Message; return RedirectToAction("Index"); }
         }

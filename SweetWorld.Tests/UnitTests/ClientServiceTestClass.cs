@@ -79,7 +79,7 @@ namespace SweetWorld.Tests.UnitTests
         {
             Guid? user = Guid.Parse(id);
 
-            Assert.ThrowsAsync<NullReferenceException>(async () => await this.clientService.AllOrdersOfAClientAsync(user));
+            Assert.ThrowsAsync<NullReferenceException>(async () => await this.clientService.AllOrdersOfAClientAsync(1, user));
         }
 
         [Test]
@@ -113,7 +113,7 @@ namespace SweetWorld.Tests.UnitTests
                 CreationDate = order.CreationDate,
             });
 
-            var allOrders = await this.clientService.AllOrdersOfAClientAsync(Guid.Parse("6d3f2835-3cfb-456e-a355-0725d13509d3"));
+            var allOrders = await this.clientService.AllOrdersOfAClientAsync(1, Guid.Parse("6d3f2835-3cfb-456e-a355-0725d13509d3"));
 
             Assert.That(allOrders?.ToList().Count, Is.EqualTo(dbOrders?.ToList().Count));
             Assert.That(allOrders.ToList()[0].OrderId, Is.EqualTo(Guid.Parse("66cd2178-03e8-477f-a534-222ceecf50d6")));

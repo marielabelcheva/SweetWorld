@@ -31,7 +31,7 @@
                                 <tr>
                                     <td><span class="ps-instock">@category.Name</span></td>
                                     <td class="ps-table__actions">
-                                        <a class="ps-btn" asp-controller="Category" asp-action="DeleteCategoryOfAProduct" asp-route-productId="@ViewBag.ProductId" asp-route-categoryId="@category.Id"></a>
+                                        <a class="ps-btn--close" asp-controller="Category" asp-action="DeleteCategoryOfAProduct" asp-route-productId="@ViewBag.ProductId" asp-route-categoryId="@category.Id"></a>
                                     </td>
                                 </tr>
                             }

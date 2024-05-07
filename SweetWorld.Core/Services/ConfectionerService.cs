@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SweetWorld.Core.Contracts;
 using SweetWorld.Core.Models.OrderViewModels;
+using SweetWorld.Core.Models.Pagination;
 using SweetWorld.Core.Models.ProductViewModels;
 using SweetWorld.Core.Models.UserViewModels;
 using SweetWorld.Infrastructure.Data;
@@ -17,7 +18,13 @@ namespace SweetWorld.Core.Services
     {
         private readonly ApplicationDbContext dbContext;
 
-        public ConfectionerService(ApplicationDbContext dbContext) { this.dbContext = dbContext; }
+        public ConfectionerService(ApplicationDbContext dbContext) 
+        { 
+            this.dbContext = dbContext;
+            this.Pager = null!;
+        }
+
+        public Pager Pager { get; set; }
 
         public async Task AddConfectionerAsync(string userId)
         {
@@ -38,31 +45,39 @@ namespace SweetWorld.Core.Services
             else throw new NullReferenceException();
         }
 
-        public async Task<IEnumerable<OrderClientViewModel>> AllOrdersForExecutingAsync(Confectioner? confectioner)
+        public async Task<IEnumerable<OrderClientViewModel>> AllOrdersForExecutingAsync(int page, Confectioner? confectioner)
         {
             var orders = await this.dbContext.Orders.Where(order => order.Status == "approved").Include(order => order.Product)
                                                     .Where(product => product.Product.ConfectionerId == confectioner.Id).ToListAsync();
             if (orders.Count != 0)
             {
+                int totalItems = orders.Count;
+                this.Pager = new Pager(totalItems, page);
+                int skipItems = (page - 1) * this.Pager.PageSize;
+
                 return orders.Select(order => new OrderClientViewModel()
                 {
                     OrderId = order.Id,
                     ProductName = order.Product.Name,
                     ProductThumb = order.Product.Thumbnail,
                     CreationDate = order.CreationDate
-                });
+                }).Skip(skipItems).Take(this.Pager.PageSize);
             }
 
             throw new NullReferenceException("No new orders!");
         }
 
-        public async Task<IEnumerable<ProductViewModel>?> AllProductsOfAConfectionerAsync(Guid? confectionerId)
+        public async Task<IEnumerable<ProductViewModel>?> AllProductsOfAConfectionerAsync(int page, Guid? confectionerId)
         {
             Confectioner? confectionerProducts = await this.dbContext.Confectioners.Where(confectioner => confectioner.Id == confectionerId)
                                                                                    .Include(confectioner => confectioner.Products)
                                                                                    .FirstOrDefaultAsync();
             if (confectionerProducts?.Id == confectionerId)
             {
+                int totalItems = confectionerProducts.Products.Count;
+                this.Pager = new Pager(totalItems, page);
+                int skipItems = (page - 1) * this.Pager.PageSize;
+
                 return confectionerProducts?.Products.Select(product => new ProductViewModel()
                 {
                     Id = product.Id,
@@ -70,7 +85,7 @@ namespace SweetWorld.Core.Services
                     Type = product.Type,
                     Price = product.Price,
                     Thumbnail = product.Thumbnail
-                });
+                }).Skip(skipItems).Take(this.Pager.PageSize);
             }
 
             throw new NullReferenceException();

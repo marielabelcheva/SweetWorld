@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SweetWorld.Core.Contracts;
 using SweetWorld.Core.Models.OrderViewModels;
+using SweetWorld.Core.Models.Pagination;
 using SweetWorld.Core.Models.UserViewModels;
 using SweetWorld.Infrastructure.Data;
 using SweetWorld.Infrastructure.Data.Models;
@@ -16,7 +17,13 @@ namespace SweetWorld.Core.Services
     {
         private readonly ApplicationDbContext dbContext;
 
-        public ClientService(ApplicationDbContext dbContext) { this.dbContext = dbContext; }
+        public ClientService(ApplicationDbContext dbContext) 
+        { 
+            this.dbContext = dbContext;
+            this.Pager = null!;
+        }
+
+        public Pager Pager { get; set; }
 
         public async Task AddClientAsync(string userId)
         {
@@ -37,19 +44,23 @@ namespace SweetWorld.Core.Services
             else throw new NullReferenceException();
         }
 
-        public async Task<IEnumerable<OrderClientViewModel>?> AllOrdersOfAClientAsync(Guid? clientId)
+        public async Task<IEnumerable<OrderClientViewModel>?> AllOrdersOfAClientAsync(int page, Guid? clientId)
         {
             Client? clientOrders = await this.dbContext.Clients.Where(client => client.Id == clientId).Include(client => client.Orders)
                                                               .ThenInclude(order => order.Product).FirstOrDefaultAsync();
             if (clientOrders?.Id == clientId) 
             {
+                int totalItems = clientOrders.Orders.Count;
+                this.Pager = new Pager(totalItems, page);
+                int skipItems = (page - 1) * this.Pager.PageSize;
+
                 return clientOrders?.Orders.Select(order => new OrderClientViewModel()
                 {
                     OrderId = order.Id,
                     ProductName = order.Product?.Name,
                     ProductThumb = order.Product?.Thumbnail,
                     CreationDate = order.CreationDate,
-                });
+                }).Skip(skipItems).Take(this.Pager.PageSize);
             }
 
             throw new NullReferenceException();

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using SweetWorld.Core.Contracts;
 using SweetWorld.Core.Models.OrderViewModels;
+using SweetWorld.Core.Models.Pagination;
 using SweetWorld.Core.Models.ProductViewModels;
 using SweetWorld.Infrastructure.Data.Models;
 
@@ -31,18 +32,26 @@ namespace SweetWorld.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> AllOrders()
+        public async Task<IActionResult> AllOrders(int page = 1)
         {
             try
             {
-                if (this.User.IsInRole("Administrator")) { return View(await this.orderService.GetAllUnaprovedOrdersAsync()); }
+                IEnumerable<OrderClientViewModel>? items = null!;
+                var pager = new Pager();
+
+                if (this.User.IsInRole("Administrator")) 
+                { 
+                    items = await this.orderService.GetAllUnaprovedOrdersAsync(page);
+                    pager = this.orderService.Pager;
+                }
                 else if (this.User.IsInRole("Confectioner")) 
                 {
                     var user = await this.userManager.GetUserAsync(this.User);
 
                     var confectioner = await this.confectionerService.GetConfectionerByUserIdAsync(user.Id);
 
-                    return View(await this.confectionerService.AllOrdersForExecutingAsync(confectioner)); 
+                    items = await this.confectionerService.AllOrdersForExecutingAsync(page, confectioner);
+                    pager = this.confectionerService.Pager;
                 }
                 else
                 {
@@ -50,8 +59,15 @@ namespace SweetWorld.Controllers
 
                     var client = await this.clientService.GetClientByUserIdAsync(user.Id);
 
-                    return View(await this.clientService.AllOrdersOfAClientAsync(client?.Id));
+                    items = await this.clientService.AllOrdersOfAClientAsync(page, client?.Id);
+                    pager = this.clientService.Pager;
                 }
+
+                pager.Controller = "Order";
+                pager.Action = "AllOrders";
+                ViewBag.Pager = pager;
+
+                return View(items);
             }
             catch (Exception ex) 
             { 

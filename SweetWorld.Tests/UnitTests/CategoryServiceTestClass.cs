@@ -25,7 +25,7 @@ namespace SweetWorld.Tests.UnitTests
         {
             var dbCategories = await this.context.Categories.ToListAsync();
 
-            var allCategories = (List<CategoryViewModel>)await categoryService.AllCategoriesAsync();
+            var allCategories = (List<CategoryViewModel>)await categoryService.AllCategoriesAsync(1);
 
             Assert.That(allCategories.Count, Is.EqualTo(dbCategories.Count));
             Assert.That(allCategories[1].Id, Is.EqualTo(dbCategories[1].Id));
@@ -37,7 +37,7 @@ namespace SweetWorld.Tests.UnitTests
             this.context.Categories.RemoveRange(await this.context.Categories.ToListAsync());
             await this.context.SaveChangesAsync();
 
-            var ex = Assert.ThrowsAsync<NullReferenceException>(async () => await this.categoryService.AllCategoriesAsync());
+            var ex = Assert.ThrowsAsync<NullReferenceException>(async () => await this.categoryService.AllCategoriesAsync(1));
             Assert.That(ex.Message, Is.EqualTo("No categories in the database!"));
         }
 

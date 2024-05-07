@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using SweetWorld.Core.Models.Pagination;
 
 namespace SweetWorld.Core.Services
 {
@@ -24,7 +25,10 @@ namespace SweetWorld.Core.Services
             this.dbContext = dbContext;
             this.categoryService = categoryService;
             this.ingredientService = ingredientService;
+            this.Pager = null!;
         }
+
+        public Pager Pager { get; set; }
 
         public async Task AddPiecesCountAndPrice(PiecesCountAndPriceViewModel viewModel)
         {
@@ -62,16 +66,20 @@ namespace SweetWorld.Core.Services
             await this.dbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<ProductViewModel>> AllProductsAsync()
+        public async Task<IEnumerable<ProductViewModel>> AllProductsAsync(int page)
         {
-            return await this.dbContext.Products
+            int totalItems = await this.dbContext.Products.CountAsync();
+            this.Pager = new Pager(totalItems, page);
+            int skipItems = (page - 1) * this.Pager.PageSize;
+
+           return await this.dbContext.Products
                                        .Select(product => new ProductViewModel()
                                        {
                                            Id = product.Id,
                                            Name = product.Name,
                                            Type = product.Type,
                                            Thumbnail = product.Thumbnail
-                                       }).ToListAsync();
+                                       }).Skip(skipItems).Take(this.Pager.PageSize).ToListAsync();
         }
 
         public async Task DeleteProductAsync(Guid? id)
@@ -220,7 +228,13 @@ namespace SweetWorld.Core.Services
                                                         .FirstOrDefaultAsync(product => product.Id == id);
             if (product?.Id == id)
             {
-                var related = await this.AllProductsAsync();
+                var related = await this.dbContext.Products.Select(product => new ProductViewModel()
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Type = product.Type,
+                    Thumbnail = product.Thumbnail
+                }).ToListAsync();
 
                 return new ProductDataViewModel()
                 {
@@ -241,7 +255,7 @@ namespace SweetWorld.Core.Services
             throw new NullReferenceException();
         }
 
-        public async Task<IEnumerable<ProductViewModel>> WishListAsync(Guid? clientId)
+        public async Task<IEnumerable<ProductViewModel>> WishListAsync(int page, Guid? clientId)
         {
             Client? products = await this.dbContext.Clients.Where(c => c.Id == clientId).Include(c => c.FavouriteProducts)
                                                           .ThenInclude(fp => fp.Product).FirstOrDefaultAsync();
@@ -250,13 +264,17 @@ namespace SweetWorld.Core.Services
 
             if (products?.Id == clientId)
             {
+                int totalItems = products.FavouriteProducts.Count;
+                this.Pager = new Pager(totalItems, page);
+                int skipItems = (page - 1) * this.Pager.PageSize;
+
                 return products.FavouriteProducts.Select(product => new ProductViewModel()
                 {
                     Id = product?.Product?.Id,
                     Name = product?.Product?.Name,
                     Type = product?.Product?.Type,
                     Thumbnail = product?.Product?.Thumbnail
-                });
+                }).Skip(skipItems).Take(this.Pager.PageSize);
             }
 
             throw new NullReferenceException();

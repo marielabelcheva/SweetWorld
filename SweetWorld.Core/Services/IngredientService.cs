@@ -4,6 +4,8 @@ using SweetWorld.Infrastructure.Data;
 using SweetWorld.Infrastructure.Data.Models;
 using SweetWorld.Core.Models.IngredientViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using SweetWorld.Core.Models.Pagination;
+using CloudinaryDotNet.Actions;
 
 namespace SweetWorld.Core.Services
 {
@@ -11,7 +13,13 @@ namespace SweetWorld.Core.Services
     {
         private readonly ApplicationDbContext dbContext;
 
-        public IngredientService(ApplicationDbContext dbContext) { this.dbContext = dbContext; }
+        public IngredientService(ApplicationDbContext dbContext) 
+        { 
+            this.dbContext = dbContext;
+            this.Pager = null!;
+        }
+
+        public Pager Pager { get; set; }
 
         public async Task AddIngredientAsync(IngredientViewModel viewModel)
         {
@@ -30,15 +38,19 @@ namespace SweetWorld.Core.Services
             else throw new ArgumentException("Ingredient has alredy exists!");
         }
 
-        public async Task<IEnumerable<IngredientViewModel>> GetAllIngredientsAsync()
+        public async Task<IEnumerable<IngredientViewModel>> GetAllIngredientsAsync(int page)
         {
             if (this.dbContext.Ingredients.Count() != 0) 
-            { 
+            {
+                int totalItems = await this.dbContext.Ingredients.CountAsync();
+                this.Pager = new Pager(totalItems, page);
+                int skipItems = (page - 1) * this.Pager.PageSize;
+
                 return await this.dbContext.Ingredients.Select(ingredient => new IngredientViewModel()
                 {
                     Id = ingredient.Id,
                     Name = ingredient.Name
-                }).ToListAsync(); 
+                }).Skip(skipItems).Take(this.Pager.PageSize).ToListAsync(); 
             }
 
             throw new NullReferenceException("No ingredients in the database!");

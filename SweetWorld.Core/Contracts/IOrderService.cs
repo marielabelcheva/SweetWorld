@@ -1,4 +1,5 @@
 ﻿using SweetWorld.Core.Models.OrderViewModels;
+using SweetWorld.Core.Models.Pagination;
 using SweetWorld.Core.Models.ProductViewModels;
 using SweetWorld.Infrastructure.Data.Models;
 
@@ -12,7 +13,7 @@ namespace SweetWorld.Core.Contracts
 
         public Task UpdateStatusOfAnOrderAsync(Guid? id, string status);
 
-        public Task<IEnumerable<OrderClientViewModel>> GetAllUnaprovedOrdersAsync();
+        public Task<IEnumerable<OrderClientViewModel>> GetAllUnaprovedOrdersAsync(int page);
 
         public Task<CartOrderViewModel> AddOrderToTheCartAsync(Guid? productId);
 
@@ -29,5 +30,7 @@ namespace SweetWorld.Core.Contracts
         public Task<CartOrderViewModel> UpdateCartOrderAsync(Guid? cartId);
 
         public Task ClearCart(Client? client);
+
+        public Pager Pager { get; set; }
     }
 }

@@ -27,32 +27,48 @@ namespace SweetWorld.Tests.UnitTests
         [TestCase("11c43ee8-b9d3-4e51-b73f-bd9dda66e29c")]
         public async Task AddOrderToTheCartShouldThrowException(string id)
         {
-            var client = await this.context.Clients.FindAsync(Guid.Parse(id));
+            Guid? product = Guid.Parse(id);
 
-            Guid? productId = Guid.Parse(id);
-            string? name = "Test";
-            string? type = "Test";
-            int amount = 2;
-            string? thumb = "someUrl.png";
-            decimal price = 3;
-            string? addInfo = "";
-
-            Assert.ThrowsAsync<NullReferenceException>(async () => await this.orderService.AddOrderToTheCartAsync(productId, name, thumb, type, amount, price, addInfo, client));
+            Assert.ThrowsAsync<NullReferenceException>(async () => await this.orderService.AddOrderToTheCartAsync(product));
         }
 
         [Test]
         public async Task AddOrderToTheCartShouldReturnCorrectResult()
         {
-            var client = await this.context.Clients.FindAsync(Guid.Parse("6d3f2835-3cfb-456e-a355-0725d13509d3"));
-            Guid? id = Guid.Parse("aeb3a25b-3b13-48d0-b8d6-c8c9500a7e32");
-            string? name = "Test";
-            string? type = "Test";
-            int amount = 2;
-            string? thumb = "someUrl.png";
-            decimal price = 3;
-            string? addInfo = "";
+            var model = await this.orderService.AddOrderToTheCartAsync(Guid.Parse("aeb3a25b-3b13-48d0-b8d6-c8c9500a7e32"));
 
-            await this.orderService.AddOrderToTheCartAsync(id, name, thumb, type, amount, price, addInfo, client);
+            Assert.IsNotNull(model);
+            Assert.That(model.Id, Is.EqualTo(Guid.Parse("aeb3a25b-3b13-48d0-b8d6-c8c9500a7e32")));
+        }
+
+        [Test]
+        [TestCase("00000000-0000-0000-0000-000000000000")]
+        [TestCase("11c43ee8-b9d3-4e51-b73f-bd9dda66e29c")]
+        public async Task AddOrderToTheCartViewShouldThrowException(string id)
+        {
+            var model = new CartOrderViewModel()
+            {
+                Id = Guid.Parse("aeb3a25b-3b13-48d0-b8d6-c8c9500a7e32"),
+                Type = "test",
+                Amount = 2
+            };
+            var client = await this.context.Clients.FindAsync(Guid.Parse(id));
+
+            Assert.ThrowsAsync<NullReferenceException>(async () => await this.orderService.AddOrderToTheCartAsync(model, client));
+        }
+
+        [Test]
+        public async Task AddOrderToTheCartViewShouldReturnCorrectResult()
+        {
+            var model = new CartOrderViewModel()
+            {
+                Id = Guid.Parse("aeb3a25b-3b13-48d0-b8d6-c8c9500a7e32"),
+                Type = "test",
+                Amount = 2
+            };
+            var client = await this.context.Clients.FindAsync(Guid.Parse("6d3f2835-3cfb-456e-a355-0725d13509d3"));
+
+            await this.orderService.AddOrderToTheCartAsync(model, client);
 
             var dbClient = await this.context.Clients.FindAsync(Guid.Parse("6d3f2835-3cfb-456e-a355-0725d13509d3"));
             var dbClientCart = dbClient?.Cart.FirstOrDefault(order => order.ProductId == Guid.Parse("aeb3a25b-3b13-48d0-b8d6-c8c9500a7e32"));
@@ -66,14 +82,6 @@ namespace SweetWorld.Tests.UnitTests
         {
             var client = await this.context.Clients.FindAsync(Guid.Parse("6d3f2835-3cfb-456e-a355-0725d13509d3"));
 
-            Guid? id = Guid.Parse("aeb3a25b-3b13-48d0-b8d6-c8c9500a7e32");
-            string? name = "Test";
-            string? type = "Test";
-            int amount = 2;
-            string? thumb = "someUrl.png";
-            decimal price = 3;
-            string? addInfo = "";
-
             var delivery = new DeliveryViewModel()
             {
                 City = "Test",
@@ -81,7 +89,19 @@ namespace SweetWorld.Tests.UnitTests
                 Address = "test_address"
             };
 
-            await this.orderService.AddOrderToTheCartAsync(id, name, thumb, type, amount, price, addInfo, client);
+            await this.context.Carts.AddAsync(new CartOrder()
+            {
+                Id = Guid.NewGuid(),
+                ProductId = Guid.Parse("aeb3a25b-3b13-48d0-b8d6-c8c9500a7e32"),
+                ClientId = client?.Id,
+                ProductName = "Test",
+                ProductThumb = "someUrl.png",
+                ProductType = "Test",
+                Amount = 2,
+                UnitPrice = 3
+            });
+
+            await this.context.SaveChangesAsync();
 
             await this.orderService.CheckoutCartAsync(delivery, client);
 
@@ -191,7 +211,7 @@ namespace SweetWorld.Tests.UnitTests
 
             var dbUOrders = await this.context.Orders.Where(o => o.Status == "unapproved").ToListAsync();
 
-            var allUOrders = await this.orderService.GetAllUnaprovedOrdersAsync();
+            var allUOrders = await this.orderService.GetAllUnaprovedOrdersAsync(1);
 
             Assert.That(allUOrders.ToList().Count, Is.EqualTo(dbUOrders.Count));
             Assert.That(allUOrders.ToList()[0].OrderId, Is.EqualTo(dbUOrders[0].Id));
@@ -215,7 +235,7 @@ namespace SweetWorld.Tests.UnitTests
             await this.context.Orders.AddAsync(order);
             await this.context.SaveChangesAsync();
 
-            var ex = Assert.ThrowsAsync<NullReferenceException>(async () => await this.orderService.GetAllUnaprovedOrdersAsync());
+            var ex = Assert.ThrowsAsync<NullReferenceException>(async () => await this.orderService.GetAllUnaprovedOrdersAsync(1));
             Assert.That(ex.Message, Is.EqualTo("No new orders!"));
         }
 
@@ -255,34 +275,81 @@ namespace SweetWorld.Tests.UnitTests
         }
 
         [Test]
-        public async Task UpdateCartShouldReturnCorrectResult()
+        [TestCase("00000000-0000-0000-0000-000000000000")]
+        [TestCase("11c43ee8-b9d3-4e51-b73f-bd9dda66e29c")]
+        public async Task UpdateCartOrderShouldThrowException(string id)
         {
-            var client = await this.context.Clients.FindAsync(Guid.Parse("6d3f2835-3cfb-456e-a355-0725d13509d3"));
+            Guid? cart = Guid.Parse(id);
 
-            var order = new CartOrder()
+            Assert.ThrowsAsync<NullReferenceException>(async () => await this.orderService.UpdateCartOrderAsync(cart));
+        }
+
+        [Test]
+        public async Task UpdateCartOrderShouldReturnCorrectResult()
+        {
+            await this.context.Carts.AddAsync(new CartOrder()
             {
-                Id = Guid.Parse("79bc1bf1-c2a4-44ff-9850-0ab0962c892e"),
-                ClientId = Guid.Parse("6d3f2835-3cfb-456e-a355-0725d13509d3"),
+                Id = Guid.Parse("11c43ee8-b9d3-4e51-b73f-bd9dda66e29c"),
                 ProductId = Guid.Parse("aeb3a25b-3b13-48d0-b8d6-c8c9500a7e32"),
-                ProductName = "Test name",
+                ClientId = Guid.Parse("6d3f2835-3cfb-456e-a355-0725d13509d3"),
+                ProductName = "Test",
                 ProductThumb = "test.png",
-                ProductType = "test",
-                Amount = 1
-            };
+                ProductType = "Test",
+                Amount = 3
+            });
 
-            var cart = new List<CartOrder>() { order };
-            cart[0].Amount = 2;
-
-            await this.context.Carts.AddAsync(order);
             await this.context.SaveChangesAsync();
 
-            await this.orderService.UpdateCartAsyncAsync(cart, client);
+            var model = await this.orderService.UpdateCartOrderAsync(Guid.Parse("11c43ee8-b9d3-4e51-b73f-bd9dda66e29c"));
 
-            var dbCart = await this.context.Carts.FindAsync(Guid.Parse("79bc1bf1-c2a4-44ff-9850-0ab0962c892e"));
+            Assert.IsNotNull(model);
+            Assert.That(model.Id, Is.EqualTo(Guid.Parse("11c43ee8-b9d3-4e51-b73f-bd9dda66e29c")));
+        }
+
+        [Test]
+        [TestCase("00000000-0000-0000-0000-000000000000")]
+        [TestCase("11c43ee8-b9d3-4e51-b73f-bd9dda66e29c")]
+        public async Task UpdateCartOrderViewShouldThrowException(string id)
+        {
+            var model = new CartOrderViewModel()
+            {
+                Id = Guid.Parse(id),
+                Type = "test",
+                Amount = 2
+            };
+
+            Assert.ThrowsAsync<NullReferenceException>(async () => await this.orderService.UpdateCartOrderAsync(model));
+        }
+
+        [Test]
+        public async Task UpdateCartOrderViewShouldReturnCorrectResult()
+        {
+            await this.context.Carts.AddAsync(new CartOrder()
+            {
+                Id = Guid.Parse("11c43ee8-b9d3-4e51-b73f-bd9dda66e29c"),
+                ProductId = Guid.Parse("aeb3a25b-3b13-48d0-b8d6-c8c9500a7e32"),
+                ClientId = Guid.Parse("6d3f2835-3cfb-456e-a355-0725d13509d3"),
+                ProductName = "Test",
+                ProductThumb = "test.png",
+                ProductType = "Test",
+                Amount = 3
+            });
+
+            await this.context.SaveChangesAsync();
+
+            var model = new CartOrderViewModel()
+            {
+                Id = Guid.Parse("11c43ee8-b9d3-4e51-b73f-bd9dda66e29c"),
+                Type = "Test",
+                Amount = 2
+            };
+
+            await this.orderService.UpdateCartOrderAsync(model);
+
+            var dbCart = await this.context.Carts.FindAsync(Guid.Parse("11c43ee8-b9d3-4e51-b73f-bd9dda66e29c"));
 
             Assert.IsNotNull(dbCart);
-            Assert.That(dbCart?.Id, Is.EqualTo(Guid.Parse("79bc1bf1-c2a4-44ff-9850-0ab0962c892e")));
-            Assert.That(dbCart?.Amount, Is.EqualTo(2));
+            Assert.That(dbCart.Amount, Is.EqualTo(2));
         }
 
         [Test]
