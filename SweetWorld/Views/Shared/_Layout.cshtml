@@ -1,7 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Identity;
 @using SweetWorld.Core.Contracts;
-@inject UserManager<User> UserManager
-@inject IClientService clientService;
 
 <!DOCTYPE html>
 <html lang="en">
@@ -118,46 +116,13 @@
             }
             else if (this.User.IsInRole("Client"))
             {
-                var user = await this.UserManager.GetUserAsync(this.User);
-
-                var client = await this.clientService.GetClientByUserIdAsync(user.Id);
-
                 <div class="header__actions">
                     <a class="ps-search-btn" href="#"><i class="fa fa-search"></i></a>
                     <a asp-action="Wishlist" asp-controller="Product"><i class="fa fa-heart-o"></i></a>
                     <div class="ps-cart--mini">
-                        <a class="ps-cart__toggle" href="#">
+                        <a class="ps-cart__toggle" asp-action="CartOrders" asp-controller="Order">
                             <i class="fa fa-shopping-basket"></i>
                         </a>
-                        @if (client.Cart.Count != 0)
-                        {
-                            <div class="ps-cart__content">
-                                <div class="ps-cart__items">
-                                    @foreach (CartOrder order in client.Cart)
-                                    {
-                                        <div class="ps-product--mini-cart">
-                                            <div class="ps-product__thumbnail">
-                                                <a asp-area="" asp-controller="Product" asp-action="ProductData" asp-route-id="@order.ProductId">
-                                                    <img src="@order.ProductThumb" alt="">
-                                                </a>
-                                            </div>
-                                            <div class="ps-product__content">
-                                                <span class="ps-btn--close"><a asp-action="DeleteFromCart" asp-controller="Order" asp-route-id="@order.Id"></a></span>
-                                                <a class="ps-product__title" asp-area="" asp-controller="Product" asp-action="ProductData" asp-route-id="@order.ProductId">@order.ProductName</a>
-                                                <p><strong>@order.Amount</strong></p><small>@order.UnitPrice BGN</small>
-                                            </div>
-                                        </div>
-                                    }
-                                </div>
-                                <div class="ps-cart__footer">
-                                    <h3>Sub Total:<strong>@client.Cart.Sum(ord => ord.Amount*ord.UnitPrice)</strong></h3>
-                                    <figure>
-                                        <a class="ps-btn" asp-area="" asp-controller="Order" asp-action="CartOrders">View Cart</a>
-                                        <a class="ps-btn ps-btn--dark" asp-area="" asp-controller="Order" asp-action="CheckoutCart">Checkout</a>
-                                    </figure>
-                                </div>
-                            </div>
-                        }
                     </div>
                 </div>
             }
@@ -180,50 +145,6 @@
             </div>
         </div>
     </header>
-
-    @if (this.User.IsInRole("Client"))
-    {
-        var user = await this.UserManager.GetUserAsync(this.User);
-
-        var client = await this.clientService.GetClientByUserIdAsync(user.Id);
-
-        <div class="ps-panel--sidebar" id="cart-mobile">
-            <div class="ps-panel__header"><h3>Shopping Cart</h3></div>
-            <div class="navigation__content">
-                <div class="ps-cart--mobile">
-                    @if (client.Cart.Count != 0)
-                    {
-                        <div class="ps-cart__content">
-                            <div class="ps-cart__items">
-                                @foreach (CartOrder order in client.Cart)
-                                {
-                                    <div class="ps-product--mini-cart">
-                                        <div class="ps-product__thumbnail">
-                                            <a asp-area="" asp-controller="Product" asp-action="ProductData" asp-route-id="@order.ProductId">
-                                                <img src="@order.ProductThumb" alt="">
-                                            </a>
-                                        </div>
-                                        <div class="ps-product__content">
-                                            <span class="ps-btn--close"><a asp-action="DeleteFromCart" asp-controller="Order" asp-route-id="@order.Id"></a></span>
-                                            <a class="ps-product__title" asp-area="" asp-controller="Product" asp-action="ProductData" asp-route-id="@order.ProductId">@order.ProductName</a>
-                                            <p><strong>@order.Amount</strong></p><small>@order.UnitPrice BGN</small>
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                            <div class="ps-cart__footer">
-                                <h3>Sub Total:<strong>@client.Cart.Sum(ord => ord.Amount*ord.UnitPrice)</strong></h3>
-                                <figure>
-                                    <a class="ps-btn" asp-area="" asp-controller="Order" asp-action="CartOrders">View Cart</a>
-                                    <a class="ps-btn ps-btn--dark" asp-area="" asp-controller="Order" asp-action="CheckoutCart">Checkout</a>
-                                </figure>
-                            </div>
-                        </div>
-                    }
-                </div>
-            </div>
-        </div>
-    }
 
     <div class="ps-panel--sidebar" id="navigation-mobile">
         <div class="ps-panel__header"><h3>Menu</h3></div>
@@ -301,7 +222,7 @@
             @if (this.User.IsInRole("Client"))
             {
                 <a class="navigation__item ps-toggle--sidebar" href="#search-sidebar"><i class="fa fa-search"></i></a>
-                <a class="navigation__item ps-toggle--sidebar" href="#cart-mobile"><i class="fa fa-shopping-basket"></i></a>
+                <a class="navigation__item ps-toggle--sidebar" asp-action="CartOrders" asp-controller="Order"><i class="fa fa-shopping-basket"></i></a>
             }
             <a class="navigation__item ps-toggle--sidebar"></a>
         </div>

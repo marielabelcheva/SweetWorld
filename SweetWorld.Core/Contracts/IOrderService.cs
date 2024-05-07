@@ -14,7 +14,9 @@ namespace SweetWorld.Core.Contracts
 
         public Task<IEnumerable<OrderClientViewModel>> GetAllUnaprovedOrdersAsync();
 
-        public Task AddOrderToTheCartAsync(ProductDataViewModel viewModel, Client? client);
+        public Task<CartOrderViewModel> AddOrderToTheCartAsync(Guid? productId);
+
+        public Task AddOrderToTheCartAsync(CartOrderViewModel viewModel, Client? client);
 
         public Task DeleteOrderFromTheCartAsync(Guid? cartOrderId, Client? client);
 
@@ -22,7 +24,9 @@ namespace SweetWorld.Core.Contracts
 
         public Task<IEnumerable<CartOrder>> AllOrdersFromTheCartAsync(Client? client);
 
-        public Task UpdateCartAsyncAsync(IEnumerable<CartOrder> cart, Client? client);
+        public Task UpdateCartOrderAsync(CartOrderViewModel cart);
+
+        public Task<CartOrderViewModel> UpdateCartOrderAsync(Guid? cartId);
 
         public Task ClearCart(Client? client);
     }

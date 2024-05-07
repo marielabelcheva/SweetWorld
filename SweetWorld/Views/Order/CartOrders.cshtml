@@ -42,14 +42,15 @@
                                 </td>
                                 <td>@item.UnitPrice BGN</td>
                                 <td>
-                                    <div class="form-group--number">
-                                        <input class="form-control" type="number" placeholder="@item.Amount" asp-for="@item.Amount">
-                                    </div>
+                                    <div class="form-group--number">@item.Amount</div>
                                 </td>
                                 <td class="total">
                                     @(item.UnitPrice * item.Amount) BGN
                                 </td>
-                                <td class="ps-table__actions"><a class="ps-btn--close" asp-action="DeleteFromCart" asp-controller="Order" asp-route-id="@item.Id"></a></td>
+                                <td class="ps-table__actions">
+                                    <a class="fa fa-edit" asp-action="UpdateCart" asp-controller="Order" asp-route-cartId="@item.Id"></a>
+                                    <a class="ps-btn--close" asp-action="DeleteFromCart" asp-controller="Order" asp-route-id="@item.Id"></a>
+                                </td>
                             </tr>
                         }
                     </tbody>
@@ -58,8 +59,8 @@
             <div class="ps-section__actions">
                 <figure>
                     <a class="ps-btn ps-btn--outline" asp-action="ClearCart" asp-controller="Order">Clear Shopping Cart</a>
-                    <a class="ps-btn ps-btn--outline" asp-action="UpdateCart" asp-controller="Order" asp-route-cart="@this.Model">Update Shopping Cart</a></figure>
-                <figure><a class="ps-btn" asp-action="Index" asp-controller="Product">Continue Shopping</a></figure>
+                    <a class="ps-btn" asp-action="Index" asp-controller="Product">Continue Shopping</a>
+                </figure>
             </div>
             <div class="ps-section__footer">
                 <a class="ps-btn ps-btn--fullwidth" asp-action="CheckoutCart" asp-controller="Order">Proceed to checkout</a>

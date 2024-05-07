@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SweetWorld.Core.Contracts;
 using SweetWorld.Core.Models;
+using SweetWorld.Core.Models.HomeViewModels;
 using System.Diagnostics;
 
 namespace SweetWorld.Controllers
@@ -10,10 +11,12 @@ namespace SweetWorld.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IHomeService homeService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IHomeService homeService)
         {
             _logger = logger;
+            this.homeService = homeService;
         }
 
         [HttpGet]
@@ -44,7 +47,7 @@ namespace SweetWorld.Controllers
             return View();
         }
 
-        /*[HttpPost]
+        [HttpPost]
         [AllowAnonymous]
         [Authorize(Roles = "Client")]
         public IActionResult ContactUs(ContactUsViewModel model)
@@ -53,7 +56,7 @@ namespace SweetWorld.Controllers
 
             this.homeService.ContactUs(model);
             return View();
-        }*/
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

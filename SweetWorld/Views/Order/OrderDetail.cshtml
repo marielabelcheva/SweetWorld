@@ -19,14 +19,15 @@
                     <h1>@this.Model.ProductName</h1>
                     <br />
                     <div class="ps-product__specification">
-                        <p><strong>Type:</strong> @this.Model.ProductType</p>
-                        <p><strong>Creation date:</strong> @this.Model.CreationDate</p>
-                        <p><strong> Status: @this.Model.Status</strong></p>
-                        <p><strong> Additional information: @this.Model.AdditionalInformation</strong></p>
-                    </div>
-                    <div class="ps-product__shopping">
+                        <p><strong> Type:</strong> @this.Model.ProductType</p>
+                        <p><strong> Creation date:</strong> @this.Model.CreationDate</p>
                         <p><strong> Amount: @this.Model.Amount</strong></p>
                         <p><strong> Total price: @this.Model.TotalPrice</strong></p>
+                        <p><strong> Additional information: @this.Model.AdditionalInformation</strong></p>
+                        <p></p>
+                        <p><strong> Status: @this.Model.Status</strong></p>
+                    </div>
+                    <div class="ps-product__shopping">
                         @if (this.User.IsInRole("Administrator"))
                         {
                             <a class="ps-btn" asp-controller="Order" asp-action="UpdateStatus" asp-route-id="@this.Model.OrderId" asp-route-status="approve">Approve</a>
@@ -39,9 +40,12 @@
                         }
                         else
                         {
-                            <a class="ps-btn" asp-controller="Order" asp-action="UpdateStatus" asp-route-id="@this.Model.OrderId" asp-route-status="delivered">Confirm delivery</a>
-                            <p></p>
-                            <a class="ps-btn" asp-controller="Order" asp-action="Delete" asp-route-id="@this.Model.OrderId">Delete</a>
+                            if (this.Model?.Status?.ToLower() == "waiting delivery")
+                            {
+                                <a class="ps-btn" asp-controller="Order" asp-action="UpdateStatus" asp-route-id="@this.Model.OrderId" asp-route-status="delivered">Confirm delivery</a>
+                                <p></p>
+                            }
+                            <a class="ps-btn" asp-controller="Order" asp-action="Delete" asp-route-id="@this.Model?.OrderId">Delete</a>
                         }
                     </div>
                 </div>

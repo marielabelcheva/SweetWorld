@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using CloudinaryDotNet;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -84,18 +85,31 @@ namespace SweetWorld.Controllers
 
             var client = await this.clientService.GetClientByUserIdAsync(user.Id);
 
-            return View(this.orderService.AllOrdersFromTheCartAsync(client));
+            return View(await this.orderService.AllOrdersFromTheCartAsync(client));
         }
 
         [HttpGet]
         [Authorize(Roles = "Client")]
-        public async Task<IActionResult> UpdateCart(IEnumerable<CartOrder> cart)
+        public async Task<IActionResult> UpdateCart(Guid? cartId)
         {
-            var user = await this.userManager.GetUserAsync(this.User);
+            try
+            {
+                var viewModel = await this.orderService.UpdateCartOrderAsync(cartId);
+                return await Task.Run(() => View("UpdateCart", viewModel));
+            }
+            catch (Exception ex)
+            {
+                TempData["message"] = ex.Message;
+                return RedirectToAction("CartOrders");
+            }
+        }
 
-            var client = await this.clientService.GetClientByUserIdAsync(user.Id);
-
-            await this.orderService.UpdateCartAsyncAsync(cart, client);
+        [HttpPost]
+        [Authorize(Roles = "Client")]
+        public async Task<IActionResult> UpdateCart(CartOrderViewModel viewModel)
+        {
+            try { await this.orderService.UpdateCartOrderAsync(viewModel); }
+            catch (Exception ex) { TempData["message"] = ex.Message; }
 
             return RedirectToAction("CartOrders");
         }
@@ -128,15 +142,35 @@ namespace SweetWorld.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Client")]
-        public async Task<IActionResult> AddToCart(ProductDataViewModel viewModel)
+        public async Task<IActionResult> AddToCart(Guid? productId)
         {
-            var user = await this.userManager.GetUserAsync(this.User);
+            try
+            {
+                var viewModel = await this.orderService.AddOrderToTheCartAsync(productId);
+                return await Task.Run(() => View("AddToCart", viewModel));
+            }
+            catch (Exception ex)
+            {
+                TempData["message"] = ex.Message;
+                return RedirectToAction("Index", "Product");
+            }
+        }
 
-            var client = await this.clientService.GetClientByUserIdAsync(user.Id);
+        [HttpPost]
+        [Authorize(Roles = "Client")]
+        public async Task<IActionResult> AddToCart(CartOrderViewModel viewModel)
+        {
+            try
+            {
+                var user = await this.userManager.GetUserAsync(this.User);
 
-            await this.orderService.AddOrderToTheCartAsync(viewModel, client);
+                var client = await this.clientService.GetClientByUserIdAsync(user.Id);
 
-            return RedirectToAction("ProductData", "Product", viewModel.Id);
+                await this.orderService.AddOrderToTheCartAsync(viewModel, client);
+            }
+            catch(Exception ex) { TempData["message"] = ex.Message; }
+
+            return RedirectToAction("CartOrders");
         }
 
         [HttpGet]
@@ -169,6 +203,15 @@ namespace SweetWorld.Controllers
             await this.orderService.CheckoutCartAsync(viewModel, client);
 
             return RedirectToAction("AllOrders");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UpdateStatus(Guid? id, string status)
+        {
+            try { await this.orderService.UpdateStatusOfAnOrderAsync(id, status); }
+            catch(Exception ex) { TempData["message"] = ex.Message; }
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }

@@ -183,7 +183,7 @@ namespace SweetWorld.Controllers
             catch(Exception ex)
             {
                 TempData["message"] = ex.Message;
-                return RedirectToAction("Index");
+                return RedirectToAction("MyProducts");
             }
         }
 
@@ -194,7 +194,7 @@ namespace SweetWorld.Controllers
             try { await this.productService.EditProductAsync(viewModel); }
             catch (Exception ex) { TempData["message"] = ex.Message; }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("MyProducts");
         }
 
         [HttpGet]

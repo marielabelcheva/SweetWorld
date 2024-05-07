@@ -1,0 +1,56 @@
+﻿@model CartOrderViewModel
+
+<div class="ps-page--about">
+    <div class="ps-hero bg--cover" data-background="img/hero/shop-hero.png">
+        <div class="ps-hero__container">
+            <div class="ps-breadcrumb">
+                <ul class="breadcrumb">
+                    <li><a asp-action="Index" asp-controller="Home">Home</a></li>
+                    <li>Update order from cart</li>
+                </ul>
+            </div>
+            <h1 class="ps-hero__heading">Update order from cart</h1>
+        </div>
+    </div>
+    <div class="container">
+        <div class="ps-checkout">
+            <form class="ps-form--checkout" action="UpdateCart" method="post">
+                <div class="form-group" hidden>
+                    <label>Id</label>
+                    <input class="form-control" type="text" asp-for="Id" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Amount</label>
+                    <input class="form-control" type="text" asp-for="Amount">
+                    <span asp-validation-for="Amount" class="text-danger"></span>
+                </div>
+                @if (this.Model.Type == "cake")
+                {
+                    <div class="form-group">
+                        <label>Select size</label>
+                        <select class="ps-select form-control" asp-for="Price" asp-items="this.Model.Sizes"></select>
+                    </div>
+                }
+                else
+                {
+                    <div class="form-group">
+                        <label>Price</label>
+                        <input class="form-control" type="text" asp-for="Price" readonly>
+                    </div>
+                }
+                <div class="form-group">
+                    <label>Additional information</label>
+                    <textarea class="form-control" rows="3" asp-for="AdditionalInformation"></textarea>
+                    <span asp-validation-for="AdditionalInformation" class="text-danger"></span>
+                </div>
+                <div class="ps-form__submit">
+                    <button class="ps-btn" type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CloudinaryDotNet;
+using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using SweetWorld.Core.Contracts;
 using SweetWorld.Core.Models.OrderViewModels;
@@ -28,37 +29,30 @@ namespace SweetWorld.Tests.UnitTests
         {
             var client = await this.context.Clients.FindAsync(Guid.Parse(id));
 
-            var viewModel = new ProductDataViewModel()
-            {
-                Id = Guid.Parse("aeb3a25b-3b13-48d0-b8d6-c8c9500a7e32"),
-                Name = "Test",
-                Type = "Test",
-                Price = 2,
-                ConfectionerName = "Test Testov",
-                Thumbnail = "someUrl.png",
-                Amount = 2
-            };
+            Guid? productId = Guid.Parse(id);
+            string? name = "Test";
+            string? type = "Test";
+            int amount = 2;
+            string? thumb = "someUrl.png";
+            decimal price = 3;
+            string? addInfo = "";
 
-            Assert.ThrowsAsync<NullReferenceException>(async () => await this.orderService.AddOrderToTheCartAsync(viewModel, client));
+            Assert.ThrowsAsync<NullReferenceException>(async () => await this.orderService.AddOrderToTheCartAsync(productId, name, thumb, type, amount, price, addInfo, client));
         }
 
         [Test]
         public async Task AddOrderToTheCartShouldReturnCorrectResult()
         {
             var client = await this.context.Clients.FindAsync(Guid.Parse("6d3f2835-3cfb-456e-a355-0725d13509d3"));
+            Guid? id = Guid.Parse("aeb3a25b-3b13-48d0-b8d6-c8c9500a7e32");
+            string? name = "Test";
+            string? type = "Test";
+            int amount = 2;
+            string? thumb = "someUrl.png";
+            decimal price = 3;
+            string? addInfo = "";
 
-            var viewModel = new ProductDataViewModel()
-            {
-                Id = Guid.Parse("aeb3a25b-3b13-48d0-b8d6-c8c9500a7e32"),
-                Name = "Test",
-                Type = "Test",
-                Price = 2,
-                ConfectionerName = "Test Testov",
-                Thumbnail = "someUrl.png",
-                Amount = 2
-            };
-
-            await this.orderService.AddOrderToTheCartAsync(viewModel, client);
+            await this.orderService.AddOrderToTheCartAsync(id, name, thumb, type, amount, price, addInfo, client);
 
             var dbClient = await this.context.Clients.FindAsync(Guid.Parse("6d3f2835-3cfb-456e-a355-0725d13509d3"));
             var dbClientCart = dbClient?.Cart.FirstOrDefault(order => order.ProductId == Guid.Parse("aeb3a25b-3b13-48d0-b8d6-c8c9500a7e32"));
@@ -72,16 +66,13 @@ namespace SweetWorld.Tests.UnitTests
         {
             var client = await this.context.Clients.FindAsync(Guid.Parse("6d3f2835-3cfb-456e-a355-0725d13509d3"));
 
-            var viewModel = new ProductDataViewModel()
-            {
-                Id = Guid.Parse("aeb3a25b-3b13-48d0-b8d6-c8c9500a7e32"),
-                Name = "Test",
-                Type = "Test",
-                Price = 2,
-                ConfectionerName = "Test Testov",
-                Thumbnail = "someUrl.png",
-                Amount = 2
-            };
+            Guid? id = Guid.Parse("aeb3a25b-3b13-48d0-b8d6-c8c9500a7e32");
+            string? name = "Test";
+            string? type = "Test";
+            int amount = 2;
+            string? thumb = "someUrl.png";
+            decimal price = 3;
+            string? addInfo = "";
 
             var delivery = new DeliveryViewModel()
             {
@@ -90,7 +81,7 @@ namespace SweetWorld.Tests.UnitTests
                 Address = "test_address"
             };
 
-            await this.orderService.AddOrderToTheCartAsync(viewModel, client);
+            await this.orderService.AddOrderToTheCartAsync(id, name, thumb, type, amount, price, addInfo, client);
 
             await this.orderService.CheckoutCartAsync(delivery, client);
 

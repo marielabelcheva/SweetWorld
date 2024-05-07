@@ -42,23 +42,12 @@
                         {
                             <p><strong> Price: @this.Model.Price</strong></p>
                         }
-                        @if (this.User.IsInRole("Client"))
-                        {
-                            <p><input class="form-control" type="text" placeholder="Your wishes" asp-for="AdditionalInformation" /></p>
-                        }
                     </div>
                     <div class="ps-product__shopping">
                         @if (this.User.IsInRole("Client"))
                         {
-                            if (this.Model.PiecesCountAndPrice.Count != 0)
-                            {
-                                var items = new SelectList(this.Model.PiecesCountAndPrice, "Price", "Count");
-                                <select class="ps-select form-control" title="Choose Size" asp-for="Price" asp-items="items"></select>
-                            }
-                            <div class="form-group--number">
-                                <input class="form-control" type="number" placeholder="1" asp-for="Amount">
-                            </div>
-                            <a class="ps-btn" asp-controller="Order" asp-action="AddToCart" asp-route-viewModel="@this.Model">Order now</a>
+                            <a class="ps-btn" asp-controller="Order" asp-action="AddToCart" asp-route-productId="@this.Model.Id">Order now</a>
+                            <p></p>
                             <div class="ps-product__actions">
                                 <a asp-action="FavouriteProduct" asp-controller="Product" asp-route-id="@this.Model.Id">
                                     <i class="fa fa-heart-o"></i>

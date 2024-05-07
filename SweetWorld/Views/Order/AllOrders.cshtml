@@ -56,7 +56,7 @@
                                             <p><span>Creation date: @order.CreationDate</span></p>
                                         </div>
                                         <div class="ps-product__shopping">
-                                            <a class="ps-btn ps-product__add-to-cart" asp-controller="Order" asp-action="OrderDetail">
+                                            <a class="ps-btn ps-product__add-to-cart" asp-controller="Order" asp-action="OrderDetail" asp-route-id="@order.OrderId">
                                                 Order detail
                                             </a>
                                         </div>

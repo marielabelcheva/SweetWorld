@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using SweetWorld.Core.Contracts;
 using SweetWorld.Core.Models.OrderViewModels;
 using SweetWorld.Core.Models.ProductViewModels;
@@ -18,17 +19,46 @@ namespace SweetWorld.Core.Services
 
         public OrderService(ApplicationDbContext dbContext) { this.dbContext = dbContext; }
 
-        public async Task AddOrderToTheCartAsync(ProductDataViewModel viewModel, Client client)
+        public async Task<CartOrderViewModel> AddOrderToTheCartAsync(Guid? productId)
+        {
+            var product = await this.dbContext.Products.Include(product => product.PiecesCountAndPrice)
+                                                       .FirstOrDefaultAsync(product => product.Id == productId);
+
+            if (product?.Id == productId)
+            {
+                var type = "other";
+                if (product?.PiecesCountAndPrice.Count > 0) { type = "cake"; }
+
+                var items = await this.dbContext.Pieces.Include(piece => piece.Product).Where(piece => piece.ProductId == product.Id).ToListAsync();
+
+
+                return new CartOrderViewModel()
+                {
+                    Id = product?.Id,
+                    Type = type,
+                    Amount = 0,
+                    AdditionalInformation = "",
+                    Price = product?.Price,
+                    Sizes = new SelectList(items, "Price", "Count")
+                };
+            }
+
+            throw new NullReferenceException();
+        }
+
+        public async Task AddOrderToTheCartAsync(CartOrderViewModel viewModel, Client? client)
         {
             if (client != null)
             {
+                var product = await this.dbContext.Products.FindAsync(viewModel.Id);
+
                 await this.dbContext.Carts.AddAsync(new CartOrder()
                 {
                     Id = Guid.NewGuid(),
-                    ProductId = viewModel.Id,
-                    ProductName = viewModel.Name,
-                    ProductThumb = viewModel.Thumbnail,
-                    ProductType = viewModel.Type,
+                    ProductId = product?.Id,
+                    ProductName = product?.Name,
+                    ProductThumb = product?.Thumbnail,
+                    ProductType = product?.Type,
                     Amount = viewModel.Amount,
                     UnitPrice = viewModel.Price,
                     AdditionalInformation = viewModel.AdditionalInformation,
@@ -47,7 +77,9 @@ namespace SweetWorld.Core.Services
 
         public async Task CheckoutCartAsync(DeliveryViewModel viewModel, Client client)
         {
-            foreach(var order in client.Cart)
+            var user = await this.dbContext.Clients.Include(c => c.Cart).FirstOrDefaultAsync(c => c.Id == client.Id);
+
+            foreach(var order in user?.Cart)
             {
                 string status = "";
 
@@ -57,7 +89,7 @@ namespace SweetWorld.Core.Services
                 await this.dbContext.Orders.AddAsync(new Order()
                 {
                     Id = Guid.NewGuid(),
-                    ClientId = client.Id,
+                    ClientId = user.Id,
                     ProductId = order.ProductId,
                     Amount = order.Amount,
                     CreationDate = DateTime.Today,
@@ -68,7 +100,7 @@ namespace SweetWorld.Core.Services
                 });
             }
 
-            client.Cart.Clear();
+            user.Cart.Clear();
 
             await this.dbContext.SaveChangesAsync();
         }
@@ -149,17 +181,47 @@ namespace SweetWorld.Core.Services
             throw new NullReferenceException("There's no order with this identifier");
         }
 
-        public async Task UpdateCartAsyncAsync(IEnumerable<CartOrder> cart, Client? client)
+        public async Task<CartOrderViewModel> UpdateCartOrderAsync(Guid? cartId)
         {
-            int index = 0;
+            var order = await this.dbContext.Carts.FindAsync(cartId);
 
-            foreach(var order in this.dbContext.Carts.Where(order => order.ClientId == client.Id))
+            if (order != null)
             {
-                order.Amount = cart.ToList()[index].Amount;
-                order.AdditionalInformation = cart.ToList()[index].AdditionalInformation;
+                var product = await this.dbContext.Products.Include(p => p.PiecesCountAndPrice).FirstOrDefaultAsync(p => p.Id == order.ProductId);
+
+                var type = "other";
+                if (product?.PiecesCountAndPrice.Count > 0) { type = "cake"; }
+
+                var items = await this.dbContext.Pieces.Include(piece => piece.Product).Where(piece => piece.ProductId == product.Id).ToListAsync();
+
+                return new CartOrderViewModel()
+                {
+                    Id = order.Id,
+                    Amount = order.Amount,
+                    AdditionalInformation = order.AdditionalInformation,
+                    Price = order.UnitPrice,
+                    Type = type,
+                    Sizes = new SelectList(items, "Price", "Count")
+                };
             }
 
-            await this.dbContext.SaveChangesAsync();
+            throw new NullReferenceException();
+        }
+
+        public async Task UpdateCartOrderAsync(CartOrderViewModel cart)
+        {
+            var order = await dbContext.Carts.FindAsync(cart.Id);
+
+            if (order != null)
+            {
+                order.Amount = cart.Amount;
+                order.AdditionalInformation = cart.AdditionalInformation;
+                order.UnitPrice = cart.Price;
+
+                await this.dbContext.SaveChangesAsync();
+            }
+
+            else throw new NullReferenceException();
         }
 
         public async Task UpdateStatusOfAnOrderAsync(Guid? id, string status)

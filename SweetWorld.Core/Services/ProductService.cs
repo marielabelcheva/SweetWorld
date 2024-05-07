@@ -214,7 +214,8 @@ namespace SweetWorld.Core.Services
 
         public async Task<ProductDataViewModel> ProductDataAsync(Guid? id)
         {
-            Product? product = await this.dbContext.Products.Include(product => product.Confectioner)
+            Product? product = await this.dbContext.Products.Include(product => product.PiecesCountAndPrice)
+                                                        .Include(product => product.Confectioner)
                                                         .ThenInclude(confectioner => confectioner.User)
                                                         .FirstOrDefaultAsync(product => product.Id == id);
             if (product?.Id == id)
