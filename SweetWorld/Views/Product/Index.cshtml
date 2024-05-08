@@ -34,11 +34,9 @@
                 </aside>
                 <aside class="widget widget_shop widget_shop-filter">
                     <h3 class="widget-title">Filter price</h3>
-                    <div class="ps-slider" data-default-min="0" data-default-max="300" data-max="300" data-step="5" data-unit="BGN "></div>
-                    <p class="ps-slider__meta">Price:
-                        <span class="ps-slider__value ps-slider__min"></span>-<span class="ps-slider__value ps-slider__max"></span>
-                    </p>
-                    <a asp-action="FilterByPrice" asp-controller="Product" asp-route-price="ps-slider__max">Filter</a>
+                    <form asp-action="FilterByPrice" asp-controller="Product">
+                        <input name="price" class="form-control" type="text" placeholder="Max price" />
+                    </form>
                 </aside>
                 <aside class="widget widget_shop widget_categories">
                     <h3 class="widget-title">Type</h3>

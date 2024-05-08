@@ -247,7 +247,7 @@ namespace SweetWorld.Controllers
             catch (Exception ex) { TempData["message"] = ex.Message; return RedirectToAction("Index"); }
         }
 
-        [HttpGet]
+        [HttpPost]
         [Authorize(Roles = "Client")]
         [AllowAnonymous]
         public async Task<IActionResult> FilterByPrice(string price)
